@@ -1,0 +1,11 @@
+.page-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	&__menu-icon,
+	&__calendar-icon {
+		padding: 1rem 0;
+		width: 2rem;
+		height: 2rem;
+	}
+}

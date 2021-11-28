@@ -1,0 +1,106 @@
+@import "./Colors.scss";
+
+.schedule-view-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    &.green {
+        background-color: $green;
+        color: $white;
+    }
+    .page-header {
+        padding: 0 2rem;
+    }
+
+    &__week-type {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding: 0 2rem;
+
+        .week-type__text {
+            font-weight: 500;
+            font-family: "Montserrat", sans-serif;
+            margin: 0;
+            user-select: none;
+        }
+        .week-type__swap-icon {
+            height: 2rem;
+            width: 2rem;
+        }
+    }
+
+    &__days {
+        display: flex;
+        margin: 1.5rem 2rem 0;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 1rem 0;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .weekday {
+            margin: 0 1rem;
+            user-select: none;
+            &:first-child {
+                margin-left: 0;
+            }
+            &:last-child {
+                margin-right: 0;
+            }
+
+            &.active {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    &__schedule {
+        background-color: $white;
+        border-radius: 8px 8px 0 0;
+        height: 100%;
+        color: hsl(0, 0%, 10%);
+		padding: 1.5rem 0;
+
+        .subject-view {
+			display: flex;
+            &-type { 
+				display: flex;
+                width: 5px;
+				height: inherit;
+                border-radius: 0 8px 8px 0;
+                &.lecture {
+                    background-color: $blue;
+                }
+                &.practice {
+                    background-color: $purple;
+                }
+                &.lab {
+                    background-color: $yellow;
+                }
+            }
+            &-content {
+				display: flex;
+				flex-direction: column;
+				margin: 0.5rem 2rem;
+                .subject-view {
+                    &__header {
+                        display: flex;
+                        justify-content: space-between;
+						color:$grey;
+						font-size: 0.8rem;
+						margin-bottom: 0.5rem;
+						user-select: none;
+                    }
+					&-teacher {
+						margin-top: 0.5rem;
+						font-size: 0.8rem;
+						color: $grey;
+					}
+                }
+            }
+        }
+    }
+}
