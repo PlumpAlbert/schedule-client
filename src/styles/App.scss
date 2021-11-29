@@ -1,7 +1,9 @@
+@import "Colors.scss";
+
 html,
 body,
 div#root,
-div.App {
+div.app {
     height: 100%;
 }
 html,
@@ -10,19 +12,35 @@ body {
     background-color: hsl(0, 0%, 97%);
     font-size: 16px;
     font-family: "Lato", sans-serif;
-	padding: 0;
-	margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
-@media (max-width: 480px) {
-    html,
-    body {
-        font-size: 18px;
+.app {
+	display: flex;
+	flex-direction: column;
+    &.green {
+        background-color: $green;
+        color: $white;
+    }
+    .page-header {
+        padding: 0 2rem;
     }
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+}
+
 @media (max-width: 320px) {
     html,
     body {
-        font-size: 20px;
+        font-size: 18px;
     }
 }

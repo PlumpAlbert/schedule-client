@@ -1,0 +1,84 @@
+@import "Colors.scss";
+
+.app-menu {
+    position: absolute;
+    z-index: 100;
+    margin-top: 3rem;
+    padding: 0 2rem;
+    height: calc(100% - 3rem);
+    transform: translateX(-100%);
+    @include transition(transform ease 0.175s);
+
+    .menu-header {
+        margin-top: 2rem;
+        .app-title {
+            font-family: "Montserrat", sans-serif;
+            font-size: 2rem;
+            font-weight: 500;
+            text-align: center;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .app-description {
+            font-family: "Lato", sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            text-align: justify;
+            margin: 2rem 0 1.5rem;
+        }
+        .app-search-field {
+            background-color: $white;
+            border-radius: 9999px;
+            width: 100%;
+
+            &__input {
+                border-radius: 9999px;
+            }
+        }
+    }
+
+    .menu-body {
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+        .app-signup {
+            &__header {
+                text-align: center;
+                font-family: "Lato", sans-serif;
+                font-weight: 400;
+                margin: 0;
+            }
+            &__text {
+                margin: 0.8rem 0 1rem;
+                text-align: justify;
+            }
+            &-btn {
+                text-transform: uppercase;
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+            }
+        }
+    }
+}
+
+.app-menu.active {
+    transform: translateX(0);
+}
+
+.app.green > .app-menu {
+    background-color: $green;
+    color: $white;
+
+    .app-signup-btn {
+        background-color: $white;
+		color: $black;
+    }
+}
+.app.white > .app-menu {
+    background-color: $white;
+    color: $black;
+
+    .app-signup-btn {
+        color: $black;
+    }
+}

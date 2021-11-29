@@ -3,14 +3,7 @@
 .schedule-view-page {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    &.green {
-        background-color: $green;
-        color: $white;
-    }
-    .page-header {
-        padding: 0 2rem;
-    }
+    flex: 1;
 
     &__week-type {
         display: flex;

@@ -10,16 +10,19 @@ interface IProps {
 }
 interface IState {
     currentDay: number;
+    isLoading: boolean;
 }
 
 export default class ScheduleView extends PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
-        let day = new Date(Date.now()).getDay();
+        let day = new Date().getDay();
         this.state = {
-            currentDay: day === 0 ? 7 : day
+            currentDay: day === 0 ? 7 : day,
+            isLoading: true
         };
     }
+
     renderWeekdays = () => {
         let array = [];
         for (let i = 1; i <= 7; i++) {
@@ -42,12 +45,7 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
     render = () => {
         let greenWeek = this.props.weekType === 1;
         return (
-            <div
-                className={`page schedule-view-page${
-                    greenWeek ? " green" : ""
-                }`}
-            >
-                <PageHeader />
+            <div className="page schedule-view-page">
                 <div className="schedule-view-page__week-type">
                     <h2 className="week-type__text">
                         {greenWeek ? "Зеленая неделя" : "Белая неделя"}
@@ -59,10 +57,10 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
                 </div>
                 <div className="schedule-view-page__schedule">
                     <SubjectView
-						id={1}
-						type={0}
-						weekType={this.props.weekType}
-						weekday={1}
+                        id={1}
+                        type={0}
+                        weekType={this.props.weekType}
+                        weekday={1}
                         audience="9-401"
                         teacher="Кургасов В.В."
                         time="shit"
