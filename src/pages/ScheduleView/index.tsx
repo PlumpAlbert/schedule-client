@@ -1,19 +1,20 @@
 import React, { PureComponent } from "react";
+import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
-import { GetWeekdayName, GetWeekType } from "../../Helpers";
+import { GetWeekdayName } from "../../Helpers";
 import { ISubject } from "../../API";
 import SchedulePresenter from "./SchedulePresenter";
-import "../../styles/ScheduleView.scss";
 import { WEEK_TYPE } from "../../Types";
+import "../../styles/ScheduleView.scss";
 
 interface IProps {
-    weekType: number;
+    weekType: WEEK_TYPE;
+    setWeekType: (w: WEEK_TYPE) => void;
 }
 interface IState {
     currentDay: number;
     isLoading: boolean;
     subjects: ISubject[];
-    weekType: WEEK_TYPE;
 }
 
 export default class ScheduleView extends PureComponent<IProps, IState> {
@@ -23,8 +24,7 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
         this.state = {
             currentDay: day === 0 ? 7 : day,
             isLoading: true,
-            subjects: [],
-            weekType: GetWeekType()
+            subjects: []
         };
     }
 
@@ -34,6 +34,14 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
             currentDay: Number(dataset["weekday"])
         });
         document.location.hash = id;
+    };
+
+    handleSwapClick: React.MouseEventHandler = () => {
+        this.props.setWeekType(
+            this.props.weekType === WEEK_TYPE.GREEN
+                ? WEEK_TYPE.WHITE
+                : WEEK_TYPE.GREEN
+        );
     };
 
     renderWeekdays = () => {
@@ -58,20 +66,25 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
     };
 
     render = () => {
-        let greenWeek = this.props.weekType === 1;
+        let greenWeek = this.props.weekType === WEEK_TYPE.GREEN;
         return (
             <div className="page schedule-view-page">
                 <div className="schedule-view-page__week-type">
                     <h2 className="week-type__text">
                         {greenWeek ? "Зеленая неделя" : "Белая неделя"}
                     </h2>
-                    <SwapVertIcon classes={{ root: "week-type__swap-icon" }} />
+                    <Button
+                        classes={{ root: "week-type__swap-icon" }}
+                        onClick={this.handleSwapClick}
+                    >
+                        <SwapVertIcon />
+                    </Button>
                 </div>
                 <div className="schedule-view-page__days">
                     {this.renderWeekdays()}
                 </div>
                 <SchedulePresenter
-                    weekType={this.state.weekType}
+                    weekType={this.props.weekType}
                     weekday={this.state.currentDay}
                 />
             </div>
