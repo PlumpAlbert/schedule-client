@@ -55,14 +55,18 @@
         border-radius: 8px 8px 0 0;
         height: 100%;
         color: hsl(0, 0%, 10%);
-		padding: 1.5rem 0;
+        padding: 1.5rem 0;
 
         .subject-view {
-			display: flex;
-            &-type { 
-				display: flex;
+            display: flex;
+            margin: 1rem 0;
+            &:first-child {
+                margin-top: 0;
+            }
+            &-type {
+                display: flex;
                 width: 5px;
-				height: inherit;
+                height: inherit;
                 border-radius: 0 8px 8px 0;
                 &.lecture {
                     background-color: $blue;
@@ -75,25 +79,62 @@
                 }
             }
             &-content {
-				display: flex;
-				flex-direction: column;
-				margin: 0.5rem 2rem;
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                margin: 0.5rem 2rem;
                 .subject-view {
                     &__header {
                         display: flex;
                         justify-content: space-between;
-						color:$grey;
-						font-size: 0.8rem;
-						margin-bottom: 0.5rem;
-						user-select: none;
+                        color: $grey;
+                        font-size: 0.8rem;
+                        margin-bottom: 0.5rem;
+                        user-select: none;
                     }
-					&-teacher {
-						margin-top: 0.5rem;
-						font-size: 0.8rem;
-						color: $grey;
-					}
+                    &-teacher {
+                        margin-top: 0.5rem;
+                        font-size: 0.8rem;
+                        color: $grey;
+                    }
+                    &.loading {
+                        &-time,
+                        &-location,
+                        &-title,
+                        &-teacher {
+                            animation-name: glow;
+                            animation-duration: 1s;
+                            animation-fill-mode: backwards;
+                            animation-iteration-count: infinite;
+                            animation-timing-function: linear;
+                            min-height: 0.8em;
+                            min-width: 4em;
+                            border-radius: 0.5em;
+                            background: linear-gradient(
+                                to left,
+                                hsl(0, 0%, 97%) 0%,
+                                white 20%,
+                                hsl(0, 0%, 97%) 40%
+                            );
+                            background-size: 50% 1em;
+                        }
+                        &-time,
+                        &-location,
+                        &-teacher {
+                            max-width: 6em;
+                        }
+                    }
                 }
             }
         }
+    }
+}
+
+@keyframes glow {
+    0% {
+        background-position-x: 100%;
+    }
+    100% {
+        background-position-x: 0%;
     }
 }

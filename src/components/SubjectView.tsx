@@ -1,17 +1,28 @@
 import React from "react";
+import { ISubject } from "../API";
 
-interface Subject {
-    id: number;
-    audience: string;
-    type: number;
-    title: string;
-    time: string;
-    weekday: number;
-    weekType: number;
-    teacher: string;
+interface ILoadable {
+    loading?: boolean;
+}
+interface IProps {
+    id?: number;
+    audience?: string;
+    type?: number;
+    title?: string;
+    time?: string;
+    weekday?: number;
+    weekType?: number;
+    teacher?: string;
 }
 
-function SubjectView({ time, audience, title, teacher, type }: Subject) {
+function SubjectView({
+    time = "",
+    audience = "",
+    title = "",
+    teacher = "",
+    type = 0,
+    loading = false
+}: IProps & ILoadable) {
     let typeClass;
     switch (type) {
         case 0:
@@ -25,7 +36,7 @@ function SubjectView({ time, audience, title, teacher, type }: Subject) {
             break;
     }
     return (
-        <div className="subject-view">
+        <div className={`subject-view${loading ? " loading" : ""}`}>
             <div className={`subject-view-type ${typeClass}`} />
             <div className="subject-view-content">
                 <div className="subject-view__header">
