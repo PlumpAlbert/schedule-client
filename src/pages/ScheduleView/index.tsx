@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react";
-import PageHeader from "../components/PageHeader";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
-import { GetWeekdayName } from "../Helpers";
-import "../styles/ScheduleView.scss";
-import SubjectView from "../components/SubjectView";
+import { GetWeekdayName } from "../../Helpers";
+import { ISubject } from "../../API";
+import SchedulePresenter from "./SchedulePresenter";
+import "../../styles/ScheduleView.scss";
 
 interface IProps {
     weekType: number;
@@ -11,6 +11,7 @@ interface IProps {
 interface IState {
     currentDay: number;
     isLoading: boolean;
+    subjects: ISubject[];
 }
 
 export default class ScheduleView extends PureComponent<IProps, IState> {
@@ -19,9 +20,18 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
         let day = new Date().getDay();
         this.state = {
             currentDay: day === 0 ? 7 : day,
-            isLoading: true
+            isLoading: true,
+            subjects: []
         };
     }
+
+    handleWeekdayClick: React.MouseEventHandler<HTMLParagraphElement> = e => {
+        const { id, dataset } = e.currentTarget;
+        this.setState({
+            currentDay: Number(dataset["weekday"])
+        });
+		document.location.hash = id;
+    };
 
     renderWeekdays = () => {
         let array = [];
@@ -31,6 +41,8 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
                 <p
                     key={`weekday-${i}`}
                     id={name}
+                    data-weekday={i}
+                    onClick={this.handleWeekdayClick}
                     className={`weekday${
                         this.state.currentDay === i ? " active" : ""
                     }`}
@@ -55,18 +67,7 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
                 <div className="schedule-view-page__days">
                     {this.renderWeekdays()}
                 </div>
-                <div className="schedule-view-page__schedule">
-                    <SubjectView
-                        id={1}
-                        type={0}
-                        weekType={this.props.weekType}
-                        weekday={1}
-                        audience="9-401"
-                        teacher="Кургасов В.В."
-                        time="shit"
-                        title="Методика обучения пользователей программных систем"
-                    />
-                </div>
+                <SchedulePresenter weekday={this.state.currentDay} />
             </div>
         );
     };
