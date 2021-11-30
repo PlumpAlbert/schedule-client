@@ -8,6 +8,8 @@
     height: calc(100% - 3rem);
     transform: translateX(-100%);
     @include transition(transform ease 0.175s);
+    background-color: $white;
+    color: $black;
 
     .menu-header {
         margin-top: 2rem;
@@ -49,10 +51,15 @@
                 margin: 0;
             }
             &__text {
-                margin: 0.8rem 0 1rem;
+                margin: 1rem 0 0.5rem;
                 text-align: justify;
             }
+            &__signin-text {
+                color: $grey;
+				margin: 1rem 0 0.5rem;
+            }
             &-btn {
+                color: $black;
                 text-transform: uppercase;
                 padding: 0.5rem 1rem;
                 border-radius: 0.5rem;
@@ -63,22 +70,4 @@
 
 .app-menu.active {
     transform: translateX(0);
-}
-
-.app.green > .app-menu {
-    background-color: $green;
-    color: $white;
-
-    .app-signup-btn {
-        background-color: $white;
-		color: $black;
-    }
-}
-.app.white > .app-menu {
-    background-color: $white;
-    color: $black;
-
-    .app-signup-btn {
-        color: $black;
-    }
 }

@@ -26,6 +26,10 @@ body {
     .page-header {
         padding: 0 2rem;
     }
+	&.menu-active > .page-header {
+		background-color: $white;
+		color: $black;
+	}
 }
 
 h1,

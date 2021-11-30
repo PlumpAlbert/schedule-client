@@ -11,9 +11,9 @@ function App() {
         setShowMenu(!showMenu);
     }, [showMenu]);
     return (
-        <div className={`app ${weekType}`}>
+        <div className={`app${showMenu ? " menu-active" : ""} ${weekType}`}>
             <PageHeader onMenuClick={menuButtonClicked} />
-            <MenuSlider showMenu={showMenu}/>
+            <MenuSlider showMenu={showMenu} />
             <ScheduleView weekType={+(weekType === "green")} />
         </div>
     );
