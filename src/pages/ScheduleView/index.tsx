@@ -1,9 +1,10 @@
 import React, { PureComponent } from "react";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
-import { GetWeekdayName } from "../../Helpers";
+import { GetWeekdayName, GetWeekType } from "../../Helpers";
 import { ISubject } from "../../API";
 import SchedulePresenter from "./SchedulePresenter";
 import "../../styles/ScheduleView.scss";
+import { WEEK_TYPE } from "../../Types";
 
 interface IProps {
     weekType: number;
@@ -12,6 +13,7 @@ interface IState {
     currentDay: number;
     isLoading: boolean;
     subjects: ISubject[];
+    weekType: WEEK_TYPE;
 }
 
 export default class ScheduleView extends PureComponent<IProps, IState> {
@@ -21,7 +23,8 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
         this.state = {
             currentDay: day === 0 ? 7 : day,
             isLoading: true,
-            subjects: []
+            subjects: [],
+            weekType: GetWeekType()
         };
     }
 
@@ -30,7 +33,7 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
         this.setState({
             currentDay: Number(dataset["weekday"])
         });
-		document.location.hash = id;
+        document.location.hash = id;
     };
 
     renderWeekdays = () => {
@@ -67,7 +70,10 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
                 <div className="schedule-view-page__days">
                     {this.renderWeekdays()}
                 </div>
-                <SchedulePresenter weekday={this.state.currentDay} />
+                <SchedulePresenter
+                    weekType={this.state.weekType}
+                    weekday={this.state.currentDay}
+                />
             </div>
         );
     };

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import PageHeader from "./components/PageHeader";
 import MenuSlider from "./components/MenuSlider";
-import ScheduleView from "./pages/ScheduleView";
+import ScheduleView from "./pages/ScheduleView/index";
 import "./styles/App.scss";
 
 function App() {

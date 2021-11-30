@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import API, { ISubject } from "../../API";
 import SubjectView from "../../components/SubjectView";
+import { WEEK_TYPE } from "../../Types";
 
 interface IProps {
     groupId?: number;
     weekday: number;
+    weekType: WEEK_TYPE;
 }
 
-function SchedulePresenter({ groupId, weekday }: IProps) {
+function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
     const [subjects, setSubjects] = useState<ISubject[]>([]);
     const [isLoading, setLoading] = useState(subjects.length === 0);
 
@@ -28,9 +30,9 @@ function SchedulePresenter({ groupId, weekday }: IProps) {
                     <SubjectView loading type={2} />
                 </>
             ) : (
-                subjects.map(
-                    s =>
-                        s.weekday === weekday && (
+                subjects.map(s => {
+                    if (s.weekday === weekday && s.weekType === weekType) {
+                        return (
                             <SubjectView
                                 key={`subject-view-${s.id}`}
                                 id={s.id}
@@ -42,8 +44,9 @@ function SchedulePresenter({ groupId, weekday }: IProps) {
                                 time={s.time}
                                 title={s.title}
                             />
-                        )
-                )
+                        );
+                    }
+                })
             )}
         </div>
     );
