@@ -28,12 +28,17 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
         };
     }
 
+    componentDidUpdate = (oldProps: IProps, oldState: IState) => {
+        if (oldState.currentDay !== this.state.currentDay) {
+            document.location.hash = GetWeekdayName(this.state.currentDay);
+        }
+    };
+
     handleWeekdayClick: React.MouseEventHandler<HTMLParagraphElement> = e => {
         const { id, dataset } = e.currentTarget;
         this.setState({
             currentDay: Number(dataset["weekday"])
         });
-        document.location.hash = id;
     };
 
     handleSwapClick: React.MouseEventHandler = () => {
@@ -42,6 +47,13 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
                 ? WEEK_TYPE.WHITE
                 : WEEK_TYPE.GREEN
         );
+    };
+
+    todayButtonClicked = () => {
+        let day = new Date().getDay();
+        this.setState({
+            currentDay: day === 0 ? 7 : day
+        });
     };
 
     renderWeekdays = () => {
