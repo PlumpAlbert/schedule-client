@@ -1,0 +1,43 @@
+@import "./Colors.scss";
+
+.page-footer {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    font-family: "Lato", sans-serif;
+    margin-top: auto;
+    padding-bottom: 1rem;
+    justify-content: space-between;
+
+    &__copyright {
+        margin: 0;
+    }
+
+    &__links {
+        display: flex;
+        flex-direction: row;
+		max-height: fit-content;
+        .page-footer__link {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 1rem;
+            &:last-child {
+                margin: 0;
+            }
+            .page-footer__icon {
+                width: 1.5rem;
+                height: 1.5rem;
+
+                &.github-icon {
+                    fill: #333333;
+                }
+                &.mail-icon {
+                    fill: #eb5757;
+                }
+                &.telegram-icon {
+                    fill: #0088cc;
+                }
+            }
+        }
+    }
+}
