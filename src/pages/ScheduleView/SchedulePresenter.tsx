@@ -9,14 +9,33 @@ interface IProps {
     weekday: number;
     weekType: WEEK_TYPE;
 }
+enum WeekDay {
+    Monday = 1,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    Sunday
+}
 
 function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
-    const [subjects, setSubjects] = useState<ISubject[]>([]);
-    const [isLoading, setLoading] = useState(subjects.length === 0);
+    const [subjects, setSubjects] = useState<Array<ISubject[]>>([]);
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
-        API.fetchSchedule(groupId || 1).then(s => {
-            setSubjects(s);
+        API.fetchSchedule(groupId || 1).then(schedule => {
+            let newSchedule: Array<ISubject[]> = [];
+            for (let i = WeekDay.Monday; i <= WeekDay.Sunday; i++) {
+                newSchedule[i - 1] = schedule
+                    .filter(v => v.weekday === i)
+                    .sort((a, b) => {
+                        let left = new Date("1970-01-01T" + a.time);
+                        let right = new Date("1970-01-01T" + b.time);
+                        return left.getTime() - right.getTime();
+                    });
+            }
+            setSubjects(newSchedule);
             setLoading(false);
         });
     }, []);
@@ -30,9 +49,9 @@ function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
                     <SubjectView loading type={2} />
                 </>
             ) : (
-                subjects.map(s => {
-                    if (s.weekday === weekday && s.weekType === weekType) {
-                        return (
+                subjects[weekday - 1].map(
+                    s =>
+                        s.weekType === weekType && (
                             <SubjectView
                                 key={`subject-view-${s.id}`}
                                 id={s.id}
@@ -44,9 +63,8 @@ function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
                                 time={s.time}
                                 title={s.title}
                             />
-                        );
-                    }
-                })
+                        )
+                )
             )}
         </div>
     );
