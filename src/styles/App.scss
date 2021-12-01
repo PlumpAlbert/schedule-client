@@ -19,6 +19,9 @@ body {
 .app {
     display: flex;
     flex-direction: column;
+    &.white {
+        background-color: $lightGrey;
+    }
     &.green {
         background-color: $green;
         color: $white;
