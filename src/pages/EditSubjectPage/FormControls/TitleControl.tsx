@@ -24,8 +24,8 @@ function TitleControl({ dispatch, value }: IProps<string>) {
             </label>
             <TextareaAutosize
                 className="form__title-textarea"
-                minRows={4}
-                maxRows={6}
+                minRows={6}
+                maxRows={10}
                 aria-label="Название"
                 placeholder="Введите название предмета"
                 defaultValue={value}

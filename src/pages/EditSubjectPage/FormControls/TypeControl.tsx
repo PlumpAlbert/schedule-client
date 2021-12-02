@@ -2,11 +2,11 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import { IProps, propTypes } from ".";
 import { SUBJECT_TYPE } from "../../../types";
 import { ACTIONS } from "../reducer";
 import { GetSubjectTypeAsString } from "../../../Helpers";
-import { MenuItem } from "@mui/material";
 
 function TypeControl({ dispatch, value }: IProps<SUBJECT_TYPE>) {
     const handleTypeChanged = useCallback<
