@@ -29,13 +29,7 @@ function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
         API.fetchSchedule(groupId || 1).then(schedule => {
             let newSchedule: Array<ISubject[]> = [];
             for (let i = WeekDay.Monday; i <= WeekDay.Sunday; i++) {
-                newSchedule[i - 1] = schedule
-                    .filter(v => v.weekday === i)
-                    .sort((a, b) => {
-                        let left = new Date("1970-01-01T" + a.time);
-                        let right = new Date("1970-01-01T" + b.time);
-                        return left.getTime() - right.getTime();
-                    });
+                newSchedule[i - 1] = schedule.filter(v => v.weekday === i);
             }
             setSubjects(newSchedule);
             setLoading(false);
