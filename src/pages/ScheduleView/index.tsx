@@ -35,7 +35,7 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
     };
 
     handleWeekdayClick: React.MouseEventHandler<HTMLParagraphElement> = e => {
-        const { id, dataset } = e.currentTarget;
+        const { dataset } = e.currentTarget;
         this.setState({
             currentDay: Number(dataset["weekday"])
         });
