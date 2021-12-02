@@ -31,6 +31,7 @@ function App() {
         if (showMenu) className.push("menu-active");
         if (location.pathname === "/schedule") {
             className.push(weekType === WEEK_TYPE.WHITE ? "white" : "green");
+            if (showFooter) setShowFooter(false);
         }
         return className.join(" ");
     }, [weekType, showMenu, location.pathname]);
@@ -54,7 +55,7 @@ function App() {
                         />
                     }
                 />
-				<Route path="/subject" element={<EditSubjectPage />} />
+                <Route path="/subject" element={<EditSubjectPage />} />
             </Routes>
             {showFooter && <PageFooter />}
         </div>
