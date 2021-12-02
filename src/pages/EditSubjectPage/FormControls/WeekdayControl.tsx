@@ -12,7 +12,11 @@ function WeekdayControl({ dispatch, value }: IProps<number>) {
         let options = [];
         for (let i = 1; i <= 7; ++i) {
             options.push(
-                <MenuItem className="weekday-control__option" value={i}>
+                <MenuItem
+                    key={`menu-item-${i}`}
+                    className="weekday-control__option"
+                    value={i}
+                >
                     {GetWeekdayName(i)}
                 </MenuItem>
             );
@@ -39,7 +43,7 @@ function WeekdayControl({ dispatch, value }: IProps<number>) {
             <Select
                 labelId="form__weekday"
                 className="form__textfield"
-				classes={{select: "form__weekday-select"}}
+                classes={{ select: "form__weekday-select" }}
                 value={value}
                 onChange={handleWeekdayChange}
             >
