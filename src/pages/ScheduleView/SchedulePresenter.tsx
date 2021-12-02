@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import API, { ISubject } from "../../API";
 import SubjectView from "../../components/SubjectView";
-import { WEEK_TYPE } from "../../Types";
+import { WEEK_TYPE } from "../../types";
 
 interface IProps {
     groupId?: number;
@@ -22,6 +23,7 @@ enum WeekDay {
 function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
     const [subjects, setSubjects] = useState<Array<ISubject[]>>([]);
     const [isLoading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         API.fetchSchedule(groupId || 1).then(schedule => {
@@ -38,7 +40,14 @@ function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
             setSubjects(newSchedule);
             setLoading(false);
         });
-    }, []);
+    }, [groupId]);
+
+    const handleSubjectClick = useCallback<(s: ISubject) => void>(
+        subject => {
+            navigate("/subject?id=" + subject.id, { state: { subject } });
+        },
+        [navigate]
+    );
 
     return (
         <div className="schedule-view-page__schedule">
@@ -53,13 +62,14 @@ function SchedulePresenter({ groupId, weekday, weekType }: IProps) {
                     s =>
                         s.weekType === weekType && (
                             <SubjectView
+                                onClick={handleSubjectClick}
                                 key={`subject-view-${s.id}`}
                                 id={s.id}
                                 type={s.type}
                                 weekType={s.weekType}
                                 weekday={s.weekday}
                                 audience={s.audience}
-                                teacher={s.teacher.name}
+                                teacher={s.teacher}
                                 time={s.time}
                                 title={s.title}
                             />

@@ -1,4 +1,4 @@
-import { WEEK_TYPE } from "./Types";
+import { WEEK_TYPE } from "./types";
 
 export function GetWeekdayName(weekday: number) {
     const monday = "2021-11-22";
@@ -31,4 +31,20 @@ export function GetWeekType(date?: number | Date): WEEK_TYPE {
         (date.getTime() - firstWeek.getTime()) / 604800000
     );
     return weeksPassed % 2 ? WEEK_TYPE.GREEN : WEEK_TYPE.WHITE;
+}
+
+export function GetSubjectTypeAsString(type: number): string {
+    switch (type) {
+        case 0: {
+            return "Лекция";
+        }
+        case 1: {
+            return "Практика";
+        }
+        case 2: {
+            return "Лабораторная";
+        }
+        default:
+            return "";
+    }
 }

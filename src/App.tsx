@@ -5,9 +5,10 @@ import MenuSlider from "./components/MenuSlider";
 import ScheduleView from "./pages/ScheduleView/index";
 import "./styles/App.scss";
 import { GetWeekType } from "./Helpers";
-import { WEEK_TYPE } from "./Types";
+import { WEEK_TYPE } from "./types";
 import LandingPage from "./pages/LandingPage";
 import PageFooter from "./components/PageFooter";
+import EditSubjectPage from "./pages/EditSubjectPage";
 
 function App() {
     const location = useLocation();
@@ -53,6 +54,7 @@ function App() {
                         />
                     }
                 />
+				<Route path="/subject" element={<EditSubjectPage />} />
             </Routes>
             {showFooter && <PageFooter />}
         </div>

@@ -4,8 +4,8 @@ import SwapVertIcon from "@mui/icons-material/SwapVert";
 import { GetWeekdayName } from "../../Helpers";
 import { ISubject } from "../../API";
 import SchedulePresenter from "./SchedulePresenter";
-import { WEEK_TYPE } from "../../Types";
 import "../../styles/ScheduleView.scss";
+import { WEEK_TYPE } from "../../types";
 
 interface IProps {
     weekType: WEEK_TYPE;
