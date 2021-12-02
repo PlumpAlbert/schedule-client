@@ -3,7 +3,7 @@ export interface ISubject {
     audience: string;
     type: number;
     title: string;
-    time: string;
+    time: Date;
     weekday: number;
     weekType: number;
     teacher: {
@@ -26,8 +26,15 @@ export default class ScheduleAPI {
      * @returns
      */
     static fetchSchedule = async (groupId: number) => {
-        const response = await fetch(`${ScheduleAPI.HOST}/subject?group=${groupId}`);
-		const result: IResponse<ISubject[]> = await response.json();
-		return result.body;
+        const response = await fetch(
+            `${ScheduleAPI.HOST}/subject?group=${groupId}`
+        );
+        const result: IResponse<
+            Array<Omit<ISubject, "time"> & { time: string }>
+        > = await response.json();
+        return result.body.map(s => ({
+            ...s,
+            time: new Date(`1999-01-13T${s.time}`)
+        }));
     };
 }

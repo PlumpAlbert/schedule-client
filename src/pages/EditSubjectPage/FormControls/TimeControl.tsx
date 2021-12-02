@@ -5,14 +5,14 @@ import TextField from "@mui/material/TextField";
 import { IProps, propTypes } from ".";
 import { ACTIONS } from "../reducer";
 
-function TimeControl({ dispatch, value }: IProps<string>) {
+function TimeControl({ dispatch, value }: IProps<Date>) {
     const handleTimeChange = useCallback<
         React.FocusEventHandler<HTMLInputElement>
     >(
         ({ target }) => {
             dispatch({
                 type: ACTIONS.setTime,
-                payload: target.value
+                payload: new Date("2000-01-01T" + target.value)
             });
         },
         [dispatch]
@@ -24,16 +24,16 @@ function TimeControl({ dispatch, value }: IProps<string>) {
             </label>
             <TextField
                 className="form__textfield"
-				type="time"
+                type="time"
                 aria-label="Время"
                 placeholder="Укажите номер аудитории"
-                defaultValue={value}
+                defaultValue={value.toLocaleTimeString("ru")}
                 onBlur={handleTimeChange}
             />
         </FormControl>
     );
 }
 
-TimeControl.propTypes = propTypes(PropTypes.string.isRequired);
+TimeControl.propTypes = propTypes(PropTypes.instanceOf(Date).isRequired);
 
 export default TimeControl;

@@ -10,11 +10,28 @@ interface IProps {
     audience?: string;
     type: number;
     title?: string;
-    time?: string;
+    time?: Date;
     weekday?: number;
     weekType?: number;
     teacher?: { id: number; name: string };
     onClick?: (s: ISubject) => void;
+}
+
+function renderTime(time: Date = new Date()) {
+    const endTime = new Date(time.valueOf());
+    endTime.setHours(endTime.getHours() + 1);
+    endTime.setMinutes(endTime.getMinutes() + 30);
+    let locale = "ru";
+    if (navigator.languages.length > 1) {
+        locale = navigator.languages[1];
+    }
+    return `${time.toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit"
+    })} - ${endTime.toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit"
+    })}`;
 }
 
 function SubjectView({
@@ -43,7 +60,7 @@ function SubjectView({
                     audience: subject.audience || "",
                     id: subject.id || -1,
                     teacher: subject.teacher || { id: -1, name: "" },
-                    time: subject.time || "",
+                    time: subject.time || new Date(),
                     title: subject.title || "",
                     type: subject.type,
                     weekType: subject.weekType || WEEK_TYPE.WHITE,
@@ -62,7 +79,9 @@ function SubjectView({
             <div className={`subject-view-type ${typeClass}`} />
             <div className="subject-view-content">
                 <div className="subject-view__header">
-                    <span className="subject-view-time">{subject.time}</span>
+                    <span className="subject-view-time">
+                        {renderTime(subject.time)}
+                    </span>
                     <span className="subject-view-location">
                         {subject.audience}
                     </span>
