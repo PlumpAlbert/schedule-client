@@ -1,11 +1,50 @@
+@import "Colors.scss";
+
 .page-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	&__menu-icon,
-	&__calendar-icon {
-		padding: 1.5rem 0 0;
-		width: 1.5rem !important;
-		height: 1.5rem !important;
-	}
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 4.5rem;
+    padding: 1.5rem 2rem 0;
+    align-items: center;
+    box-sizing: border-box;
+
+    & &__menu-icon,
+    & &__calendar-icon {
+        display: inline-flex;
+        width: 2rem;
+        height: 2rem;
+    }
+    & &__search-input-wrapper {
+        margin-left: 1rem;
+        .page-header__search-input {
+            width: min-content;
+            &::before {
+                transform: scaleX(0);
+                border-color: transparent;
+            }
+            &::after {
+                border-color: $blue;
+            }
+            .MuiInputAdornment-root {
+                margin: 0;
+            }
+
+            &-icon {
+                box-sizing: content-box;
+                padding: 0 0.5rem;
+            }
+            &-enter {
+                display: none;
+            }
+
+            &--display {
+                width: auto;
+
+                .page-header__search-input-enter {
+                    display: inline-flex;
+                }
+            }
+        }
+    }
 }

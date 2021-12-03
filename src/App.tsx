@@ -39,6 +39,7 @@ function App() {
     return (
         <div className={appClassName}>
             <PageHeader
+                menuIsShown={showMenu}
                 onMenuClick={menuButtonClicked}
                 onTodayClick={todayButtonClicked}
             />

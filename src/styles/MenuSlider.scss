@@ -3,9 +3,9 @@
 .app-menu {
     position: absolute;
     z-index: 100;
-    margin-top: 3rem;
+    margin-top: 4.5rem;
     padding: 0 2rem;
-    height: calc(100% - 3rem);
+    height: calc(100% - 4.5rem);
     transform: translateX(-100%);
     @include transition(transform ease 0.175s);
     background-color: $white;
