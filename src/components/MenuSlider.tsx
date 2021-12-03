@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
+import PageFooter from "./PageFooter";
 
 import "../styles/MenuSlider.scss";
 
@@ -16,11 +17,11 @@ function MenuSlider({ showMenu }: IProps) {
     const [userName, setUserName] = useState(
         window.localStorage.getItem("username")
     );
-
     const [userGroup, setUserGroup] = useState(
         window.localStorage.getItem("group")
     );
-    const [isLoggedIn, setLoggedIn] = useState(!!userName);
+
+    const [isLoggedIn, setLoggedIn] = useState(true);
     return (
         <div className={`app-menu${showMenu ? " active" : ""}`}>
             <div className="menu-header">
@@ -91,6 +92,7 @@ function MenuSlider({ showMenu }: IProps) {
                     </>
                 )}
             </div>
+            <PageFooter />
         </div>
     );
 }
