@@ -3,6 +3,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
 import PageFooter from "./PageFooter";
+import LandingPage from "../pages/LandingPage";
 
 import "../styles/MenuSlider.scss";
 
@@ -10,7 +11,7 @@ interface IProps {
     showMenu: boolean;
 }
 
-function MenuSlider({ showMenu }: IProps) {
+function MenuSlider() {
     const [userName, setUserName] = useState(
         window.localStorage.getItem("username")
     );
@@ -18,9 +19,8 @@ function MenuSlider({ showMenu }: IProps) {
         window.localStorage.getItem("group")
     );
 
-    const [isLoggedIn, setLoggedIn] = useState(true);
     return (
-        <div className={`app-menu${showMenu ? " active" : ""}`}>
+        <>
             <div className="menu-header">
                 <h1 className="app-title">Расписание ЛГТУ</h1>
                 <div className="user-info">
@@ -52,9 +52,16 @@ function MenuSlider({ showMenu }: IProps) {
                     <span className="option__text">Выйти</span>
                 </p>
             </div>
-            <PageFooter />
-        </div>
+        </>
     );
 }
 
-export default MenuSlider;
+export default ({ showMenu }: IProps) => {
+    const userInfo = window.localStorage.getItem("user");
+    return (
+        <div className={`app-menu${showMenu ? " active" : ""}`}>
+            {userInfo ? <MenuSlider /> : <LandingPage />}
+            <PageFooter />
+        </div>
+    );
+};
