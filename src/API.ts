@@ -19,7 +19,7 @@ interface IResponse<T = any> {
 }
 
 export default class ScheduleAPI {
-    private static HOST: string = "http://www.plumpalbert.xyz";
+    private static HOST: string = "https://www.plumpalbert.xyz/api";
     /**
      * Method for fetching group's schedule
      * @param groupId Group identifier
