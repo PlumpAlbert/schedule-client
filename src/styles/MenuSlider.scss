@@ -1,8 +1,8 @@
 @import "Colors.scss";
 
 .app-menu {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: calc(100% - 4.5rem);
     position: absolute;
@@ -19,7 +19,7 @@
     }
 
     .menu-header {
-        margin-top: 2rem;
+        margin-top: 3rem;
         .app-title {
             font-family: "Montserrat", sans-serif;
             font-size: 2rem;
@@ -28,48 +28,58 @@
             margin: 0;
             text-transform: uppercase;
         }
-        .app-description {
-            font-family: "Lato", sans-serif;
-            font-size: 1rem;
-            font-weight: 400;
-            text-align: justify;
-            margin: 2rem 0 1.5rem;
-        }
-        .app-search-field {
-            background-color: $white;
-            border-radius: 9999px;
-            width: 100%;
-
-            &__input {
-                border-radius: 9999px;
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            margin-top: 2rem;
+            align-items: center;
+            .user-pic {
+                width: 128px;
+            }
+            .user-name {
+                font-family: "Lato", sans-serif;
+                font-weight: 400;
+                font-size: 1.5rem;
+                text-align: center;
+                margin: 1.5rem 0 0.8rem;
+                text-transform: capitalize;
+            }
+            .user-group {
+                font-family: "Lato", sans-serif;
+                font-weight: 400;
+                font-size: 1rem;
+                text-align: center;
+                text-transform: uppercase;
+                margin: 0;
             }
         }
     }
 
-    .menu-body {
+    .menu-settings {
         display: flex;
         flex-direction: column;
-        margin-top: 2rem;
-        .app-signup {
-            &__header {
-                text-align: center;
-                font-family: "Lato", sans-serif;
-                font-weight: 400;
-                margin: 0;
-            }
-            &__text {
-                margin: 1rem 0 0.5rem;
-                text-align: justify;
-            }
-            &__signin-text {
+        margin-top: 3rem;
+        padding: 0 2rem;
+
+        &__header {
+            font-family: "Lato", sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-left: 2.5rem;
+        }
+        &__option {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0.5rem 0;
+
+            .option__icon {
                 color: $grey;
-                margin: 1rem 0 0.5rem;
             }
-            &-btn {
-                color: $black;
-                text-transform: uppercase;
-                padding: 0.5rem 1rem;
-                border-radius: 0.5rem;
+            .option__text {
+                margin-left: 1rem;
             }
         }
     }
