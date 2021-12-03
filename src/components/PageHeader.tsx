@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import { useLocation } from "react-router";
 import MenuIcon from "@mui/icons-material/Menu";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -15,7 +21,10 @@ interface IProps {
 }
 
 function PageHeader({ onMenuClick, onTodayClick, menuIsShown }: IProps) {
-    const [showSearchInput, setShowSearchInput] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
+    const [showSearchInput, setShowSearchInput] = useState<
+        "full" | "icon" | "none"
+    >(!!searchValue ? "full" : "none");
     const location = useLocation();
     const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -25,44 +34,62 @@ function PageHeader({ onMenuClick, onTodayClick, menuIsShown }: IProps) {
         if (searchInputRef.current) {
             searchInputRef.current.focus();
         }
-        setShowSearchInput(true);
+        setShowSearchInput("full");
     }, [setShowSearchInput]);
+    const handleSearchInputBlur = useCallback(
+        e => {
+            if (!e.target.value) {
+                setShowSearchInput("icon");
+            }
+        },
+        [setShowSearchInput]
+    );
     const handleEnterClick = useCallback(() => {
         alert("Should implement this feature");
     }, []);
+    const handleSearchValueChanged = useCallback<
+        React.ChangeEventHandler<HTMLInputElement>
+    >(
+        ({ target }) => {
+            setSearchValue(target.value);
+        },
+        [setSearchValue]
+    );
 
     useEffect(() => {
         switch (location.pathname) {
             case "/":
-                setShowSearchInput(true);
+                setShowSearchInput("icon");
                 break;
             default:
+                setShowSearchInput("none");
                 break;
         }
     }, [location.pathname]);
+    useEffect(() => {
+        if (!menuIsShown) setShowSearchInput("none");
+        else if (searchValue) setShowSearchInput("full");
+    }, [menuIsShown]);
 
-    return (
-        <div className="page-header">
-            <MenuIcon
-                onClick={handleMenuClick}
-                classes={{ root: "page-header__menu-icon" }}
-            />
-            {showSearchInput || menuIsShown ? (
+    const rightSideIcon = useMemo(() => {
+        if (
+            showSearchInput === "full" ||
+            showSearchInput === "icon" ||
+            menuIsShown
+        ) {
+            return (
                 <TextField
                     className="page-header__search-input-wrapper"
                     variant="standard"
-                    onBlur={e => {
-                        if (!e.target.value) {
-                            console.log("setShowSearchInput - false");
-                            setShowSearchInput(false);
-                        }
-                    }}
+                    onBlur={handleSearchInputBlur}
                     placeholder="Введите название группы"
+                    value={searchValue}
+                    onChange={handleSearchValueChanged}
                     InputProps={{
                         inputRef: searchInputRef,
                         classes: {
                             root: `page-header__search-input${
-                                showSearchInput
+                                showSearchInput === "full"
                                     ? " page-header__search-input--display"
                                     : ""
                             }`
@@ -86,12 +113,31 @@ function PageHeader({ onMenuClick, onTodayClick, menuIsShown }: IProps) {
                         )
                     }}
                 />
-            ) : (
+            );
+        }
+        if (location.pathname === "/schedule" && !menuIsShown) {
+            return (
                 <CalendarTodayIcon
                     classes={{ root: "page-header__calendar-icon" }}
                     onClick={handleTodayClick}
                 />
-            )}
+            );
+        }
+    }, [
+        showSearchInput,
+        menuIsShown,
+        location.pathname,
+        handleSearchValueChanged,
+        searchValue
+    ]);
+
+    return (
+        <div className="page-header">
+            <MenuIcon
+                onClick={handleMenuClick}
+                classes={{ root: "page-header__menu-icon" }}
+            />
+            {rightSideIcon}
         </div>
     );
 }
