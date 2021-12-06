@@ -9,6 +9,7 @@ import { WEEK_TYPE } from "./types";
 import LandingPage from "./pages/LandingPage";
 import PageFooter from "./components/PageFooter";
 import EditSubjectPage from "./pages/EditSubjectPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
     const location = useLocation();
@@ -46,6 +47,7 @@ function App() {
             <MenuSlider showMenu={showMenu} />
             <Routes>
                 <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route
                     path="/schedule"
                     element={

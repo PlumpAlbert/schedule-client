@@ -8,7 +8,10 @@ export default function LandingPage(props: any) {
     const navigate = useNavigate();
     const groupBtnClick = useCallback(() => {
         navigate("/schedule", { replace: true });
-    }, []);
+    }, [navigate]);
+    const loginBtnClick = useCallback(() => {
+        navigate("/login");
+    }, [navigate]);
     return (
         <div className="page landing-page">
             <h1 className="app-title">Расписание ЛГТУ</h1>
@@ -29,7 +32,9 @@ export default function LandingPage(props: any) {
                 Регистрация
             </Button>
             <p className="landing-page__text">Уже есть аккаунт?</p>
-            <Button className="landing-page__btn">Вход</Button>
+            <Button className="landing-page__btn" onClick={loginBtnClick}>
+                Вход
+            </Button>
         </div>
     );
 }
