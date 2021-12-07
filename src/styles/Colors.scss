@@ -1,19 +1,19 @@
-$green: #27AE60;
-$blue: #2F80ED;
-$purple: #9B51E0;
-$yellow: #F2C94C;
-$red: #EB5757;
+$green: #27ae60;
+$blue: #2f80ed;
+$purple: #9b51e0;
+$yellow: #f2c94c;
+$red: #eb5757;
 
-$white: #FFFFFF;
-$offWhite: hsl(0,0%,92%);
-$lightGrey: hsl(0,0%,64%);
+$white: hsl(0, 0%, 100%);
+$offWhite: hsl(0, 0%, 90%);
+$lightGrey: hsl(0, 0%, 64%);
 $grey: hsl(0, 0%, 37%);
 $black: hsl(0, 0%, 10%);
 
-@mixin transition($x){
-    transition: $x;
-    -webkit-transition: $x;
-    -moz-transition: $x;
-    -ms-transition: $x;
-    -o-transition: $x;
+@mixin transition($x) {
+	transition: $x;
+	-webkit-transition: $x;
+	-moz-transition: $x;
+	-ms-transition: $x;
+	-o-transition: $x;
 }
