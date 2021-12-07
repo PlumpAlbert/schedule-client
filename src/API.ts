@@ -48,7 +48,7 @@ export default abstract class ScheduleAPI {
         const jsonText = await fetch(`${ScheduleAPI.HOST}/auth`, {
             method: "POST",
             cache: "no-cache",
-            // credentials: "same-origin",
+            credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json"
             },

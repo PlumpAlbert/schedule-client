@@ -1,0 +1,57 @@
+@import "./Colors.scss";
+
+.login-page {
+    display: flex;
+    flex-direction: column;
+    padding: 0 2rem;
+
+    & &__title {
+        font-family: "Montserrat", "Lato", sans-serif;
+        text-transform: uppercase;
+        text-align: center;
+        margin: 3rem 0 0;
+    }
+    & &__form {
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+
+        & > * {
+            margin: 1rem 0 0;
+        }
+
+        .login-page {
+            &__form-control {
+				.form-control {
+					&__input {
+						input {
+							padding-left: 14px !important;
+							font-family: "Lato", sans-serif;
+						}
+					}
+				}
+				&.error {
+					.form-control {
+						&__label {
+							color: $red;
+						}
+						&__input {
+							&::before {
+								border-color: $red;
+							}
+						}
+						&__helper-text {
+							color: $red;
+						}
+					}
+				}
+			}
+            &__button {
+                font-family: "Montserrat", "Lato", sans-serif;
+                font-weight: 500;
+                background-color: $blue;
+                color: $white;
+            }
+        }
+    }
+}
