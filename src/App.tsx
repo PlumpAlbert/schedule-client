@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Route, Routes, useLocation} from "react-router-dom";
 import PageHeader from "./components/PageHeader";
 import MenuSlider from "./components/MenuSlider";
-import ScheduleView from "./pages/ScheduleView/index";
+import ScheduleView from "./pages/ScheduleView";
 import "./styles/App.scss";
 import {GetWeekType} from "./Helpers";
 import {WEEK_TYPE} from "./types";
@@ -14,18 +14,19 @@ import GroupsListPage from "./pages/GroupsListPage";
 
 function App() {
 	const location = useLocation();
+	const [weekday, setWeekday] = useState<number | undefined>(undefined);
 	const [weekType, setWeekType] = useState<WEEK_TYPE>(GetWeekType());
 	const [showMenu, setShowMenu] = useState(false);
 	const [showFooter, setShowFooter] = useState(location.pathname === "/");
-	const scheduleViewRef = useRef<ScheduleView>(null);
 
 	const menuButtonClicked = useCallback(() => {
 		setShowMenu(!showMenu);
 	}, [showMenu]);
 
 	const todayButtonClicked = useCallback(() => {
-		scheduleViewRef.current?.todayButtonClicked();
 		setWeekType(GetWeekType());
+		let day = new Date().getDay();
+		setWeekday(day === 0 ? 7 : day);
 	}, []);
 
 	const appClassName = useMemo(() => {
@@ -53,7 +54,7 @@ function App() {
 					path="/schedule"
 					element={
 						<ScheduleView
-							ref={scheduleViewRef}
+							weekday={weekday}
 							weekType={weekType}
 							setWeekType={setWeekType}
 						/>

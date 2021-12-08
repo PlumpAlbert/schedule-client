@@ -27,14 +27,25 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		API.fetchSchedule(groupId || 1).then(schedule => {
-			let newSchedule: Array<ISubject[]> = [];
-			for (let i = WeekDay.Monday; i <= WeekDay.Sunday; i++) {
-				newSchedule[i - 1] = schedule.filter(v => v.weekday === i);
+		const abortController = new AbortController();
+		try {
+			API.fetchSchedule(groupId || 1, abortController).then(schedule => {
+				let newSchedule: Array<ISubject[]> = [];
+				for (let i = WeekDay.Monday; i <= WeekDay.Sunday; i++) {
+					newSchedule[i - 1] = schedule.filter(v => v.weekday === i);
+				}
+				setSubjects(newSchedule);
+				setLoading(false);
+			});
+		} catch (err) {
+			if (!abortController.signal.aborted) {
+				setLoading(false);
 			}
-			setSubjects(newSchedule);
-			setLoading(false);
-		});
+		} finally {
+			return () => {
+				abortController.abort();
+			};
+		}
 	}, [groupId]);
 
 	const handleSubjectClick = useCallback<(s: ISubject) => void>(

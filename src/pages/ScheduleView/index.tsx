@@ -1,4 +1,4 @@
-import React, {PureComponent} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import {GetWeekdayName} from "../../Helpers";
@@ -6,57 +6,51 @@ import {ISubject} from "../../types";
 import SchedulePresenter from "./SchedulePresenter";
 import "../../styles/ScheduleView.scss";
 import {WEEK_TYPE} from "../../types";
+import {useLocation, useNavigate} from "react-router";
 
 interface IProps {
+	weekday?: number;
 	weekType: WEEK_TYPE;
 	setWeekType: (w: WEEK_TYPE) => void;
 }
-interface IState {
-	currentDay: number;
-	isLoading: boolean;
-	subjects: ISubject[];
-}
 
-export default class ScheduleView extends PureComponent<IProps, IState> {
-	constructor(props: IProps) {
-		super(props);
+const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
+	const [currentDay, setCurrentDay] = useState(() => {
+		if (weekday) return weekday;
 		let day = new Date().getDay();
-		this.state = {
-			currentDay: day === 0 ? 7 : day,
-			isLoading: true,
-			subjects: []
-		};
-	}
+		return day === 0 ? 7 : day;
+	});
+	const navigate = useNavigate();
+	const location = useLocation();
 
-	componentDidUpdate = (oldProps: IProps, oldState: IState) => {
-		if (oldState.currentDay !== this.state.currentDay) {
-			document.location.hash = GetWeekdayName(this.state.currentDay);
-		}
-	};
+	useEffect(() => {
+		navigate("#" + GetWeekdayName(currentDay));
+	}, [currentDay]);
 
-	handleWeekdayClick: React.MouseEventHandler<HTMLParagraphElement> = e => {
-		const {dataset} = e.currentTarget;
-		this.setState({
-			currentDay: Number(dataset["weekday"])
-		});
-	};
+	//#region CALLBACKS
+	const handleWeekdayClick = useCallback<
+		React.MouseEventHandler<HTMLParagraphElement>
+	>(
+		({currentTarget}) => {
+			const {dataset} = currentTarget;
+			setCurrentDay(Number(dataset["weekday"]));
+		},
+		[setCurrentDay]
+	);
 
-	handleSwapClick: React.MouseEventHandler = () => {
-		this.props.setWeekType(
-			this.props.weekType === WEEK_TYPE.GREEN
-				? WEEK_TYPE.WHITE
-				: WEEK_TYPE.GREEN
+	const handleSwapClick = useCallback<React.MouseEventHandler>(() => {
+		setWeekType(
+			weekType === WEEK_TYPE.GREEN ? WEEK_TYPE.WHITE : WEEK_TYPE.GREEN
 		);
-	};
+	}, [weekType, setWeekType]);
 
-	todayButtonClicked = () => {
+	const todayButtonClicked = useCallback(() => {
 		let day = new Date().getDay();
-		this.setState({
-			currentDay: day === 0 ? 7 : day
-		});
-	};
+		setCurrentDay(day === 0 ? 7 : day);
+	}, [setCurrentDay]);
+	//#endregion
 
-	renderWeekdays = () => {
+	const weekdays = useMemo(() => {
 		let array = [];
 		for (let i = 1; i <= 7; i++) {
 			let name = GetWeekdayName(i);
@@ -65,41 +59,43 @@ export default class ScheduleView extends PureComponent<IProps, IState> {
 					key={`weekday-${i}`}
 					id={name}
 					data-weekday={i}
-					onClick={this.handleWeekdayClick}
-					className={`weekday${
-						this.state.currentDay === i ? " active" : ""
-					}`}
+					onClick={handleWeekdayClick}
+					className={`weekday${currentDay === i ? " active" : ""}`}
 				>
 					{name.charAt(0).toUpperCase() + name.slice(1)}
 				</p>
 			);
 		}
 		return array;
-	};
+	}, [handleWeekdayClick, currentDay]);
+	const greenWeek = useMemo(() => weekType === WEEK_TYPE.GREEN, [weekType]);
+	const groupId = useMemo(() => {
+		const query = new URLSearchParams(location.search);
+		const groupId = query.get("group");
+		return groupId ? parseInt(groupId) : undefined;
+	}, [location.search]);
 
-	render = () => {
-		let greenWeek = this.props.weekType === WEEK_TYPE.GREEN;
-		return (
-			<div className="page schedule-view-page">
-				<div className="schedule-view-page__week-type">
-					<h2 className="week-type__text">
-						{greenWeek ? "Зеленая неделя" : "Белая неделя"}
-					</h2>
-					<Button
-						classes={{root: "week-type__swap-icon"}}
-						onClick={this.handleSwapClick}
-					>
-						<SwapVertIcon />
-					</Button>
-				</div>
-				<div className="schedule-view-page__days">
-					{this.renderWeekdays()}
-				</div>
-				<SchedulePresenter
-					weekType={this.props.weekType}
-					weekday={this.state.currentDay}
-				/>
+	return (
+		<div className="page schedule-view-page">
+			<div className="schedule-view-page__week-type">
+				<h2 className="week-type__text">
+					{greenWeek ? "Зеленая неделя" : "Белая неделя"}
+				</h2>
+				<Button
+					classes={{root: "week-type__swap-icon"}}
+					onClick={handleSwapClick}
+				>
+					<SwapVertIcon />
+				</Button>
 			</div>
-		);
-	};
-}
+			<div className="schedule-view-page__days">{weekdays}</div>
+			<SchedulePresenter
+				groupId={groupId}
+				weekType={weekType}
+				weekday={currentDay}
+			/>
+		</div>
+	);
+};
+
+export default ScheduleView;
