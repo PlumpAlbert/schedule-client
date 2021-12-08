@@ -1,8 +1,10 @@
-import React, {useMemo} from "react";
+import React, {useCallback, useMemo} from "react";
 import PropTypes from "prop-types";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {useNavigate} from "react-router-dom";
 
 interface IProps {
 	faculty: string;
@@ -15,16 +17,39 @@ function SpecialtiesView({faculty}: IProps) {
 		"Автоматизированные системы обработки информации и управления",
 		"Администрирование информационных систем"
 	];
+	const navigate = useNavigate();
+	const handleCourseClick = useCallback(
+		course => () => {
+			navigate("/schedule?group=");
+		},
+		[navigate]
+	);
 	const courseElements = useMemo(
-		() => courses.map(c => <p className="specialty-cource">{c}</p>),
+		() =>
+			courses.map(c => (
+				<p onClick={handleCourseClick(c)} className="specialty-course">
+					{c}
+				</p>
+			)),
 		[courses]
 	);
 	const specialtyElements = useMemo(
 		() =>
 			specialties.map(s => (
-				<Accordion>
-					<AccordionSummary>{s}</AccordionSummary>
-					<AccordionDetails>{courseElements}</AccordionDetails>
+				<Accordion
+					disableGutters
+					className="specialty"
+					TransitionProps={{unmountOnExit: true}}
+				>
+					<AccordionSummary
+						className="specialty-summary"
+						expandIcon={<ChevronDownIcon sx={{fontSize: "1rem"}} />}
+					>
+						{s}
+					</AccordionSummary>
+					<AccordionDetails className="specialty-details">
+						{courseElements}
+					</AccordionDetails>
 				</Accordion>
 			)),
 		[courseElements, specialties]
