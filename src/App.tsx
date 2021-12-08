@@ -60,7 +60,7 @@ function App() {
 					}
 				/>
 				<Route path="/subject" element={<EditSubjectPage />} />
-				<Route path="/groups" element={<GroupsListPage />} />
+				<Route path="/groups/*" element={<GroupsListPage />} />
 			</Routes>
 			{showFooter && <PageFooter />}
 		</div>

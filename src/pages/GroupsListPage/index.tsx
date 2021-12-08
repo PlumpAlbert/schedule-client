@@ -1,23 +1,24 @@
 import React, {useMemo} from "react";
-import Faculty from "./Faculty";
+import {useLocation} from "react-router-dom";
+import FacultiesView from "./FacultiesView";
 import SpecialtiesView from "./SpecialtiesView";
 
 import "../../styles/GroupsListPage.scss";
 
-const FacultiesView = () => {
-	const faculties = ["ФАИ", "ИСФ", "ФГСНиП", "ИМ", "ЭФ", "МИ", "ФТФ"];
-	const facultyElements = useMemo(
-		() => faculties.map(f => <Faculty title={f} />),
-		[faculties]
-	);
-	return <div className="faculties-wrapper">{facultyElements}</div>;
-};
-
 const GroupsListPage = () => {
+	const location = useLocation();
+	const currentFaculty = useMemo(() => {
+		const uri = location.pathname.split("/");
+		if (uri[uri.length - 1] !== "groups") return uri[uri.length - 1];
+		return "";
+	}, [location.pathname]);
 	return (
 		<div className="page groups-list-page">
-			<FacultiesView />
-			{/* <SpecialtiesView faculty="ФАИ" /> */}
+			{currentFaculty !== "" ? (
+				<SpecialtiesView faculty={currentFaculty} />
+			) : (
+				<FacultiesView />
+			)}
 		</div>
 	);
 };
