@@ -1,94 +1,94 @@
 @import "Colors.scss";
 
 .app-menu {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: calc(100% - 4.5rem);
-    position: absolute;
-    z-index: 100;
-    margin-top: 4.5rem;
-    transform: translateX(-100%);
-    @include transition(transform ease 0.175s);
-    background-color: $white;
-    color: $black;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: calc(100% - 4.5rem);
+	position: absolute;
+	z-index: 100;
+	margin-top: 4.5rem;
+	transform: translateX(-100%);
+	@include transition(transform ease 0.175s);
+	background-color: $white;
+	color: $black;
 
-    .menu-header,
-    .menu-body {
-        padding: 0 2rem;
-    }
+	.menu-header,
+	.menu-body {
+		padding: 0 2rem;
+	}
 
-    .menu-header {
-        margin-top: 3rem;
-        .app-title {
-            font-family: "Montserrat", sans-serif;
-            font-size: 2rem;
-            font-weight: 500;
-            text-align: center;
-            margin: 0;
-            text-transform: uppercase;
-        }
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            margin-top: 2rem;
-            align-items: center;
-            .user-pic {
-                width: 128px;
-            }
-            .user-name {
-                font-family: "Lato", sans-serif;
-                font-weight: 400;
-                font-size: 1.5rem;
-                text-align: center;
-                margin: 1.5rem 0 0.8rem;
-                text-transform: capitalize;
-            }
-            .user-group {
-                font-family: "Lato", sans-serif;
-                font-weight: 400;
-                font-size: 1rem;
-                text-align: center;
-                text-transform: uppercase;
-                margin: 0;
-            }
-        }
-    }
+	.menu-header {
+		margin-top: 3rem;
+		.app-title {
+			font-family: "Montserrat", sans-serif;
+			font-size: 2rem;
+			font-weight: 500;
+			text-align: center;
+			margin: 0;
+			text-transform: uppercase;
+		}
+		.user-info {
+			display: flex;
+			flex-direction: column;
+			margin-top: 2rem;
+			align-items: center;
+			.user-pic {
+				width: 128px;
+			}
+			.user-name {
+				font-family: "Lato", sans-serif;
+				font-weight: 400;
+				font-size: 1.5rem;
+				text-align: center;
+				margin: 1.5rem 0 0.8rem;
+				text-transform: capitalize;
+			}
+			.user-group {
+				font-family: "Lato", sans-serif;
+				font-weight: 400;
+				font-size: 1rem;
+				text-align: center;
+				text-transform: uppercase;
+				margin: 0;
+			}
+		}
+	}
 
-    .menu-settings {
-        display: flex;
-        flex-direction: column;
-        margin-top: 3rem;
-        padding: 0 2rem;
+	.menu-settings {
+		display: flex;
+		flex-direction: column;
+		margin-top: 3rem;
+		padding: 0 2rem;
 
-        &__header {
-            font-family: "Lato", sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            margin-left: 2.5rem;
-        }
-        &__option {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            line-height: 1.5;
-            margin: 0;
-            padding: 0.5rem 0;
+		&__header {
+			font-family: "Lato", sans-serif;
+			font-weight: 700;
+			font-size: 1rem;
+			margin-left: 2.5rem;
+		}
+		&__option {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			line-height: 1.5;
+			margin: 0;
+			padding: 0.5rem 0;
 
-            .option__icon {
-                color: $grey;
-            }
-            .option__text {
-                margin-left: 1rem;
-            }
-        }
-    }
+			.option__icon {
+				color: $grey;
+			}
+			.option__text {
+				margin-left: 1rem;
+			}
+		}
+	}
 
-    .page-footer {
-        margin-top: auto;
-    }
+	.page-footer {
+		margin-top: auto;
+	}
 }
 
 .app-menu.active {
-    transform: translateX(0);
+	transform: translateX(0);
 }

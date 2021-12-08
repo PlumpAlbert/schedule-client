@@ -1,108 +1,108 @@
 @import "./Colors.scss";
 
 .edit-subject-page {
-    padding: 1.5rem 2rem 3rem;
-    .edit-subject-form {
-        display: flex;
-        flex-direction: column;
+	padding: 1.5rem 2rem 3rem;
+	.edit-subject-form {
+		display: flex;
+		flex-direction: column;
 
-        &__save-btn {
-            margin: 2rem 0 0;
-            font-family: "Lato", sans-serif;
-            font-weight: 500;
-            color: $white;
-            background-color: $blue;
-            &:hover {
-                background-color: $blue;
-            }
-        }
-        .form-group {
-            display: flex;
-            align-items: baseline;
-            margin-bottom: 1rem;
-            &:last-of-type {
-                margin-bottom: 0;
-            }
+		&__save-btn {
+			margin: 2rem 0 0;
+			font-family: "Lato", sans-serif;
+			font-weight: 500;
+			color: $white;
+			background-color: $blue;
+			&:hover {
+				background-color: $blue;
+			}
+		}
+		.form-group {
+			display: flex;
+			align-items: baseline;
+			margin-bottom: 1rem;
+			&:last-of-type {
+				margin-bottom: 0;
+			}
 
-            &-vertical {
-                flex-direction: column;
-                .form__label {
-                    margin-bottom: 0.5rem;
-                }
-            }
-            &-horizontal {
-                flex-direction: row;
-            }
-            & > .form__label {
-                flex: 1 1 unset;
-                min-width: 9rem;
-            }
-            & > .form__textfield {
-                flex: 1 0;
+			&-vertical {
+				flex-direction: column;
+				.form__label {
+					margin-bottom: 0.5rem;
+				}
+			}
+			&-horizontal {
+				flex-direction: row;
+			}
+			& > .form__label {
+				flex: 1 1 unset;
+				min-width: 9rem;
+			}
+			& > .form__textfield {
+				flex: 1 0;
 
-                input,
-                .MuiSelect-select {
-                    padding: 0.5rem 1rem !important;
-                }
-            }
-            .form__title-textarea {
-                width: calc(100% + 1rem);
+				input,
+				.MuiSelect-select {
+					padding: 0.5rem 1rem !important;
+				}
+			}
+			.form__title-textarea {
+				width: calc(100% + 1rem);
 				margin-left: -0.5rem;
 				padding: 0.5rem;
-                box-sizing: border-box;
-                border-color: rgba(0, 0, 0, 0.23);
-                border-radius: 4px;
-                font-family: inherit;
-                font-size: inherit;
-                resize: none;
-                &:focus {
-                    outline-color: $blue;
-                }
-            }
-            .MuiSwitch-root {
-                .form__week-type--checked {
-                    color: $green !important;
-                    & ~ .MuiSwitch-track {
-                        background-color: $green !important;
-                    }
-                }
-                .MuiSwitch-track {
-                    background-color: hsl(0, 0%, 30%) !important;
-                }
-            }
-        }
+				box-sizing: border-box;
+				border-color: rgba(0, 0, 0, 0.23);
+				border-radius: 4px;
+				font-family: inherit;
+				font-size: inherit;
+				resize: none;
+				&:focus {
+					outline-color: $blue;
+				}
+			}
+			.MuiSwitch-root {
+				.form__week-type--checked {
+					color: $green !important;
+					& ~ .MuiSwitch-track {
+						background-color: $green !important;
+					}
+				}
+				.MuiSwitch-track {
+					background-color: hsl(0, 0%, 30%) !important;
+				}
+			}
+		}
 
-        .form__select__selected-item {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0 1rem 0 0;
+		.form__select__selected-item {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			margin: 0 1rem 0 0;
 
-            .select__selected-item__type {
-                content: " ";
-                display: inline-block;
-                width: 10px;
-                height: 10px;
-                border-radius: 9999px;
-                &.lecture {
-                    background-color: $blue;
-                }
-                &.practice {
-                    background-color: $purple;
-                }
-                &.lab {
-                    background-color: $yellow;
-                }
-            }
-        }
-        .form__weekday-select {
-            text-transform: capitalize;
-        }
-    }
+			.select__selected-item__type {
+				content: " ";
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				border-radius: 9999px;
+				&.lecture {
+					background-color: $blue;
+				}
+				&.practice {
+					background-color: $purple;
+				}
+				&.lab {
+					background-color: $yellow;
+				}
+			}
+		}
+		.form__weekday-select {
+			text-transform: capitalize;
+		}
+	}
 }
 .weekday-control__option {
-    text-transform: capitalize;
+	text-transform: capitalize;
 }
 
 @media (max-width: 380px) {

@@ -1,27 +1,27 @@
 @import "./Colors.scss";
 
 .login-page {
-    display: flex;
-    flex-direction: column;
-    padding: 0 2rem;
+	display: flex;
+	flex-direction: column;
+	padding: 0 2rem;
 
-    & &__title {
-        font-family: "Montserrat", "Lato", sans-serif;
-        text-transform: uppercase;
-        text-align: center;
-        margin: 3rem 0 0;
-    }
-    & &__form {
-        display: flex;
-        flex-direction: column;
-        margin-top: 2rem;
+	& &__title {
+		font-family: "Montserrat", "Lato", sans-serif;
+		text-transform: uppercase;
+		text-align: center;
+		margin: 3rem 0 0;
+	}
+	& &__form {
+		display: flex;
+		flex-direction: column;
+		margin-top: 2rem;
 
-        & > * {
-            margin: 1rem 0 0;
-        }
+		& > * {
+			margin: 1rem 0 0;
+		}
 
-        .login-page {
-            &__form-control {
+		.login-page {
+			&__form-control {
 				.form-control {
 					&__input {
 						input {
@@ -46,12 +46,12 @@
 					}
 				}
 			}
-            &__button {
-                font-family: "Montserrat", "Lato", sans-serif;
-                font-weight: 500;
-                background-color: $blue;
-                color: $white;
-            }
-        }
-    }
+			&__button {
+				font-family: "Montserrat", "Lato", sans-serif;
+				font-weight: 500;
+				background-color: $blue;
+				color: $white;
+			}
+		}
+	}
 }
