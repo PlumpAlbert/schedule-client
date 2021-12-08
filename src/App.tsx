@@ -1,16 +1,16 @@
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {Route, Routes, useLocation} from "react-router-dom";
 import PageHeader from "./components/PageHeader";
 import MenuSlider from "./components/MenuSlider";
 import ScheduleView from "./pages/ScheduleView";
-import "./styles/App.scss";
-import {GetWeekType} from "./Helpers";
-import {WEEK_TYPE} from "./types";
 import LandingPage from "./pages/LandingPage";
 import PageFooter from "./components/PageFooter";
 import EditSubjectPage from "./pages/EditSubjectPage";
 import LoginPage from "./pages/LoginPage";
 import GroupsListPage from "./pages/GroupsListPage";
+import {GetWeekType} from "./Helpers";
+import {WEEK_TYPE} from "./types";
+import "./styles/App.scss";
 
 function App() {
 	const location = useLocation();
@@ -37,7 +37,7 @@ function App() {
 			if (showFooter) setShowFooter(false);
 		}
 		return className.join(" ");
-	}, [weekType, showMenu, location.pathname]);
+	}, [weekType, showMenu, location.pathname, showFooter]);
 
 	return (
 		<div className={appClassName}>
