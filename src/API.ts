@@ -1,4 +1,4 @@
-import {Course, ISpecialty, ISubject} from "./types";
+import {Course, ISpecialty, ISubject, IUser} from "./types";
 
 interface IResponse<T = any> {
 	error: boolean;
@@ -34,7 +34,6 @@ export default class ScheduleAPI {
 	 * Method to authenticate user's
 	 * @param login User's login
 	 * @param password User's password
-	 * @returns {boolean} True on success, false otherwise
 	 */
 	static authenticate = async (
 		login: string,
@@ -54,8 +53,9 @@ export default class ScheduleAPI {
 			}),
 			signal: controller?.signal
 		});
-		const result = await jsonText.json();
-		return !result.error;
+		const result: IResponse<{success: true; user: IUser}> =
+			await jsonText.json();
+		return result.error && !result.body.success ? null : result.body.user;
 	};
 
 	/**

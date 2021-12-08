@@ -31,3 +31,22 @@ export interface ISubject {
 		name: string;
 	};
 }
+
+export enum UserType {
+	ADMIN = 1,
+	TEACHER = 2,
+	STUDENT = 0
+}
+export interface IGroup {
+	id: number;
+	faculty: string;
+	specialty: string;
+	year: number;
+}
+export interface IUser {
+	id: number;
+	name: string;
+	login: string;
+	type: UserType;
+	group: IGroup;
+}
