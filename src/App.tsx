@@ -8,6 +8,7 @@ import PageFooter from "./components/PageFooter";
 import EditSubjectPage from "./pages/EditSubjectPage";
 import LoginPage from "./pages/LoginPage";
 import GroupsListPage from "./pages/GroupsListPage";
+import Page404 from "./pages/Page404";
 import {GetWeekType} from "./Helpers";
 import {WEEK_TYPE} from "./types";
 import "./styles/App.scss";
@@ -66,6 +67,7 @@ function App() {
 				/>
 				<Route path="/subject" element={<EditSubjectPage />} />
 				<Route path="/groups/*" element={<GroupsListPage />} />
+				<Route path="*" element={<Page404 />} />
 			</Routes>
 			{showFooter && <PageFooter />}
 		</div>

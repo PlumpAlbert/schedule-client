@@ -1,0 +1,25 @@
+@import "./Colors.scss";
+
+.page.page-404 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: auto 2rem;
+	.header {
+		font-family: "Montserrat", "Lato", sans-serif;
+		font-size: 2rem;
+		padding: 0;
+		margin: 0 0 2rem 0;
+		text-align: center;
+	}
+	.text {
+		font-family: "Lato", sans-serif;
+		font-size: 1rem;
+		margin: 0;
+		text-align: justify;
+		&.center {
+			margin-top: 1rem;
+			text-align: center;
+		}
+	}
+}
