@@ -24,8 +24,12 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 	const location = useLocation();
 
 	useEffect(() => {
-		navigate("#" + GetWeekdayName(currentDay));
-	}, [currentDay]);
+		const weekdayName = GetWeekdayName(currentDay);
+		navigate(location.search + "#" + weekdayName);
+	}, [currentDay, location.search]);
+	useEffect(() => {
+		if (weekday) setCurrentDay(weekday);
+	}, [weekday]);
 
 	//#region CALLBACKS
 	const handleWeekdayClick = useCallback<
@@ -43,11 +47,6 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 			weekType === WEEK_TYPE.GREEN ? WEEK_TYPE.WHITE : WEEK_TYPE.GREEN
 		);
 	}, [weekType, setWeekType]);
-
-	const todayButtonClicked = useCallback(() => {
-		let day = new Date().getDay();
-		setCurrentDay(day === 0 ? 7 : day);
-	}, [setCurrentDay]);
 	//#endregion
 
 	const weekdays = useMemo(() => {
@@ -68,7 +67,9 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 		}
 		return array;
 	}, [handleWeekdayClick, currentDay]);
+
 	const greenWeek = useMemo(() => weekType === WEEK_TYPE.GREEN, [weekType]);
+
 	const groupId = useMemo(() => {
 		const query = new URLSearchParams(location.search);
 		const groupId = query.get("group");
