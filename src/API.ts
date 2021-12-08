@@ -1,16 +1,4 @@
-export interface ISubject {
-    id: number;
-    audience: string;
-    type: number;
-    title: string;
-    time: Date;
-    weekday: number;
-    weekType: number;
-    teacher: {
-        id: number;
-        name: string;
-    };
-}
+import {Course, ISpecialty, ISubject} from "./types";
 
 interface IResponse<T = any> {
     error: boolean;
@@ -60,4 +48,31 @@ export default abstract class ScheduleAPI {
 		const result = await jsonText.json();
 		return !result.error;
     };
+
+	/**
+	 * Method for fetching specialties for selected `faculty`
+	 * @param {string} faculty Faculty to use
+	 * @returns {ISpecialty} Array of specialties and group id's
+	 */
+	static fetchSpecialties = async (
+		faculty: string,
+		controller?: AbortController
+	) => {
+		const response = await fetch(
+			`${ScheduleAPI.HOST}/group/specialty?faculty=${faculty}`,
+			{signal: controller?.signal}
+		);
+		const result: IResponse<{
+			[specialty: string]: {
+				[courseNumber in Course]: number;
+			};
+		}> = await response.json();
+		if (result.error) {
+			return null;
+		}
+		return Object.keys(result.body).map<ISpecialty>(key => ({
+			title: key,
+			courses: result.body[key]
+		}));
+	};
 }

@@ -48,6 +48,9 @@
 	}
 
 	.specialties-wrapper {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
 		.specialty {
 			border: 1px solid $offWhite;
 			font-family: "Lato", sans-serif;

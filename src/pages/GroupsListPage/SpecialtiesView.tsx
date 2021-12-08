@@ -1,58 +1,88 @@
-import React, {useCallback, useMemo} from "react";
+import React, {useCallback, useMemo, useState, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {useNavigate} from "react-router-dom";
+import ScheduleAPI from "../../API";
+import {Course, ISpecialty} from "../../types";
+
+interface ISpecialtyProps extends ISpecialty {}
+const Specialty = ({title, courses}: ISpecialtyProps) => {
+	const navigate = useNavigate();
+	//#region CALLBACKS
+	const handleCourseClick = useCallback<
+		React.MouseEventHandler<HTMLParagraphElement>
+	>(
+		({currentTarget}) => {
+			const elementId = currentTarget.id;
+			const id = parseInt(elementId.split("course-")[1]);
+			navigate(`/schedule?group=${id}`);
+		},
+		[navigate]
+	);
+	//#endregion
+	//#region MEMO
+	const courseElements = useMemo(() => {
+		const keys = Object.keys(courses) as Course[];
+		return keys.sort().map(courseNumber => (
+			<p
+				key={`course-${courseNumber}-${courses[courseNumber]}`}
+				id={`course-${courses[courseNumber]}`}
+				onClick={handleCourseClick}
+				className="specialty-course"
+			>
+				{courseNumber} курс
+			</p>
+		));
+	}, [courses, handleCourseClick]);
+	//#endregion
+	return (
+		<Accordion
+			disableGutters
+			className="specialty"
+			TransitionProps={{unmountOnExit: true}}
+		>
+			<AccordionSummary
+				className="specialty-summary"
+				expandIcon={<ChevronDownIcon sx={{fontSize: "1rem"}} />}
+			>
+				{title}
+			</AccordionSummary>
+			<AccordionDetails className="specialty-details">
+				{courseElements}
+			</AccordionDetails>
+		</Accordion>
+	);
+};
 
 interface IProps {
 	faculty: string;
 }
-const courses = ["1 курс", "2 курс", "3 курс", "4 курс"];
-
 function SpecialtiesView({faculty}: IProps) {
-	const specialties = [
-		"Программная инженерия",
-		"Автоматизированные системы обработки информации и управления",
-		"Администрирование информационных систем"
-	];
-	const navigate = useNavigate();
-	const handleCourseClick = useCallback(
-		course => () => {
-			navigate("/schedule?group=");
-		},
-		[navigate]
-	);
-	const courseElements = useMemo(
-		() =>
-			courses.map(c => (
-				<p onClick={handleCourseClick(c)} className="specialty-course">
-					{c}
-				</p>
-			)),
-		[courses]
-	);
+	const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		try {
+			ScheduleAPI.fetchSpecialties(faculty, abortController).then(
+				result => {
+					if (!result) return;
+					setSpecialties(result);
+				}
+			);
+		} catch (err) {
+			if (abortController.signal.aborted) return;
+		}
+		return () => {
+			abortController.abort();
+		};
+	}, [faculty]);
+
 	const specialtyElements = useMemo(
-		() =>
-			specialties.map(s => (
-				<Accordion
-					disableGutters
-					className="specialty"
-					TransitionProps={{unmountOnExit: true}}
-				>
-					<AccordionSummary
-						className="specialty-summary"
-						expandIcon={<ChevronDownIcon sx={{fontSize: "1rem"}} />}
-					>
-						{s}
-					</AccordionSummary>
-					<AccordionDetails className="specialty-details">
-						{courseElements}
-					</AccordionDetails>
-				</Accordion>
-			)),
-		[courseElements, specialties]
+		() => specialties.map(s => <Specialty key={s.title} {...s} />),
+		[specialties]
 	);
 	return <div className="specialties-wrapper">{specialtyElements}</div>;
 }
