@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from "react";
+import {useNavigate} from "react-router";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
@@ -12,7 +13,9 @@ function LoginPage() {
 	const [isError, setError] = useState(false);
 	const loginRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
+	const navigate = useNavigate();
 
+	//#region CALLBACKS
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(
 		e => {
 			e.preventDefault();
@@ -22,20 +25,31 @@ function LoginPage() {
 				setError(true);
 				return;
 			}
-			ScheduleAPI.authenticate(login, password).then(success => {
-				if (!success) {
-					setError(true);
-					return;
-				}
-			});
+			try {
+				ScheduleAPI.authenticate(login, password).then(user => {
+					if (!user) {
+						setError(true);
+						return;
+					}
+					sessionStorage.setItem("user", JSON.stringify(user));
+					debugger
+					navigate(`/schedule?group=${user.group.id}`, {
+						replace: true
+					});
+				});
+			} catch (err) {
+				console.log(err);
+			}
 		},
 		[setError]
 	);
+
 	const handleInputChange = useCallback<
 		React.ChangeEventHandler<HTMLInputElement>
 	>(() => {
 		if (isError) setError(false);
 	}, [isError, setError]);
+	//#endregion
 
 	const helperText: [string, string] = useMemo(() => {
 		let text: [string, string] = ["", ""];
