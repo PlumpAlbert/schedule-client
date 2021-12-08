@@ -73,11 +73,12 @@ function SpecialtiesView({faculty}: IProps) {
 				}
 			);
 		} catch (err) {
-			if (abortController.signal.aborted) return;
+			if (!abortController.signal.aborted) console.log(err);
+		} finally {
+			return () => {
+				abortController.abort();
+			};
 		}
-		return () => {
-			abortController.abort();
-		};
 	}, [faculty]);
 
 	const specialtyElements = useMemo(
