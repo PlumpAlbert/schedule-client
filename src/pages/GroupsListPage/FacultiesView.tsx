@@ -25,7 +25,7 @@ Faculty.propTypes = {
 const FacultiesView = () => {
 	const faculties = ["ФАИ", "ИСФ", "ФГСНиП", "ИМ", "ЭФ", "МИ", "ФТФ"];
 	const facultyElements = useMemo(
-		() => faculties.map(f => <Faculty title={f} />),
+		() => faculties.map(f => <Faculty key={f} title={f} />),
 		[faculties]
 	);
 	return <div className="faculties-wrapper">{facultyElements}</div>;
