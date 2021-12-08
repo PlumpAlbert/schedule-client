@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {Route, Routes, useLocation} from "react-router-dom";
 import PageHeader from "./components/PageHeader";
 import MenuSlider from "./components/MenuSlider";
@@ -18,6 +18,10 @@ function App() {
 	const [weekType, setWeekType] = useState<WEEK_TYPE>(GetWeekType());
 	const [showMenu, setShowMenu] = useState(false);
 	const [showFooter, setShowFooter] = useState(location.pathname === "/");
+
+	useEffect(() => {
+		setShowMenu(false);
+	}, [location.pathname, setShowMenu]);
 
 	const menuButtonClicked = useCallback(() => {
 		setShowMenu(!showMenu);
