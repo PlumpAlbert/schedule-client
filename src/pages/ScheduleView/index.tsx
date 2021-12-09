@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import {GetWeekdayName} from "../../Helpers";
@@ -22,10 +22,14 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 	});
 	const navigate = useNavigate();
 	const location = useLocation();
+	const weekdayRefs = useRef<Array<HTMLParagraphElement | null>>([]);
 
 	useEffect(() => {
-		const weekdayName = GetWeekdayName(currentDay);
-		navigate(location.search + "#" + weekdayName);
+		weekdayRefs.current[currentDay - 1]?.scrollIntoView({
+			behavior: "smooth",
+			block: "center",
+			inline: "center"
+		});
 	}, [currentDay, location.search]);
 	useEffect(() => {
 		if (weekday) setCurrentDay(weekday);
@@ -56,6 +60,9 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 			array.push(
 				<p
 					key={`weekday-${i}`}
+					ref={ref => {
+						weekdayRefs.current.push(ref);
+					}}
 					id={name}
 					data-weekday={i}
 					onClick={handleWeekdayClick}
