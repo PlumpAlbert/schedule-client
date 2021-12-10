@@ -12,6 +12,7 @@ import Page404 from "./pages/Page404";
 import {GetWeekType} from "./Helpers";
 import {WEEK_TYPE} from "./types";
 import "./styles/App.scss";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
 	const location = useLocation();
@@ -54,6 +55,7 @@ function App() {
 			<MenuSlider showMenu={showMenu} />
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
+				<Route path="/signup" element={<SignUpPage />} />
 				<Route path="/login" element={<LoginPage />} />
 				<Route
 					path="/schedule"

@@ -44,9 +44,22 @@ export interface IGroup {
 	year: number;
 }
 export interface IUser {
-	id: number;
+	id?: number;
 	name: string;
 	login: string;
-	type: UserType;
+	type?: UserType;
 	group: IGroup;
+}
+export interface IAuthenticated {
+	password: string;
+}
+
+export enum FACULTY {
+	ФАИ = "ФАИ",
+	ИСФ = "ИСФ",
+	ФГСНиП = "ФГСНиП",
+	ИМ = "ИМ",
+	ЭФ = "ЭФ",
+	МИ = "МИ",
+	ФТФ = "ФТФ"
 }

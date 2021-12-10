@@ -1,4 +1,11 @@
-import {Course, ISpecialty, ISubject, IUser} from "./types";
+import {
+	Course,
+	IAuthenticated,
+	IGroup,
+	ISpecialty,
+	ISubject,
+	IUser
+} from "./types";
 
 interface IResponse<T = any> {
 	error: boolean;
@@ -7,7 +14,7 @@ interface IResponse<T = any> {
 }
 
 export default class ScheduleAPI {
-	private static HOST: string = "http://localhost/api";
+	private static HOST: string = "https://www.plumpalbert.xyz/api";
 	/**
 	 * Method for fetching group's schedule
 	 * @param groupId Group identifier
@@ -83,5 +90,27 @@ export default class ScheduleAPI {
 			title: key,
 			courses: result.body[key]
 		}));
+	};
+
+	static signUp = async (
+		user: IUser & IAuthenticated,
+		controller?: AbortController
+	) => {
+		const response = await fetch(`${ScheduleAPI.HOST}/user`, {
+			signal: controller?.signal,
+			body: JSON.stringify({
+				name: user.name,
+				login: user.login,
+				group_id: user.group.id,
+				password: user.password
+			}),
+			method: "POST"
+		});
+		const result: IResponse<{id: number}> = await response.json();
+		if (result.error) {
+			alert(result.message);
+			return;
+		}
+		return result.body.id;
 	};
 }

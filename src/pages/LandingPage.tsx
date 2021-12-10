@@ -12,6 +12,9 @@ export default function LandingPage(props: any) {
 	const loginBtnClick = useCallback(() => {
 		navigate("/login");
 	}, [navigate]);
+	const signUpBtnClick = useCallback(() => {
+		navigate("/signup");
+	}, [navigate]);
 	return (
 		<div className="page landing-page">
 			<h1 className="app-title">Расписание ЛГТУ</h1>
@@ -28,7 +31,10 @@ export default function LandingPage(props: any) {
 				Надоело вечно искать свою группу? Зарегистрируйся, чтобы видеть
 				только расписание своей группы
 			</p>
-			<Button className="landing-page__btn signup-btn">
+			<Button
+				className="landing-page__btn signup-btn"
+				onClick={signUpBtnClick}
+			>
 				Регистрация
 			</Button>
 			<p className="landing-page__text">Уже есть аккаунт?</p>
