@@ -1,11 +1,12 @@
 import React, {useCallback, useRef, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-
-import "../../styles/SignUpPage.scss";
 import GroupSelect, {IGroupSelect} from "./GroupSelect";
 import {IAuthenticated, IGroup, IUser, UserType} from "../../types";
 import ScheduleAPI from "../../API";
+
+import "../../styles/SignUpPage.scss";
 
 function SignUpPage() {
 	const [isError, setError] = useState(false);
@@ -13,6 +14,7 @@ function SignUpPage() {
 	const [login, setLogin] = useState("");
 	const [password, setPassword] = useState("");
 	const groupRef = useRef<IGroupSelect>();
+	const navigate = useNavigate();
 
 	//#region CALLBACKS
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(
@@ -48,6 +50,10 @@ function SignUpPage() {
 					}
 					user.id = id;
 					user.type = UserType.STUDENT;
+					sessionStorage.setItem("user", JSON.stringify(user));
+					navigate(`/schedule?group=${user.group.id}`, {
+						replace: true
+					});
 				})
 				.catch(err => {
 					if (!abortController.signal.aborted) {
@@ -56,7 +62,7 @@ function SignUpPage() {
 					}
 				});
 		},
-		[name, login, password, isError, setError]
+		[name, login, password, isError, navigate]
 	);
 
 	const handleInputChange = useCallback<
