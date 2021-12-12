@@ -14,7 +14,7 @@ export type Course = "1" | "2" | "3" | "4";
 export interface ISpecialty {
 	title: string;
 	courses: {
-		[courseNumber in Course]: number;
+		[courseNumber in Course]?: number;
 	};
 }
 
@@ -39,7 +39,7 @@ export enum UserType {
 }
 export interface IGroup {
 	id: number;
-	faculty: string;
+	faculty: FACULTY;
 	specialty: string;
 	year: number;
 }
