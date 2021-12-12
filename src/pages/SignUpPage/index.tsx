@@ -72,10 +72,10 @@ function SignUpPage() {
 			const {name, value} = target;
 			let updateFunction: React.Dispatch<React.SetStateAction<string>>;
 			switch (name) {
-				case "user_name":
+				case "user":
 					updateFunction = setName;
 					break;
-				case "user_login":
+				case "username":
 					updateFunction = setLogin;
 					break;
 				case "user_password":
@@ -104,8 +104,8 @@ function SignUpPage() {
 					className="form-control"
 					error={isError && !name}
 					variant="standard"
-					id="user_name"
-					name="user_name"
+					id="user"
+					name="user"
 					onChange={handleInputChange}
 					value={name}
 					label="ФИО:"
@@ -118,7 +118,7 @@ function SignUpPage() {
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user_name"
+						htmlFor: "user"
 					}}
 					FormHelperTextProps={{
 						className: "form-control__helper-text"
@@ -128,8 +128,8 @@ function SignUpPage() {
 					className="form-control"
 					error={isError && !login}
 					variant="standard"
-					id="user_login"
-					name="user_login"
+					id="username"
+					name="username"
 					onChange={handleInputChange}
 					value={login}
 					label="Логин:"
@@ -142,7 +142,7 @@ function SignUpPage() {
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user_login"
+						htmlFor: "username"
 					}}
 					FormHelperTextProps={{
 						className: "form-control__helper-text"
