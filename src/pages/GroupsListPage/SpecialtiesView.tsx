@@ -6,7 +6,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ScheduleAPI from "../../API";
-import {Course, ISpecialty} from "../../types";
+import {Course, FACULTY, ISpecialty} from "../../types";
+import useSpecialties from "../../hooks/useSpecialties";
 
 interface ISpecialtyProps extends ISpecialty {}
 const Specialty = ({title, courses}: ISpecialtyProps) => {
@@ -61,25 +62,7 @@ interface IProps {
 	faculty: string;
 }
 function SpecialtiesView({faculty}: IProps) {
-	const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
-
-	useEffect(() => {
-		const abortController = new AbortController();
-		try {
-			ScheduleAPI.fetchSpecialties(faculty, abortController).then(
-				result => {
-					if (!result) return;
-					setSpecialties(result);
-				}
-			);
-		} catch (err) {
-			if (!abortController.signal.aborted) console.log(err);
-		} finally {
-			return () => {
-				abortController.abort();
-			};
-		}
-	}, [faculty]);
+	const [specialties,] = useSpecialties(faculty as FACULTY);
 
 	const specialtyElements = useMemo(
 		() => specialties.map(s => <Specialty key={s.title} {...s} />),
