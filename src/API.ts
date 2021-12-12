@@ -64,7 +64,7 @@ export default class ScheduleAPI {
 		});
 		const result: IResponse<{success: true; user: IUser}> =
 			await jsonText.json();
-		return result.error && !result.body.success ? null : result.body.user;
+		return result.error || !result.body.success ? null : result.body.user;
 	};
 
 	/**
