@@ -7,6 +7,8 @@ import Autocomplete, {
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import useSpecialties from "../../../hooks/useSpecialties";
 import {Course, FACULTY, IGroup} from "../../../types";
 
@@ -42,8 +44,8 @@ function GroupSelectDialog({
 	//#region Component's state
 	const [error, setError] = useState(false);
 	const [specialtyInput, setSpecialtyInput] = useState("");
-	const [courseInput, setCourseInput] = useState("");
 	const [specialties, setSpecialties] = useSpecialties(faculty);
+
 	const facultyOptions = useMemo(
 		() =>
 			Object.values(FACULTY).map(faculty => (
@@ -57,10 +59,25 @@ function GroupSelectDialog({
 		() => specialties.map(({title}) => title),
 		[specialties]
 	);
-	const courseOptions: Course[] = useMemo(
-		() => new Array(4).map((_, i) => i.toString() as Course),
-		[]
-	);
+
+	const courseButtons = useMemo(() => {
+		let buttons: React.ReactNode[] = [];
+		for (let i = 1; i < 5; ++i) {
+			buttons.push(
+				<ToggleButton
+					key={`course-toggle-button-${i}`}
+					value={i}
+					className={`course-toggle-button course-${i}`}
+					classes={{
+						selected: "course-toggle-button--selected"
+					}}
+				>
+					{i}
+				</ToggleButton>
+			);
+		}
+		return buttons;
+	}, []);
 	//#endregion
 
 	//#region CALLBACKS
@@ -94,6 +111,10 @@ function GroupSelectDialog({
 			},
 		[]
 	);
+
+	const handleCourseChange = useCallback((_, newCourses) => {
+		setCourse(newCourses[newCourses.length - 1]);
+	}, []);
 	//#endregion
 
 	return (
@@ -170,27 +191,13 @@ function GroupSelectDialog({
 				)}
 			/>
 
-			<Autocomplete
-				className="group-select-dialog__field"
-				options={courseOptions}
-				noOptionsText={`Создать ${courseInput}`}
-				value={course}
-				onInputChange={handleSelectChange(setCourseInput)}
-				renderInput={props => (
-					<TextField
-						{...props}
-						error={error && !course}
-						variant="standard"
-						id="group_course"
-						name="group_course"
-						label="Курс:"
-						InputLabelProps={{
-							className: "field__label",
-							htmlFor: "group_course"
-						}}
-					/>
-				)}
-			/>
+			<ToggleButtonGroup
+				className="group-select-dialog__course-buttons"
+				onChange={handleCourseChange}
+				value={[course]}
+			>
+				{courseButtons}
+			</ToggleButtonGroup>
 
 			<Button className="group-select-dialog__button" variant="contained">
 				Сохранить
