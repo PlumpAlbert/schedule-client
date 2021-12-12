@@ -1,0 +1,23 @@
+@import "../../../styles/Colors.scss";
+
+.group-select-dialog-wrapper {
+	.group-select-dialog {
+		margin: auto 1rem;
+		padding: 0 1rem;
+		&__title {
+			font-family: "Montserrat", "Lato", sans-serif;
+			margin: 0 0 1rem 0;
+		}
+		&__field {
+			&:not(:last-of-type) {
+				margin-bottom: 1rem;
+			}
+		}
+		&__button {
+			background-color: $blue;
+			color: $white;
+			font-family: "Lato", sans-serif;
+			margin: 2rem 0 1rem;
+		}
+	}
+}

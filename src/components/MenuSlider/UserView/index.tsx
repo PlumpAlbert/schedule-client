@@ -1,21 +1,17 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useCallback, useState} from "react";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
-import PageFooter from "./PageFooter";
-import LandingPage from "../pages/LandingPage";
-
-import "../styles/MenuSlider.scss";
-import {IUser, UserType} from "../types";
+import GroupSelectDialog from "./GroupSelectDialog";
+import {IGroup, IUser, UserType} from "../../../types";
 
 interface IProps {
-	showMenu: boolean;
+	user: IUser;
+	onGroupChange: (group: IGroup) => void;
 }
 
-function UserDataView() {
-	const [user, setUser] = useState<IUser>(
-		JSON.parse(sessionStorage.getItem("user") || "")
-	);
+function UserView({user, onGroupChange}: IProps) {
+	const [dialogOpened, setDialogOpened] = useState(false);
 	const groupName = useMemo(() => {
 		const words = user.group.specialty.split(" ");
 		const year = user.group.year.toString();
@@ -26,8 +22,18 @@ function UserDataView() {
 		);
 	}, [user.group.specialty, user.group.year]);
 
+	const handleGroupChange = useCallback(group => {}, []);
+	const handleEditGroupClick = useCallback(() => {
+		setDialogOpened(true);
+	}, [setDialogOpened]);
+
 	return (
 		<>
+			<GroupSelectDialog
+				open={dialogOpened}
+				onClose={handleGroupChange}
+				{...user.group}
+			/>
 			<div className="menu-header">
 				<h1 className="app-title">Расписание ЛГТУ</h1>
 				<div className="user-info">
@@ -50,7 +56,10 @@ function UserDataView() {
 						</span>
 					</p>
 				)}
-				<p className="menu-settings__option">
+				<p
+					className="menu-settings__option"
+					onClick={handleEditGroupClick}
+				>
 					<ManageAccountsIcon classes={{root: "option__icon"}} />
 					<span className="option__text">Изменить группу</span>
 				</p>
@@ -63,12 +72,4 @@ function UserDataView() {
 	);
 }
 
-export default ({showMenu}: IProps) => {
-	const userInfo = sessionStorage.getItem("user");
-	return (
-		<div className={`app-menu${showMenu ? " active" : ""}`}>
-			{userInfo ? <UserDataView /> : <LandingPage />}
-			<PageFooter />
-		</div>
-	);
-};
+export default UserView;
