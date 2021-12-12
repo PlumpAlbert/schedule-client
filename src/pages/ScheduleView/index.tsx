@@ -2,12 +2,11 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import {GetWeekdayName} from "../../Helpers";
-import {ISubject} from "../../types";
 import SchedulePresenter from "./SchedulePresenter";
-import "../../styles/ScheduleView.scss";
 import {WEEK_TYPE} from "../../types";
-import {useLocation, useNavigate} from "react-router";
+import {useLocation} from "react-router";
 
+import "../../styles/ScheduleView.scss";
 interface IProps {
 	weekday?: number;
 	weekType: WEEK_TYPE;
@@ -20,7 +19,6 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 		let day = new Date().getDay();
 		return day === 0 ? 7 : day;
 	});
-	const navigate = useNavigate();
 	const location = useLocation();
 	const weekdayRefs = useRef<Array<HTMLParagraphElement | null>>([]);
 

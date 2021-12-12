@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import useSpecialties from "../../../hooks/useSpecialties";
-import {Course, FACULTY, IGroup, ISpecialty} from "../../../types";
+import {Course, FACULTY, IGroup} from "../../../types";
 
 import "./GroupSelectDialog.scss";
 

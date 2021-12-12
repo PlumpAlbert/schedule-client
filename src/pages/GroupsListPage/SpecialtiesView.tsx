@@ -1,11 +1,10 @@
-import React, {useCallback, useMemo, useState, useEffect} from "react";
+import React, {useCallback, useMemo} from "react";
 import {useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import ScheduleAPI from "../../API";
 import {Course, FACULTY, ISpecialty} from "../../types";
 import useSpecialties from "../../hooks/useSpecialties";
 
@@ -62,7 +61,7 @@ interface IProps {
 	faculty: string;
 }
 function SpecialtiesView({faculty}: IProps) {
-	const [specialties,] = useSpecialties(faculty as FACULTY);
+	const [specialties] = useSpecialties(faculty as FACULTY);
 
 	const specialtyElements = useMemo(
 		() => specialties.map(s => <Specialty key={s.title} {...s} />),

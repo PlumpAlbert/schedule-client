@@ -1,7 +1,6 @@
 import {
 	Course,
 	IAuthenticated,
-	IGroup,
 	ISpecialty,
 	ISubject,
 	IUser
@@ -14,7 +13,10 @@ interface IResponse<T = any> {
 }
 
 export default class ScheduleAPI {
-	private static HOST: string = "https://www.plumpalbert.xyz/api";
+	private static HOST: string =
+		process.env.NODE_ENV === "development"
+			? "http://deer/api"
+			: "https://www.plumpalbert.xyz/api";
 	/**
 	 * Method for fetching group's schedule
 	 * @param groupId Group identifier

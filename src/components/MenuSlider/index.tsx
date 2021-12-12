@@ -10,7 +10,7 @@ interface IProps {
 	showMenu: boolean;
 }
 
-export default ({showMenu}: IProps) => {
+const MenuSlider = ({showMenu}: IProps) => {
 	const userInfo = sessionStorage.getItem("user");
 	const handleGroupChange = useCallback(
 		newGroup => {
@@ -35,3 +35,5 @@ export default ({showMenu}: IProps) => {
 		</div>
 	);
 };
+
+export default MenuSlider;

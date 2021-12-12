@@ -40,7 +40,7 @@ function LoginPage() {
 				console.log(err);
 			}
 		},
-		[setError]
+		[setError, navigate]
 	);
 
 	const handleInputChange = useCallback<

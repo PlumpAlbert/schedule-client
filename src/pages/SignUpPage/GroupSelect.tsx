@@ -7,18 +7,16 @@ import React, {
 	useReducer,
 	useState
 } from "react";
-import Select, {SelectChangeEvent} from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
+import {SelectChangeEvent} from "@mui/material/Select";
 import ScheduleAPI from "../../API";
 import {Course, FACULTY, IGroup, ISpecialty} from "../../types";
 
 type Action = {type: string; payload: any};
+type IState = Omit<IGroup, "faculty"> & {faculty: string};
 
-const groupReducer: React.Reducer<IGroup, Action> = (state, action) => {
+const groupReducer: React.Reducer<IState, Action> = (state, action) => {
 	switch (action.type) {
 		case "SET-ID":
 		case "SET-FACULTY":
@@ -31,7 +29,7 @@ const groupReducer: React.Reducer<IGroup, Action> = (state, action) => {
 			return action.payload;
 		}
 		case "COMBINED": {
-			const updatedState = (action.payload as Action[]).reduce<IGroup>(
+			const updatedState = (action.payload as Action[]).reduce<IState>(
 				(s, a) => {
 					const newState = groupReducer(s, a);
 					return {
@@ -61,7 +59,9 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 	const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
 	useImperativeHandle<any, IGroupSelect>(
 		ref,
-		() => ({getState: () => group}),
+		() => ({
+			getState: () => ({...group, faculty: group.faculty as FACULTY})
+		}),
 		[group]
 	);
 
@@ -126,7 +126,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 				abortController.abort();
 			};
 		}
-	}, [group.faculty, setSpecialties, dispatch]);
+	}, [group.faculty, setSpecialties]);
 
 	const handleSelectChange = useCallback<
 		(e: SelectChangeEvent<unknown>, node: any) => void

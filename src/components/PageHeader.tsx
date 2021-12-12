@@ -63,7 +63,7 @@ function PageHeader({onMenuClick, onTodayClick, menuIsShown}: IProps) {
 	useEffect(() => {
 		if (!menuIsShown) setShowSearchInput("none");
 		else if (searchValue) setShowSearchInput("full");
-	}, [menuIsShown]);
+	}, [menuIsShown]); //eslint-disable-line
 
 	const rightSideIcon = useMemo(() => {
 		if (
@@ -122,7 +122,11 @@ function PageHeader({onMenuClick, onTodayClick, menuIsShown}: IProps) {
 		menuIsShown,
 		location.pathname,
 		handleSearchValueChanged,
-		searchValue
+		searchValue,
+		handleEnterClick,
+		handleSearchIconClick,
+		handleSearchInputBlur,
+		handleTodayClick
 	]);
 
 	return (

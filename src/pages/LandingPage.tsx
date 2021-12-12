@@ -1,7 +1,6 @@
 import React, {useCallback} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "@mui/material/Button";
-import PageFooter from "../components/PageFooter";
 import "../styles/LandingPage.scss";
 
 export default function LandingPage(props: any) {
