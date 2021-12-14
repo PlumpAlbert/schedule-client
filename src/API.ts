@@ -94,6 +94,11 @@ export default class ScheduleAPI {
 		}));
 	};
 
+	/**
+	 * Method for creating new users
+	 * @param user New user to create
+	 * @returns {Promise<number|undefined>} On success returns user's id
+	 */
 	static signUp = async (
 		user: IUser & IAuthenticated,
 		controller?: AbortController
@@ -110,7 +115,6 @@ export default class ScheduleAPI {
 		});
 		const result: IResponse<{id: number}> = await response.json();
 		if (result.error) {
-			alert(result.message);
 			return;
 		}
 		return result.body.id;
