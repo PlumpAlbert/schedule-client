@@ -23,7 +23,7 @@ function App() {
 
 	useEffect(() => {
 		setShowMenu(false);
-	}, [location.pathname, setShowMenu]);
+	}, [location.pathname]);
 
 	const menuButtonClicked = useCallback(() => {
 		setShowMenu(!showMenu);
