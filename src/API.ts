@@ -1,6 +1,7 @@
 import {
 	Course,
 	IAuthenticated,
+	IGroup,
 	ISpecialty,
 	ISubject,
 	IUser
@@ -10,6 +11,9 @@ interface IResponse<T = any> {
 	error: boolean;
 	body: T;
 	message?: string;
+}
+interface ISuccessful {
+	success: boolean;
 }
 
 export default class ScheduleAPI {
@@ -118,5 +122,22 @@ export default class ScheduleAPI {
 			return;
 		}
 		return result.body.id;
+	};
+
+	/**
+	 * Method for changing group of authenticated user
+	 * @param group New group to set
+	 */
+	static changeGroup = async (
+		group: IGroup,
+		controller?: AbortController
+	) => {
+		const response = await fetch(`${ScheduleAPI.HOST}/user/group`, {
+			method: "POST",
+			body: JSON.stringify({group_id: group.id}),
+			signal: controller?.signal
+		});
+		const result: IResponse<ISuccessful> = await response.json();
+		return result.error ? false : result.body.success;
 	};
 }
