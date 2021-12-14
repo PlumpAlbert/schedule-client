@@ -140,4 +140,17 @@ export default class ScheduleAPI {
 		const result: IResponse<ISuccessful> = await response.json();
 		return result.error ? false : result.body.success;
 	};
+
+	static signOut = async (controller?: AbortController) => {
+		return fetch(`${ScheduleAPI.HOST}/signout`, {
+			signal: controller?.signal
+		})
+			.then(() => true)
+			.catch(err => {
+				if (process.env.NODE_ENV === "development") {
+					console.log(err);
+				}
+				return false;
+			});
+	};
 }
