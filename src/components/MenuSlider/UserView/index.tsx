@@ -22,7 +22,10 @@ function UserView({user, onGroupChange}: IProps) {
 		);
 	}, [user.group.specialty, user.group.year]);
 
-	const handleGroupChange = useCallback(group => {}, []);
+	const handleGroupChange = useCallback(group => {
+		onGroupChange(group);
+		setDialogOpened(false);
+	}, [onGroupChange]);
 	const handleEditGroupClick = useCallback(() => {
 		setDialogOpened(true);
 	}, [setDialogOpened]);

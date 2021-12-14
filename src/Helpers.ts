@@ -1,4 +1,4 @@
-import {WEEK_TYPE} from "./types";
+import {Course, WEEK_TYPE} from "./types";
 
 export function GetWeekdayName(weekday: number) {
 	const monday = "2021-11-22";
@@ -47,4 +47,18 @@ export function GetSubjectTypeAsString(type: number): string {
 		default:
 			return "";
 	}
+}
+
+/**
+ * Calculates group's course from year
+ * @param groupYear Group's year
+ * @returns {Course} Group's course
+ */
+export function CalculateCourse(groupYear: number) {
+	const date = new Date();
+	let number = date.getFullYear() - groupYear;
+	if (date.getMonth() > 9) {
+		number += 1;
+	}
+	return number.toString() as Course;
 }

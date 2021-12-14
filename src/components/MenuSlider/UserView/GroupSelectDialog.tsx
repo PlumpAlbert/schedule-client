@@ -1,15 +1,14 @@
 import React, {useCallback, useMemo, useState} from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import Autocomplete, {
-	AutocompleteInputChangeReason
-} from "@mui/material/Autocomplete";
+import {SelectChangeEvent} from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import useSpecialties from "../../../hooks/useSpecialties";
+import {CalculateCourse} from "../../../Helpers";
 import {Course, FACULTY, IGroup} from "../../../types";
 
 import "./GroupSelectDialog.scss";
@@ -29,22 +28,14 @@ function GroupSelectDialog({
 }: IProps) {
 	//#region Group state
 	const [id, setId] = useState(defaultId);
-	const [course, setCourse] = useState<Course>(() => {
-		const date = new Date();
-		let number = date.getFullYear() - defaultYear;
-		if (date.getMonth() > 9) {
-			number += 1;
-		}
-		return number.toString() as Course;
-	});
+	const [course, setCourse] = useState<Course>(CalculateCourse(defaultYear));
 	const [specialty, setSpecialty] = useState(defaultSpecialty);
 	const [faculty, setFaculty] = useState<FACULTY>(defaultFaculty);
 	//#endregion
 
 	//#region Component's state
 	const [error, setError] = useState(false);
-	const [specialtyInput, setSpecialtyInput] = useState("");
-	const [specialties, setSpecialties] = useSpecialties(faculty);
+	const [specialties] = useSpecialties(faculty);
 
 	const facultyOptions = useMemo(
 		() =>
@@ -56,17 +47,28 @@ function GroupSelectDialog({
 		[]
 	);
 	const specialtyOptions = useMemo(
-		() => specialties.map(({title}) => title),
+		() =>
+			specialties.map(({title}) => (
+				<MenuItem key={title} value={title}>
+					{title}
+				</MenuItem>
+			)),
 		[specialties]
 	);
 
 	const courseButtons = useMemo(() => {
 		let buttons: React.ReactNode[] = [];
+		const courses = Object.keys(
+			specialties.find(s => s.title === specialty)?.courses || []
+		);
 		for (let i = 1; i < 5; ++i) {
+			const disabled = !courses.find(c => c === i.toString());
 			buttons.push(
 				<ToggleButton
 					key={`course-toggle-button-${i}`}
-					value={i}
+					disabled={disabled}
+					selected={!disabled && i.toString() === course}
+					value={i.toString()}
 					className={`course-toggle-button course-${i}`}
 					classes={{
 						selected: "course-toggle-button--selected"
@@ -77,44 +79,68 @@ function GroupSelectDialog({
 			);
 		}
 		return buttons;
-	}, []);
+	}, [specialties, specialty, course]);
 	//#endregion
 
 	//#region CALLBACKS
+	const resetState = useCallback(() => {
+		setId(defaultId);
+		setCourse(CalculateCourse(defaultYear));
+		setSpecialty(defaultSpecialty);
+		setFaculty(defaultFaculty);
+	}, [defaultFaculty, defaultSpecialty, defaultYear, defaultId]);
+
 	const handleSaveChangesClick = useCallback(() => {
+		const id = specialties.find(s => s.title === specialty)?.courses[
+			course
+		];
+		if (!specialty || !id) {
+			setError(true);
+			return;
+		}
 		const date = new Date();
 		let year = date.getFullYear() - Number(course);
 		if (date.getMonth() > 9) year += 1;
 		onClose({id, specialty, faculty, year});
-	}, [onClose, id, course, specialty, faculty]);
+	}, [onClose, setError, course, specialty, faculty, specialties]);
 
 	const handleDialogClose = useCallback(() => {
+		resetState();
 		onClose();
-	}, [onClose]);
+	}, [onClose, resetState]);
 
-	const handleSelectChange = useCallback(
-		(dispatch: React.Dispatch<React.SetStateAction<any>>) =>
-			(
-				_: React.SyntheticEvent,
-				value: string,
-				reason: AutocompleteInputChangeReason
-			) => {
-				switch (reason) {
-					case "input":
-					case "reset":
-						dispatch(value);
-						break;
-					case "clear":
-						dispatch("");
-						break;
-				}
-			},
-		[]
+	const handleCourseChange = useCallback(
+		(_, newCourses: Course[]) => {
+			if (newCourses.length === 0) {
+				return;
+			}
+			const newCourse = newCourses[newCourses.length - 1];
+			const id = specialties.find(s => s.title === specialty)?.courses[
+				newCourse
+			];
+			setCourse(newCourse);
+			if (id) setId(id);
+			else setError(true);
+		},
+		[specialties, specialty]
 	);
 
-	const handleCourseChange = useCallback((_, newCourses) => {
-		setCourse(newCourses[newCourses.length - 1]);
-	}, []);
+	const handleSelectChange = useCallback<
+		(e: SelectChangeEvent<unknown>) => void
+	>(
+		({target}) => {
+			switch (target.name) {
+				case "group_faculty":
+					setFaculty(target.value as FACULTY);
+					setSpecialty("");
+					break;
+				case "group_specialty":
+					setSpecialty(target.value as string);
+					break;
+			}
+		},
+		[setFaculty, setSpecialty]
+	);
 	//#endregion
 
 	return (
@@ -138,11 +164,12 @@ function GroupSelectDialog({
 				id="group_faculty"
 				name="group_faculty"
 				label="Факультет:"
+				helperText={
+					error && !faculty ? "Укажите свой факультет" : undefined
+				}
 				SelectProps={{
 					className: "field__input",
-					onChange: ({target}) => {
-						setFaculty(target.value as FACULTY);
-					},
+					onChange: handleSelectChange,
 					value: faculty
 				}}
 				InputLabelProps={{
@@ -156,50 +183,47 @@ function GroupSelectDialog({
 				{facultyOptions}
 			</TextField>
 
-			<Autocomplete
+			<TextField
+				select
+				error={error && !specialty}
 				className="group-select-dialog__field"
-				options={specialtyOptions}
-				noOptionsText={`Создать ${specialtyInput}`}
-				value={specialty}
-				onInputChange={handleSelectChange(setSpecialtyInput)}
-				renderInput={props => (
-					<TextField
-						{...props}
-						error={error && !specialty}
-						variant="standard"
-						id="group_specialty"
-						name="group_specialty"
-						label="Специальность:"
-						onKeyPress={e => {
-							if (
-								e.key === "Enter" &&
-								specialtyOptions.every(
-									s => s !== specialtyInput
-								)
-							) {
-								setSpecialties([
-									...specialties,
-									{title: specialtyInput, courses: {}}
-								]);
-							}
-						}}
-						InputLabelProps={{
-							className: "field__label",
-							htmlFor: "group_specialty"
-						}}
-					/>
-				)}
-			/>
+				variant="standard"
+				id="group_specialty"
+				name="group_specialty"
+				label="Специальность:"
+				helperText={
+					error && !specialty
+						? "Укажите свою специальность"
+						: undefined
+				}
+				SelectProps={{
+					className: "field__input",
+					onChange: handleSelectChange,
+					value: specialty
+				}}
+				InputLabelProps={{
+					className: "field__label",
+					htmlFor: "group_specialty"
+				}}
+				FormHelperTextProps={{
+					className: "field__helper-text"
+				}}
+			>
+				{specialtyOptions}
+			</TextField>
 
 			<ToggleButtonGroup
 				className="group-select-dialog__course-buttons"
 				onChange={handleCourseChange}
-				value={[course]}
 			>
 				{courseButtons}
 			</ToggleButtonGroup>
 
-			<Button className="group-select-dialog__button" variant="contained">
+			<Button
+				className="group-select-dialog__button"
+				variant="contained"
+				onClick={handleSaveChangesClick}
+			>
 				Сохранить
 			</Button>
 		</Dialog>

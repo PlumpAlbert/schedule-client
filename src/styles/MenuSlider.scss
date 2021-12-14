@@ -13,6 +13,16 @@
 	background-color: $white;
 	color: $black;
 
+	& &__alert {
+		font-family: "Lato", sans-serif;
+		&--success {
+			background-color: $green;
+		}
+		&--error {
+			background-color: $red;
+		}
+	}
+
 	.menu-header,
 	.menu-body {
 		padding: 0 2rem;
