@@ -8,8 +8,10 @@ import ScheduleAPI from "../../API";
 
 import "../../styles/SignUpPage.scss";
 
+type Error = "name" | "login" | "password" | "group" | null;
+
 function SignUpPage() {
-	const [isError, setError] = useState(false);
+	const [error, setError] = useState<Error>(null);
 	const [name, setName] = useState("");
 	const [login, setLogin] = useState("");
 	const [password, setPassword] = useState("");
@@ -20,24 +22,30 @@ function SignUpPage() {
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(
 		e => {
 			e.preventDefault();
-			if (isError) {
-				return;
-			}
+			if (error) return;
 			if (!groupRef.current) {
-				setError(true);
+				setError("group");
+				return;
 			}
 			const group = groupRef.current?.getState();
 			// Check if all of the fields are set
 			if (
 				!group ||
-				!Object.keys(group).every(
-					key => !!group[key as keyof IGroup]
-				) ||
-				!name ||
-				!login ||
-				!password
+				!Object.keys(group).every(key => !!group[key as keyof IGroup])
 			) {
-				setError(true);
+				setError("group");
+				return;
+			}
+			if (!name) {
+				setError("name");
+				return;
+			}
+			if (!login) {
+				setError("login");
+				return;
+			}
+			if (!password) {
+				setError("password");
 				return;
 			}
 			let user: IUser & IAuthenticated = {name, login, password, group};
@@ -45,24 +53,33 @@ function SignUpPage() {
 			ScheduleAPI.signUp(user, abortController)
 				.then(id => {
 					if (!id) {
-						setError(true);
+						setError("login");
 						return;
 					}
 					user.id = id;
 					user.type = UserType.STUDENT;
-					sessionStorage.setItem("user", JSON.stringify(user));
+					sessionStorage.setItem(
+						"user",
+						JSON.stringify({
+							id,
+							type: UserType.STUDENT,
+							name: user.name,
+							login: user.login,
+							group: user.group
+						} as IUser)
+					);
 					navigate(`/schedule?group=${user.group.id}`, {
 						replace: true
 					});
 				})
 				.catch(err => {
 					if (!abortController.signal.aborted) {
-						setError(true);
+						setError("login");
 						console.error(err.message);
 					}
 				});
 		},
-		[name, login, password, isError, navigate]
+		[name, login, password, error, navigate]
 	);
 
 	const handleInputChange = useCallback<
@@ -102,7 +119,7 @@ function SignUpPage() {
 			>
 				<TextField
 					className="form-control"
-					error={isError && !name}
+					error={error === "name"}
 					variant="standard"
 					id="user"
 					name="user"
@@ -126,14 +143,20 @@ function SignUpPage() {
 				/>
 				<TextField
 					className="form-control"
-					error={isError && !login}
+					error={error === "login"}
 					variant="standard"
 					id="username"
 					name="username"
 					onChange={handleInputChange}
 					value={login}
 					label="Логин:"
-					helperText="Уникальное имя пользователя, по которому Вы будете входить в приложение"
+					helperText={
+						error === "login"
+							? !login
+								? "Поле должно быть заполнено"
+								: "Данное имя уже занято другим пользователем"
+							: "Уникальное имя пользователя, по которому Вы будете входить в приложение"
+					}
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
@@ -150,7 +173,7 @@ function SignUpPage() {
 				/>
 				<TextField
 					className="form-control"
-					error={isError && !password}
+					error={error === "password"}
 					variant="standard"
 					id="user_password"
 					name="user_password"
@@ -179,7 +202,7 @@ function SignUpPage() {
 						className: "form-control__helper-text"
 					}}
 				/>
-				<GroupSelect isError={isError} ref={groupRef} />
+				<GroupSelect isError={error === "group"} ref={groupRef} />
 				<Button className="form-button" type="submit">
 					Зарегистрироваться
 				</Button>
