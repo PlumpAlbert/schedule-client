@@ -23,6 +23,7 @@ function App() {
 
 	useEffect(() => {
 		setShowMenu(false);
+		if (location.pathname === "/") setShowFooter(true);
 	}, [location.pathname]);
 
 	const menuButtonClicked = useCallback(() => {
