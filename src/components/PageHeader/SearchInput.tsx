@@ -1,4 +1,5 @@
 import React, {useCallback, useRef} from "react";
+import {useNavigate} from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import IconWrapper from "@mui/material/Icon";
 import ArrowRightIcon from "@mui/icons-material/ArrowForward";
@@ -20,6 +21,7 @@ export enum SearchDisplayType {
 
 const SearchInput = ({value, variant, dispatch}: IProps) => {
 	const searchInputRef = useRef<HTMLInputElement>(null);
+	const navigate = useNavigate();
 
 	//#region ACTION CREATORS
 	const setSearchDisplayType = useCallback(
@@ -41,11 +43,15 @@ const SearchInput = ({value, variant, dispatch}: IProps) => {
 	//#endregion
 
 	//#region CALLBACKS
-	const handleEnterPress = useCallback(e => {
-		if (e.key && e.key === "Enter") {
-			alert("Should implement this feature");
-		}
-	}, []);
+	const handleEnterPress = useCallback(
+		e => {
+			if (e.key && e.key !== "Enter") {
+				return;
+			}
+			navigate(`/search?q=${value}`);
+		},
+		[value]
+	);
 
 	const handleSearchValueChanged = useCallback<
 		React.ChangeEventHandler<HTMLInputElement>

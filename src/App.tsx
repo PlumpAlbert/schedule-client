@@ -13,6 +13,7 @@ import {GetWeekType} from "./Helpers";
 import {WEEK_TYPE} from "./types";
 import "./styles/App.scss";
 import SignUpPage from "./pages/SignUpPage";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
 	const location = useLocation();
@@ -80,6 +81,7 @@ function App() {
 				/>
 				<Route path="/subject" element={<EditSubjectPage />} />
 				<Route path="/groups/*" element={<GroupsListPage />} />
+				<Route path="/search" element={<SearchPage />} />
 				<Route path="*" element={<Page404 />} />
 			</Routes>
 			{showFooter && <PageFooter />}

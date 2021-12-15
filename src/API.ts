@@ -1,5 +1,7 @@
+import {CalculateCourse} from "./Helpers";
 import {
 	Course,
+	FACULTY,
 	IAuthenticated,
 	IGroup,
 	ISpecialty,
@@ -152,5 +154,47 @@ export default class ScheduleAPI {
 				}
 				return false;
 			});
+	};
+
+	static searchGroup = async (
+		searchString: string,
+		controller?: AbortController
+	) => {
+		try {
+			const response = await fetch(
+				`${ScheduleAPI.HOST}/group?q=${searchString}`,
+				{signal: controller?.signal}
+			);
+			const result: IResponse<IGroup[]> = await response.json();
+			if (result.error) {
+				return null;
+			}
+			let faculties: Partial<Record<FACULTY, ISpecialty[]>> = {};
+			result.body.forEach(group => {
+				let faculty = faculties[group.faculty];
+				if (!faculty) {
+					faculty = [];
+				}
+				const courseNumber = CalculateCourse(group.year);
+				const specialtyIndex = faculty.findIndex(
+					s => s.title === group.specialty
+				);
+				if (specialtyIndex === -1) {
+					faculty.push({
+						title: group.specialty,
+						courses: {[courseNumber]: group.id}
+					});
+				} else {
+					faculty[specialtyIndex].courses[courseNumber] = group.id;
+				}
+				faculties[group.faculty] = faculty;
+			});
+			return faculties;
+		} catch (err) {
+			if (process.env.NODE_ENV === "development") {
+				console.error(err);
+			}
+			return {};
+		}
 	};
 }
