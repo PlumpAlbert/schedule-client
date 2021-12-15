@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import Alert, {AlertColor} from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import PageFooter from "../PageFooter";
@@ -6,7 +7,7 @@ import LandingPage from "../../pages/LandingPage";
 import UserView from "./UserView";
 
 import "../../styles/MenuSlider.scss";
-import {IUser} from "../../types";
+import {IGroup, IUser} from "../../types";
 import ScheduleAPI from "../../API";
 
 interface IProps {
@@ -25,6 +26,7 @@ const MenuSlider = ({showMenu}: IProps) => {
 		message: "",
 		type: "success"
 	});
+	const navigate = useNavigate();
 
 	const userJson = sessionStorage.getItem("user");
 	useEffect(() => {
@@ -36,7 +38,7 @@ const MenuSlider = ({showMenu}: IProps) => {
 	}, [userJson]);
 
 	const handleGroupChange = useCallback(
-		newGroup => {
+		(newGroup: IGroup | null) => {
 			if (!user || !newGroup) return;
 			user.group = newGroup;
 			sessionStorage.setItem("user", JSON.stringify(user));
@@ -48,6 +50,7 @@ const MenuSlider = ({showMenu}: IProps) => {
 						: "Ошибка при смене группы",
 					type: success ? "success" : "error"
 				});
+				navigate(`/schedule?group=${newGroup.id}`);
 			});
 		},
 		[user]
