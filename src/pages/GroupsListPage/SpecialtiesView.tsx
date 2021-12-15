@@ -61,7 +61,7 @@ interface IProps {
 	faculty: string;
 }
 function SpecialtiesView({faculty}: IProps) {
-	const [specialties] = useSpecialties(faculty as FACULTY);
+	const [specialties, _, isLoading] = useSpecialties(faculty as FACULTY);
 
 	const specialtyElements = useMemo(
 		() => specialties.map(s => <Specialty key={s.title} {...s} />),
@@ -69,15 +69,15 @@ function SpecialtiesView({faculty}: IProps) {
 	);
 	return (
 		<div className="specialties-wrapper">
-			{specialtyElements.length ? (
-				specialtyElements
-			) : (
-				<p className="specialties-wrapper__no-items">
-					<h3 className="no-items__header">
-						Упс, ничего не найдено!
-					</h3>
-				</p>
-			)}
+			{specialtyElements.length
+				? specialtyElements
+				: !isLoading && (
+						<div className="specialties-wrapper__no-items">
+							<h3 className="no-items__header">
+								Упс, ничего не найдено!
+							</h3>
+						</div>
+				  )}
 		</div>
 	);
 }
