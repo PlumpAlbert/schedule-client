@@ -67,7 +67,19 @@ function SpecialtiesView({faculty}: IProps) {
 		() => specialties.map(s => <Specialty key={s.title} {...s} />),
 		[specialties]
 	);
-	return <div className="specialties-wrapper">{specialtyElements}</div>;
+	return (
+		<div className="specialties-wrapper">
+			{specialtyElements.length ? (
+				specialtyElements
+			) : (
+				<p className="specialties-wrapper__no-items">
+					<h3 className="no-items__header">
+						Упс, ничего не найдено!
+					</h3>
+				</p>
+			)}
+		</div>
+	);
 }
 
 SpecialtiesView.propTypes = {

@@ -4,6 +4,7 @@
 	display: flex;
 	flex-direction: row;
 	overflow-x: hidden;
+	flex: 1;
 
 	.faculties-wrapper {
 		display: flex;
@@ -51,9 +52,23 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
+		&__no-items {
+			margin: auto 0;
+			padding: 0;
+			text-align: center;
+
+			.no-items__header {
+				font-family: "Montserrat", "Lato", sans-serif;
+				font-size: 1rem;
+				margin: 0;
+			}
+		}
+
 		.specialty {
 			border: 1px solid $offWhite;
 			font-family: "Lato", sans-serif;
+			box-shadow: none;
+
 			&:first-child {
 				border-top: none;
 			}
