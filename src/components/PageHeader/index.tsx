@@ -1,5 +1,7 @@
 import React, {useEffect, useMemo, useReducer} from "react";
 import {useLocation} from "react-router";
+import Icon from "@mui/material/Icon";
+import BackIcon from "@mui/icons-material/NavigateBefore";
 import MenuIcon from "@mui/icons-material/Menu";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import SearchInput, {SearchDisplayType} from "./SearchInput";
@@ -8,6 +10,7 @@ import "../../styles/PageHeader.scss";
 interface IProps {
 	onMenuClick: React.MouseEventHandler;
 	onTodayClick: React.MouseEventHandler;
+	onBackClick: React.MouseEventHandler;
 	menuIsShown: boolean;
 }
 interface IState {
@@ -62,7 +65,12 @@ const PageHeaderReducer: React.Reducer<IState, Action<any>> = (
 	}
 };
 
-function PageHeader({onMenuClick, onTodayClick, menuIsShown}: IProps) {
+function PageHeader({
+	onMenuClick,
+	onTodayClick,
+	onBackClick,
+	menuIsShown
+}: IProps) {
 	const [state, dispatch] = useReducer(PageHeaderReducer, {
 		searchValue: "",
 		searchDisplayType: SearchDisplayType.NONE,
@@ -72,36 +80,59 @@ function PageHeader({onMenuClick, onTodayClick, menuIsShown}: IProps) {
 	const location = useLocation();
 
 	useEffect(() => {
-		switch (location.pathname) {
-			case "/":
-				dispatch({
-					type: "COMBINED",
-					payload: [
-						{
-							type: "SET-SEARCH_DISPLAY_TYPE",
-							payload: state.searchValue
-								? SearchDisplayType.FULL
-								: SearchDisplayType.ICON
-						},
-						{
+		const uri = location.pathname.split("/");
+		if (uri.length === 1) {
+			dispatch({
+				type: "COMBINED",
+				payload: [
+					{
+						type: "SET-SEARCH_DISPLAY_TYPE",
+						payload: state.searchValue
+							? SearchDisplayType.FULL
+							: SearchDisplayType.ICON
+					},
+					{
+						type: "SET-LEFT_ICON",
+						payload: LeftIcon.NONE
+					}
+				]
+			});
+		} else {
+			switch (uri[1]) {
+				case "groups": {
+					if (uri[2]) {
+						dispatch({
 							type: "SET-LEFT_ICON",
-							payload: LeftIcon.NONE
-						}
-					]
-				});
-				break;
-			default:
-				dispatch({
-					type: "COMBINED",
-					payload: [
-						{
-							type: "SET-SEARCH_DISPLAY_TYPE",
-							payload: SearchDisplayType.NONE
-						},
-						{type: "SET-LEFT_ICON", payload: LeftIcon.MENU}
-					]
-				});
-				break;
+							payload: LeftIcon.BACK
+						});
+					} else {
+						dispatch({
+							type: "COMBINED",
+							payload: [
+								{type: "SET-LEFT_ICON", payload: LeftIcon.MENU},
+								{
+									type: "SET-RIGHT_ICON",
+									payload: RightIcon.NONE
+								}
+							]
+						});
+					}
+					break;
+				}
+				default: {
+					dispatch({
+						type: "COMBINED",
+						payload: [
+							{
+								type: "SET-SEARCH_DISPLAY_TYPE",
+								payload: SearchDisplayType.NONE
+							},
+							{type: "SET-LEFT_ICON", payload: LeftIcon.MENU}
+						]
+					});
+					break;
+				}
+			}
 		}
 	}, [location.pathname]); // eslint-disable-line
 
@@ -135,13 +166,29 @@ function PageHeader({onMenuClick, onTodayClick, menuIsShown}: IProps) {
 	}, [menuIsShown, location.pathname]); // eslint-disable-line
 
 	const leftSideIcon = useMemo(() => {
-		if (state.leftIcon === LeftIcon.MENU) {
-			return (
-				<MenuIcon
-					onClick={onMenuClick}
-					classes={{root: "page-header__menu-icon"}}
-				/>
-			);
+		switch (state.leftIcon) {
+			case LeftIcon.MENU: {
+				return (
+					<Icon
+						onClick={onMenuClick}
+						classes={{root: "page-header__menu-icon"}}
+					>
+						<MenuIcon />
+					</Icon>
+				);
+			}
+			case LeftIcon.BACK: {
+				return (
+					<Icon
+						onClick={onBackClick}
+						classes={{root: "page-header__menu-icon"}}
+					>
+						<BackIcon />
+					</Icon>
+				);
+			}
+			default:
+				return null;
 		}
 	}, [onMenuClick, state.leftIcon]);
 

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {Route, Routes, useLocation} from "react-router-dom";
+import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import PageHeader from "./components/PageHeader";
 import MenuSlider from "./components/MenuSlider";
 import ScheduleView from "./pages/ScheduleView";
@@ -16,6 +16,7 @@ import SignUpPage from "./pages/SignUpPage";
 
 function App() {
 	const location = useLocation();
+	const navigate = useNavigate();
 	const [weekday, setWeekday] = useState<number | undefined>(undefined);
 	const [weekType, setWeekType] = useState<WEEK_TYPE>(GetWeekType());
 	const [showMenu, setShowMenu] = useState(false);
@@ -23,7 +24,11 @@ function App() {
 
 	useEffect(() => {
 		setShowMenu(false);
-		if (location.pathname === "/") setShowFooter(true);
+		if (location.pathname === "/") {
+			setShowFooter(true);
+		} else {
+			setShowFooter(false);
+		}
 	}, [location.pathname]);
 
 	const menuButtonClicked = useCallback(() => {
@@ -34,6 +39,10 @@ function App() {
 		setWeekType(GetWeekType());
 		let day = new Date().getDay();
 		setWeekday(day === 0 ? 7 : day);
+	}, []);
+
+	const backButtonClicked = useCallback(() => {
+		navigate(-1);
 	}, []);
 
 	const appClassName = useMemo(() => {
@@ -50,6 +59,7 @@ function App() {
 		<div className={appClassName}>
 			<PageHeader
 				menuIsShown={showMenu}
+				onBackClick={backButtonClicked}
 				onMenuClick={menuButtonClicked}
 				onTodayClick={todayButtonClicked}
 			/>
