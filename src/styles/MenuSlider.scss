@@ -1,16 +1,11 @@
 @import "Colors.scss";
 
-.app-menu {
+body .app-menu {
 	display: flex;
+	min-width: 85%;
+	width: auto;
+	overflow-x: hidden;
 	flex-direction: column;
-	width: 100%;
-	height: calc(100% - 4rem);
-	position: absolute;
-	z-index: 100;
-	margin-top: 4rem;
-	transform: translateX(-100%);
-	@include transition(transform ease 0.175s);
-	background-color: $white;
 	color: $black;
 
 	& &__alert {
@@ -23,83 +18,146 @@
 		}
 	}
 
-	.menu-header,
-	.menu-body {
-		padding: 0 2rem;
-	}
-
-	.menu-header {
-		margin-top: 3rem;
-		.app-title {
-			font-family: "Montserrat", sans-serif;
-			font-size: 2rem;
-			font-weight: 500;
-			text-align: center;
-			margin: 0;
-			text-transform: uppercase;
-		}
-		.user-info {
-			display: flex;
-			flex-direction: column;
-			margin-top: 2rem;
-			align-items: center;
-			.user-pic {
-				width: 128px;
-			}
-			.user-name {
-				font-family: "Lato", sans-serif;
-				font-weight: 400;
-				font-size: 1.5rem;
-				text-align: center;
-				margin: 1.5rem 0 0.8rem;
-				text-transform: capitalize;
-			}
-			.user-group {
-				font-family: "Lato", sans-serif;
-				font-weight: 400;
-				font-size: 1rem;
-				text-align: center;
-				text-transform: uppercase;
-				margin: 0;
-			}
-		}
-	}
-
-	.menu-settings {
+	.app-menu__content {
 		display: flex;
 		flex-direction: column;
-		margin-top: 3rem;
-		padding: 0 2rem;
-
-		&__header {
-			font-family: "Lato", sans-serif;
-			font-weight: 700;
-			font-size: 1rem;
-			margin-left: 2.5rem;
-		}
-		&__option {
+		flex: 1;
+		.menu-header,
+		.menu-body {
 			display: flex;
-			flex-direction: row;
-			align-items: center;
-			line-height: 1.5;
-			margin: 0;
-			padding: 0.5rem 0;
-			cursor: pointer;
+			flex: 1;
+			flex-direction: column;
+			padding: 0 1.5rem;
+		}
 
-			.option__icon {
-				color: $grey;
+		.menu-header {
+			margin-top: 3rem;
+			justify-content: flex-end;
+			.app-title {
+				display: inline-block;
+				font-family: "Montserrat", "Roboto", sans-serif;
+				font-size: 1.5rem;
+				font-weight: 500;
+				text-align: center;
+				margin: 0;
+				text-transform: uppercase;
 			}
-			.option__text {
-				margin-left: 1rem;
+
+			.search-input {
+				margin-top: 1.5rem;
+			}
+			&__btn {
+				color: $blue;
+				background-color: $white;
+				font-family: "Roboto", "Montserrat", sans-serif;
+				padding: 0.5rem 1rem;
+
+				&.btn-groups {
+					margin-top: 1rem;
+				}
+			}
+
+			.user-info {
+				display: flex;
+				flex-direction: column;
+				margin-top: 2rem;
+				align-items: center;
+				.user-pic {
+					width: 128px;
+				}
+				.user-name {
+					font-family: "Roboto", sans-serif;
+					font-weight: 400;
+					font-size: 1.5rem;
+					text-align: center;
+					margin: 1.5rem 0 0.8rem;
+					text-transform: capitalize;
+				}
+				.user-group {
+					font-family: "Roboto", sans-serif;
+					font-weight: 400;
+					font-size: 1rem;
+					text-align: center;
+					text-transform: uppercase;
+					margin: 0;
+				}
+			}
+		}
+
+		.menu-body {
+			margin: 2rem 0;
+			justify-content: center;
+
+			&__btn {
+				color: $blue;
+				background-color: $white;
+				font-family: "Roboto", "Montserrat", sans-serif;
+
+				&.btn-sign-up {
+					background-color: $blue;
+					color: $white;
+					margin-top: 1.5rem;
+				}
+				&.btn-sign-in {
+					margin-top: 1rem;
+				}
+			}
+
+			&__text {
+				.text {
+					line-height: 1.5;
+					&-header {
+						font-family: "Roboto", "Montserrat", sans-serif;
+						font-size: 1rem;
+						font-weight: 500;
+						margin: 0;
+						margin-bottom: 0.5rem;
+					}
+					&-content {
+						display: inline-block;
+						font-family: "Roboto", "Montserrat", sans-serif;
+						font-size: 1rem;
+						font-weight: 400;
+						text-align: justify;
+					}
+				}
+			}
+		}
+
+		.menu-settings {
+			display: flex;
+			flex-direction: column;
+			margin-top: 3rem;
+			padding: 0 1rem;
+
+			&__header {
+				font-family: "Roboto", sans-serif;
+				font-weight: 700;
+				font-size: 1rem;
+				margin-left: 2.5rem;
+			}
+			&__option {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				line-height: 1.5;
+				margin: 0;
+				padding: 0.5rem 0;
+				cursor: pointer;
+
+				.option__icon {
+					color: $grey;
+				}
+				.option__text {
+					margin-left: 1rem;
+				}
 			}
 		}
 	}
 
 	.page-footer {
 		margin-top: auto;
+		white-space: nowrap;
+		padding: 1rem 1.5rem;
 	}
-}
-
-.app-menu.active {
-	transform: translateX(0);
 }

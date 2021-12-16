@@ -76,7 +76,11 @@ function App() {
 				onMenuClick={menuButtonClicked}
 				onTodayClick={todayButtonClicked}
 			/>
-			<MenuSlider showMenu={showMenu} />
+			<MenuSlider
+				showMenu={showMenu}
+				onClose={() => setShowMenu(false)}
+				onOpen={() => setShowMenu(true)}
+			/>
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
 				<Route path="/signup" element={<SignUpPage />} />

@@ -45,7 +45,7 @@ function UserView({user, onGroupChange}: IProps) {
 	}, []);
 
 	return (
-		<>
+		<div className="app-menu__content">
 			<GroupSelectDialog
 				open={dialogOpened}
 				onClose={handleGroupChange}
@@ -88,7 +88,7 @@ function UserView({user, onGroupChange}: IProps) {
 					<span className="option__text">Выйти</span>
 				</p>
 			</div>
-		</>
+		</div>
 	);
 }
 
