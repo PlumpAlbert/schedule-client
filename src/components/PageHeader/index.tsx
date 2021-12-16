@@ -1,16 +1,18 @@
 import React, {useEffect, useMemo, useReducer} from "react";
 import {useLocation} from "react-router";
+import AppBar from "@mui/material/AppBar";
 import Icon from "@mui/material/Icon";
 import BackIcon from "@mui/icons-material/NavigateBefore";
 import MenuIcon from "@mui/icons-material/Menu";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import SearchInput, {SearchDisplayType} from "./SearchInput";
 import "../../styles/PageHeader.scss";
 
 interface IProps {
-	onMenuClick: React.MouseEventHandler;
-	onTodayClick: React.MouseEventHandler;
-	onBackClick: React.MouseEventHandler;
+	onMenuClick?: React.MouseEventHandler;
+	onTodayClick?: React.MouseEventHandler;
+	onBackClick?: React.MouseEventHandler;
 	menuIsShown: boolean;
 }
 interface IState {
@@ -23,6 +25,7 @@ export interface Action<T extends any> {
 	type: string;
 	payload: T;
 }
+type CombinedAction = Action<Action<any>[]> & {type: "COMBINED"};
 
 enum LeftIcon {
 	NONE = 0,
@@ -80,89 +83,80 @@ function PageHeader({
 	const location = useLocation();
 
 	useEffect(() => {
+		let action: CombinedAction = {type: "COMBINED", payload: []};
+		if (!menuIsShown) {
+			action.payload.push({
+				type: "SET-SEARCH_DISPLAY_TYPE",
+				payload: SearchDisplayType.NONE
+			});
+		} else if (state.searchValue) {
+			action.payload.push({
+				type: "SET-SEARCH_DISPLAY_TYPE",
+				payload: SearchDisplayType.FULL
+			});
+		} else {
+			action.payload.push({
+				type: "SET-SEARCH_DISPLAY_TYPE",
+				payload: SearchDisplayType.ICON
+			});
+		}
 		const uri = location.pathname.split("/");
+		// Matches root path
 		if (uri.length === 1) {
-			dispatch({
-				type: "COMBINED",
-				payload: [
-					{
-						type: "SET-SEARCH_DISPLAY_TYPE",
-						payload: state.searchValue
-							? SearchDisplayType.FULL
-							: SearchDisplayType.ICON
-					},
-					{
-						type: "SET-LEFT_ICON",
-						payload: LeftIcon.NONE
-					}
-				]
+			action.payload.push({
+				type: "SET-SEARCH_DISPLAY_TYPE",
+				payload: state.searchValue
+					? SearchDisplayType.FULL
+					: SearchDisplayType.ICON
+			}, {
+				type: "SET-LEFT_ICON",
+				payload: LeftIcon.NONE
+			});
+			action.payload.push({
+				type: "SET-LEFT_ICON",
+				payload: LeftIcon.NONE
 			});
 		} else {
 			switch (uri[1]) {
 				case "groups": {
 					if (uri[2]) {
-						dispatch({
+						action.payload.push({
 							type: "SET-LEFT_ICON",
 							payload: LeftIcon.BACK
 						});
 					} else {
-						dispatch({
-							type: "COMBINED",
-							payload: [
-								{type: "SET-LEFT_ICON", payload: LeftIcon.MENU},
-								{
-									type: "SET-RIGHT_ICON",
-									payload: RightIcon.NONE
-								}
-							]
+						action.payload.push({
+							type: "SET-LEFT_ICON",
+							payload: LeftIcon.MENU
+						});
+						action.payload.push({
+							type: "SET-RIGHT_ICON",
+							payload: RightIcon.NONE
 						});
 					}
 					break;
 				}
+				case "schedule": {
+					action.payload.push({
+						type: "SET-RIGHT_ICON",
+						payload: RightIcon.TODAY
+					});
+					break;
+				}
 				default: {
-					dispatch({
-						type: "COMBINED",
-						payload: [
-							{
-								type: "SET-SEARCH_DISPLAY_TYPE",
-								payload: SearchDisplayType.NONE
-							},
-							{type: "SET-LEFT_ICON", payload: LeftIcon.MENU}
-						]
+					action.payload.push({
+						type: "SET-SEARCH_DISPLAY_TYPE",
+						payload: SearchDisplayType.NONE
+					});
+					action.payload.push({
+						type: "SET-LEFT_ICON",
+						payload: LeftIcon.MENU
 					});
 					break;
 				}
 			}
 		}
-	}, [location.pathname]); // eslint-disable-line
-
-	useEffect(() => {
-		if (!menuIsShown) {
-			let action: Action<SearchDisplayType | Action<any>[]> = {
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: SearchDisplayType.NONE
-			};
-			if (location.pathname.includes("/schedule")) {
-				action = {
-					type: "COMBINED",
-					payload: [
-						action,
-						{type: "SET-RIGHT_ICON", payload: RightIcon.TODAY}
-					]
-				};
-			}
-			dispatch(action);
-		} else if (state.searchValue) {
-			dispatch({
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: SearchDisplayType.FULL
-			});
-		} else {
-			dispatch({
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: SearchDisplayType.ICON
-			});
-		}
+		dispatch(action);
 	}, [menuIsShown, location.pathname]); // eslint-disable-line
 
 	const leftSideIcon = useMemo(() => {
@@ -206,10 +200,11 @@ function PageHeader({
 				);
 			case RightIcon.TODAY:
 				return (
-					<CalendarTodayIcon
-						classes={{root: "page-header__calendar-icon"}}
-						onClick={onTodayClick}
-					/>
+					<Icon onClick={onTodayClick}>
+						<CalendarTodayIcon
+							classes={{root: "page-header__calendar-icon"}}
+						/>
+					</Icon>
 				);
 		}
 	}, [
@@ -220,11 +215,16 @@ function PageHeader({
 		state.searchDisplayType
 	]);
 
+	const isScrolled = useScrollTrigger({
+		disableHysteresis: true,
+		threshold: 0
+	});
+
 	return (
-		<div className="page-header">
+		<AppBar elevation={isScrolled ? 3 : 0} className="page-header">
 			{leftSideIcon}
 			{rightSideIcon}
-		</div>
+		</AppBar>
 	);
 }
 
