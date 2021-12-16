@@ -5,7 +5,7 @@
 		margin: auto 1rem;
 		padding: 0 1rem;
 		&__title {
-			font-family: "Montserrat", "Lato", sans-serif;
+			font-family: "Montserrat", "Roboto", sans-serif;
 			margin: 0 0 1rem 0;
 		}
 		&__field {
@@ -51,7 +51,7 @@
 		&__button {
 			background-color: $blue;
 			color: $white;
-			font-family: "Lato", sans-serif;
+			font-family: "Roboto", sans-serif;
 			margin: 2rem 0 1rem;
 		}
 	}
