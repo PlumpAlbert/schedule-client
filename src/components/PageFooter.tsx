@@ -7,7 +7,7 @@ import "../styles/PageFooter.scss";
 
 export default function PageFooter() {
 	return (
-		<div className="page-footer">
+		<footer className="page-footer">
 			<p className="page-footer__copyright">
 				© {new Date().getFullYear()} Plump Albert
 			</p>
@@ -22,6 +22,6 @@ export default function PageFooter() {
 					<TelegramIcon className="telegram-icon page-footer__icon" />
 				</IconButton>
 			</div>
-		</div>
+		</footer>
 	);
 }
