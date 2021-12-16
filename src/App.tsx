@@ -52,7 +52,7 @@ function App() {
 		setWeekType(GetWeekType());
 		let day = new Date().getDay();
 		setWeekday(day === 0 ? 7 : day);
-	}, []);
+	}, [setWeekType, setWeekday]);
 
 	const backButtonClicked = useCallback(() => {
 		navigate(-1);
