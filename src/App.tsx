@@ -32,6 +32,18 @@ function App() {
 		}
 	}, [location.pathname]);
 
+	useEffect(() => {
+		document.addEventListener("keydown", e => {
+			if (e.key === "Escape") {
+				navigate(-1);
+			}
+		});
+		return () => {
+			if (document.onkeydown)
+				document.removeEventListener("keydown", document.onkeydown);
+		};
+	}, []);
+
 	const menuButtonClicked = useCallback(() => {
 		setShowMenu(!showMenu);
 	}, [showMenu]);
