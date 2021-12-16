@@ -28,7 +28,7 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 			block: "center",
 			inline: "center"
 		});
-	}, [currentDay, location.search]);
+	}, [currentDay]);
 	useEffect(() => {
 		if (weekday) setCurrentDay(weekday);
 	}, [weekday]);

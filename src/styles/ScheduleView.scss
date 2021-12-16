@@ -62,12 +62,18 @@
 		.subject-view {
 			display: flex;
 			margin: 1rem 0;
+			padding: 0;
+			position: relative;
 			&:first-child {
 				margin-top: 0;
 			}
 			&-type {
 				display: flex;
-				width: 5px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				width: 0.25rem;
 				height: inherit;
 				border-radius: 0 8px 8px 0;
 				&.lecture {

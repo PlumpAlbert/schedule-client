@@ -1,6 +1,6 @@
-import React, {useCallback} from "react";
-import {ISubject} from "../types";
-import {WEEK_TYPE} from "../types";
+import React, {useCallback, useRef} from "react";
+import ListItem from "@mui/material/ListItem";
+import {ISubject, WEEK_TYPE} from "../../types";
 
 interface ILoadable {
 	loading?: boolean;
@@ -52,7 +52,7 @@ function SubjectView({
 			break;
 	}
 
-	const handleClick = useCallback<React.MouseEventHandler<HTMLDivElement>>(
+	const handleClick = useCallback<React.MouseEventHandler<HTMLLIElement>>(
 		e => {
 			e.preventDefault();
 			if (onClick) {
@@ -71,10 +71,29 @@ function SubjectView({
 		[onClick, subject]
 	);
 
+	const swipeTouchRef = useRef<React.Touch>();
+	const handleSwipe = useCallback<React.TouchEventHandler<HTMLLIElement>>(
+		e => {
+			if (e.touches.length > 1) return;
+			if (!swipeTouchRef.current) {
+				swipeTouchRef.current = e.touches[0];
+				return;
+			}
+			const deltaX =
+				e.changedTouches[0].clientX - swipeTouchRef.current.clientX;
+		},
+		[]
+	);
+	const handleSwipeEnd = useCallback(() => {
+		swipeTouchRef.current = undefined;
+	}, []);
+
 	return (
-		<div
+		<ListItem
 			className={`subject-view${loading ? " loading" : ""}`}
 			onClick={handleClick}
+			onTouchMove={handleSwipe}
+			onTouchEnd={handleSwipeEnd}
 		>
 			<div className={`subject-view-type ${typeClass}`} />
 			<div className="subject-view-content">
@@ -91,7 +110,7 @@ function SubjectView({
 					{subject.teacher?.name}
 				</span>
 			</div>
-		</div>
+		</ListItem>
 	);
 }
 

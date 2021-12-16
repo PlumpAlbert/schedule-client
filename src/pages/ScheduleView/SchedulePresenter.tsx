@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
-import API from "../../API";
+import List from "@mui/material/List";
+import ScheduleAPI from "../../API";
 import {ISubject} from "../../types";
-import SubjectView from "../../components/SubjectView";
+import SubjectView from "./SubjectView";
 import {WEEK_TYPE} from "../../types";
 
 interface IProps {
@@ -29,14 +30,18 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 	useEffect(() => {
 		const abortController = new AbortController();
 		try {
-			API.fetchSchedule(groupId || 1, abortController).then(schedule => {
-				let newSchedule: Array<ISubject[]> = [];
-				for (let i = WeekDay.Monday; i <= WeekDay.Sunday; i++) {
-					newSchedule[i - 1] = schedule.filter(v => v.weekday === i);
+			ScheduleAPI.fetchSchedule(groupId || 1, abortController).then(
+				schedule => {
+					let newSchedule: Array<ISubject[]> = [];
+					for (let i = WeekDay.Monday; i <= WeekDay.Sunday; i++) {
+						newSchedule[i - 1] = schedule.filter(
+							v => v.weekday === i
+						);
+					}
+					setSubjects(newSchedule);
+					setLoading(false);
 				}
-				setSubjects(newSchedule);
-				setLoading(false);
-			});
+			);
 		} catch (err) {
 			if (!abortController.signal.aborted) {
 				setLoading(false);
@@ -50,13 +55,16 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 
 	const handleSubjectClick = useCallback<(s: ISubject) => void>(
 		subject => {
-			navigate("/subject?id=" + subject.id, {state: {subject}});
+			navigate("/subject?id=" + subject.id, {
+				state: {subject},
+				replace: false
+			});
 		},
 		[navigate]
 	);
 
 	return (
-		<div className="schedule-view-page__schedule">
+		<List className="schedule-view-page__schedule">
 			{isLoading ? (
 				<>
 					<SubjectView loading type={0} />
@@ -82,7 +90,7 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 						)
 				)
 			)}
-		</div>
+		</List>
 	);
 }
 
