@@ -1,7 +1,7 @@
 @import "./Colors.scss";
 
 .app .page .specialty {
-	border: 1px solid $offWhite;
+	border: 1px solid transparentize($black, 0.84);
 	font-family: "Lato", sans-serif;
 	box-shadow: none;
 
@@ -25,12 +25,12 @@
 		}
 	}
 	&-details {
-		border-top: 1px solid $offWhite;
+		border-top: 1px solid transparentize($black, 0.84);
 		padding: 0;
 
 		.specialty-course {
 			cursor: pointer;
-			background-color: hsl(0, 0%, 97%);
+			background-color: hsl(0, 0%, 95%);
 			margin: 0;
 			padding: 0.8rem 2rem;
 			border-style: solid;

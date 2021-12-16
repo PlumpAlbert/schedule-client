@@ -25,17 +25,17 @@ const FacultyAccordion = ({title, specialties}: IProps) => {
 	return (
 		<Accordion
 			disableGutters
-			className="faculty"
+			className="faculty-accordion"
 			TransitionProps={{unmountOnExit: true}}
 			elevation={0}
 		>
 			<AccordionSummary
-				className="faculty-summary"
+				className="faculty-accordion-summary"
 				expandIcon={<ChevronDownIcon sx={{fontSize: "1rem"}} />}
 			>
 				{title}
 			</AccordionSummary>
-			<AccordionDetails className="faculty-details">
+			<AccordionDetails className="faculty-accordion-details">
 				{specialtyElements}
 			</AccordionDetails>
 		</Accordion>
