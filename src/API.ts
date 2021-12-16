@@ -21,7 +21,7 @@ interface ISuccessful {
 export default class ScheduleAPI {
 	private static HOST: string =
 		process.env.NODE_ENV === "development"
-			? "http://deer/api"
+			? `http://${document.location.host}/api`
 			: "https://www.plumpalbert.xyz/api";
 	/**
 	 * Method for fetching group's schedule
