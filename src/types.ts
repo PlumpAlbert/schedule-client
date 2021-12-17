@@ -4,9 +4,9 @@ export enum WEEK_TYPE {
 }
 
 export enum SUBJECT_TYPE {
-	LECTURE = 0,
-	PRACTICE = 1,
-	LAB = 2
+	ЛЕКЦИЯ = 0,
+	ПРАКТИКА = 1,
+	ЛАБОРАТОРНАЯ = 2
 }
 
 export type Course = "1" | "2" | "3" | "4";

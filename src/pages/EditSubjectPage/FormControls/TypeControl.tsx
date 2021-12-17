@@ -41,9 +41,9 @@ function TypeControl({dispatch, value}: IProps<SUBJECT_TYPE>) {
 					</p>
 				)}
 			>
-				<MenuItem value={SUBJECT_TYPE.LECTURE}>Лекция</MenuItem>
-				<MenuItem value={SUBJECT_TYPE.PRACTICE}>Практика</MenuItem>
-				<MenuItem value={SUBJECT_TYPE.LAB}>Лабораторная</MenuItem>
+				<MenuItem value={SUBJECT_TYPE.ЛЕКЦИЯ}>Лекция</MenuItem>
+				<MenuItem value={SUBJECT_TYPE.ПРАКТИКА}>Практика</MenuItem>
+				<MenuItem value={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}>Лабораторная</MenuItem>
 			</Select>
 		</FormControl>
 	);
