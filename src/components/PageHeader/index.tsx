@@ -77,7 +77,7 @@ function PageHeader({
 	const [state, dispatch] = useReducer(PageHeaderReducer, {
 		searchValue: "",
 		searchDisplayType: SearchDisplayType.NONE,
-		leftIcon: LeftIcon.NONE,
+		leftIcon: LeftIcon.MENU,
 		rightIcon: RightIcon.NONE
 	});
 	const location = useLocation();
@@ -108,10 +108,6 @@ function PageHeader({
 				payload: state.searchValue
 					? SearchDisplayType.FULL
 					: SearchDisplayType.ICON
-			});
-			action.payload.push({
-				type: "SET-LEFT_ICON",
-				payload: LeftIcon.NONE
 			});
 		} else {
 			switch (uri[1]) {
