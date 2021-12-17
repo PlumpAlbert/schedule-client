@@ -60,79 +60,9 @@
 		padding: 1.5rem 0;
 
 		.subject-view {
-			display: flex;
 			margin: 1rem 0;
-			padding: 0;
-			position: relative;
 			&:first-child {
 				margin-top: 0;
-			}
-			&-type {
-				display: flex;
-				position: absolute;
-				left: 0;
-				top: 0;
-				bottom: 0;
-				width: 0.25rem;
-				height: inherit;
-				border-radius: 0 8px 8px 0;
-				&.lecture {
-					background-color: $blue;
-				}
-				&.practice {
-					background-color: $purple;
-				}
-				&.lab {
-					background-color: $yellow;
-				}
-			}
-			&-content {
-				display: flex;
-				flex: 1;
-				flex-direction: column;
-				margin: 0.5rem 2rem;
-				.subject-view {
-					&__header {
-						display: flex;
-						justify-content: space-between;
-						color: $grey;
-						font-size: 0.8rem;
-						margin-bottom: 0.5rem;
-						user-select: none;
-					}
-					&-teacher {
-						margin-top: 0.5rem;
-						font-size: 0.8rem;
-						color: $grey;
-					}
-					&.loading {
-						&-time,
-						&-location,
-						&-title,
-						&-teacher {
-							animation-name: glow;
-							animation-duration: 1s;
-							animation-fill-mode: backwards;
-							animation-iteration-count: infinite;
-							animation-timing-function: linear;
-							min-height: 0.8em;
-							min-width: 4em;
-							border-radius: 0.5em;
-							background: linear-gradient(
-								to left,
-								hsl(0, 0%, 97%) 0%,
-								white 20%,
-								hsl(0, 0%, 97%) 40%
-							);
-							background-size: 50% 1em;
-						}
-						&-time,
-						&-location,
-						&-teacher {
-							max-width: 6em;
-						}
-					}
-				}
 			}
 		}
 	}
