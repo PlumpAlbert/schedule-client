@@ -108,9 +108,6 @@ function PageHeader({
 				payload: state.searchValue
 					? SearchDisplayType.FULL
 					: SearchDisplayType.ICON
-			}, {
-				type: "SET-LEFT_ICON",
-				payload: LeftIcon.NONE
 			});
 			action.payload.push({
 				type: "SET-LEFT_ICON",
