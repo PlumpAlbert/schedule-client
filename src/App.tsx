@@ -25,10 +25,18 @@ function App() {
 
 	useEffect(() => {
 		setShowMenu(false);
+		const userInfo = sessionStorage.getItem("user");
 		if (location.pathname === "/") {
-			setShowFooter(true);
+			if (userInfo) {
+				navigate("/schedule", {replace: true});
+			} else {
+				setShowFooter(true);
+			}
 		} else {
 			setShowFooter(false);
+			if (location.pathname === "/login" && userInfo) {
+				navigate("/schedule", {replace: true});
+			}
 		}
 	}, [location.pathname]);
 
