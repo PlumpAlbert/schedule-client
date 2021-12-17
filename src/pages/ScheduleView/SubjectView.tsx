@@ -138,7 +138,7 @@ function SubjectView({
 							{renderTime(subject.time)}
 						</span>
 						<span className="subject-view-location">
-							{subject.audience}
+							{SUBJECT_TYPE[subject.type]} в {subject.audience}
 						</span>
 					</div>
 					<span className="subject-view-title">{subject.title}</span>

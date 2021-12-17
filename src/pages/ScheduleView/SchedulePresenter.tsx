@@ -63,21 +63,38 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 		[navigate]
 	);
 
+	const handleSubjectDelete = useCallback<(s: Partial<ISubject>) => void>(
+		subject => {
+			if (subject.weekday) {
+				const index = subject.weekday - 1;
+				setSubjects([
+					...subjects.slice(0, index),
+					subjects[index].filter(s => s.id !== subject.id),
+					...subjects.slice(index + 1)
+				]);
+			}
+		},
+		[setSubjects, subjects]
+	);
+
 	return (
 		<List className="schedule-view-page__schedule">
 			{isLoading ? (
 				<>
-					<SubjectView loading type={0} />
-					<SubjectView loading type={1} />
-					<SubjectView loading type={2} />
+					<SubjectView key="subject-view-0" loading type={0} />
+					<SubjectView key="subject-view-1" loading type={2} />
+					<SubjectView key="subject-view-2" loading type={1} />
+					<SubjectView key="subject-view-3" loading type={2} />
+					<SubjectView key="subject-view-4" loading type={0} />
 				</>
 			) : (
 				subjects[weekday - 1].map(
-					s =>
+					(s, i) =>
 						s.weekType === weekType && (
 							<SubjectView
+								key={`subject-view-${i}`}
 								onClick={handleSubjectClick}
-								key={`subject-view-${s.id}`}
+								onDelete={handleSubjectDelete}
 								id={s.id}
 								type={s.type}
 								weekType={s.weekType}

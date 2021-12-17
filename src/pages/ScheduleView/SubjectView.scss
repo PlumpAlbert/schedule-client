@@ -43,6 +43,12 @@ body .app .subject-view {
 						font-size: 0.8rem;
 						margin-bottom: 0.5rem;
 						user-select: none;
+						.subject-view-location {
+							text-transform: lowercase;
+							&::first-letter {
+								text-transform: uppercase;
+							}
+						}
 					}
 					&-teacher {
 						margin-top: 0.5rem;
