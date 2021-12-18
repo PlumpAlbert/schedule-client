@@ -5,6 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {ISubject, SUBJECT_TYPE, WEEK_TYPE} from "../../types";
 
 import "./SubjectView.scss";
+import {renderTime} from "../../Helpers";
+import SwipeAction from "../../components/SwipeAction";
 
 interface ILoadable {
 	loading?: boolean;
@@ -13,23 +15,6 @@ interface IProps extends Partial<ISubject> {
 	type: SUBJECT_TYPE;
 	onClick?: (s: ISubject) => void;
 	onDelete?: (s: Partial<ISubject>) => void;
-}
-
-function renderTime(time: Date = new Date()) {
-	const endTime = new Date(time.valueOf());
-	endTime.setHours(endTime.getHours() + 1);
-	endTime.setMinutes(endTime.getMinutes() + 30);
-	let locale = "ru";
-	if (navigator.languages.length > 1) {
-		locale = navigator.languages[1];
-	}
-	return `${time.toLocaleTimeString(locale, {
-		hour: "2-digit",
-		minute: "2-digit"
-	})} - ${endTime.toLocaleTimeString(locale, {
-		hour: "2-digit",
-		minute: "2-digit"
-	})}`;
 }
 
 const TOUCH_TIME_THRESHOLD = 150;
@@ -80,56 +65,30 @@ function SubjectView({
 		[onDelete]
 	);
 
-	//#region Touch event
-	const touchesRef = useRef<React.Touch>();
-	const touchStartTimeRef = useRef<number>(0);
-	const [swipeX, setX] = useState(0);
-	const handleSwipe = useCallback<React.TouchEventHandler<HTMLDivElement>>(
-		e => {
-			if (e.touches.length > 1) return;
-			if (!touchesRef.current) {
-				touchStartTimeRef.current = performance.now();
-				touchesRef.current = e.touches[0];
-				return;
-			}
-			const deltaX =
-				e.changedTouches[0].clientX - touchesRef.current.clientX;
-			setX(deltaX);
-		},
-		[setX]
-	);
-	const itemRef = useRef(null);
-	const actionRef = useRef(null);
-	const handleSwipeEnd = useCallback(() => {
-		const touchTime = performance.now() - touchStartTimeRef.current;
-		touchesRef.current = undefined;
-		let actionWidth = 0;
-		if (actionRef.current) {
-			actionWidth = Number(
-				getComputedStyle(actionRef.current).width.replace("px", "")
-			);
-		}
-		if (touchTime < TOUCH_TIME_THRESHOLD && -swipeX > actionWidth) {
-			handleDeleteClick();
-			setX(0);
-		} else {
-			if (-swipeX > actionWidth) setX(-actionWidth);
-			else setX(0);
-		}
-	}, [setX, swipeX, handleDeleteClick]);
-	//#endregion
-
 	return (
 		<ListItem
 			className={`subject-view${loading ? " loading" : ""}`}
 			onClick={handleClick}
 		>
-			<div
-				ref={itemRef}
-				className="subject-view-wrapper"
-				onTouchMove={handleSwipe}
-				onTouchEnd={handleSwipeEnd}
-				style={{transform: swipeX > 0 ? "" : `translateX(${swipeX}px)`}}
+			<SwipeAction
+				className="subject-view"
+				onAction={handleDeleteClick}
+				action={
+					<>
+						<Icon
+							id="subject-view-action__icon-delete"
+							className="subject-view-action__icon"
+						>
+							<DeleteIcon />
+						</Icon>
+						<label
+							htmlFor="subject-view-action__icon-delete"
+							className="subject-view-action__text"
+						>
+							Удалить
+						</label>
+					</>
+				}
 			>
 				<div className={`subject-view-type ${typeClass}`} />
 				<div className="subject-view-content">
@@ -146,25 +105,7 @@ function SubjectView({
 						{subject.teacher?.name}
 					</span>
 				</div>
-			</div>
-			<div
-				className="subject-view-action"
-				ref={actionRef}
-				onClick={handleDeleteClick}
-			>
-				<Icon
-					id="subject-view-action__icon-delete"
-					className="subject-view-action__icon"
-				>
-					<DeleteIcon />
-				</Icon>
-				<label
-					htmlFor="subject-view-action__icon-delete"
-					className="subject-view-action__text"
-				>
-					Удалить
-				</label>
-			</div>
+			</SwipeAction>
 		</ListItem>
 	);
 }
