@@ -62,3 +62,24 @@ export function CalculateCourse(groupYear: number) {
 	}
 	return number.toString() as Course;
 }
+
+/**
+ * Pretty printing of subject's start and end time
+ * @param time Start time of subject
+ */
+export function renderTime(time: Date = new Date()) {
+	const endTime = new Date(time.valueOf());
+	endTime.setHours(endTime.getHours() + 1);
+	endTime.setMinutes(endTime.getMinutes() + 30);
+	let locale = "ru";
+	if (navigator.languages.length > 1) {
+		locale = navigator.languages[1];
+	}
+	return `${time.toLocaleTimeString(locale, {
+		hour: "2-digit",
+		minute: "2-digit"
+	})} - ${endTime.toLocaleTimeString(locale, {
+		hour: "2-digit",
+		minute: "2-digit"
+	})}`;
+}

@@ -2,11 +2,14 @@ export enum WEEK_TYPE {
 	GREEN = 1,
 	WHITE = 0
 }
-
-export enum SUBJECT_TYPE {
-	ЛЕКЦИЯ = 0,
-	ПРАКТИКА = 1,
-	ЛАБОРАТОРНАЯ = 2
+export enum WEEKDAY {
+	MONDAY = 1,
+	TUESDAY = 2,
+	WEDNESDAY = 3,
+	THURSDAY = 4,
+	FRIDAY = 5,
+	SATURDAY = 6,
+	SUNDAY = 7
 }
 
 export type Course = "1" | "2" | "3" | "4";
@@ -18,14 +21,19 @@ export interface ISpecialty {
 	};
 }
 
+export enum SUBJECT_TYPE {
+	ЛЕКЦИЯ = 0,
+	ПРАКТИКА = 1,
+	ЛАБОРАТОРНАЯ = 2
+}
 export interface ISubject {
 	id: number;
 	audience: string;
 	type: number;
 	title: string;
 	time: Date;
-	weekday: number;
-	weekType: number;
+	weekday: WEEKDAY;
+	weekType: WEEK_TYPE;
 	teacher: {
 		id: number;
 		name: string;
@@ -46,9 +54,9 @@ export interface IGroup {
 export interface IUser {
 	id?: number;
 	name: string;
-	login: string;
+	login?: string;
 	type?: UserType;
-	group: IGroup;
+	group?: IGroup;
 }
 export interface IAuthenticated {
 	password: string;
