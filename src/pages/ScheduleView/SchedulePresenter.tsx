@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import ScheduleAPI from "../../API";
-import {ISubject} from "../../types";
+import {ISubject, WEEKDAY} from "../../types";
 import SubjectView from "./SubjectView";
 import {WEEK_TYPE} from "../../types";
 
@@ -11,15 +11,6 @@ interface IProps {
 	groupId?: number;
 	weekday: number;
 	weekType: WEEK_TYPE;
-}
-enum WeekDay {
-	Monday = 1,
-	Tuesday,
-	Wednesday,
-	Thursday,
-	Friday,
-	Saturday,
-	Sunday
 }
 
 function SchedulePresenter({groupId, weekday, weekType}: IProps) {
@@ -33,7 +24,7 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 			ScheduleAPI.fetchSchedule(groupId || 1, abortController).then(
 				schedule => {
 					let newSchedule: Array<ISubject[]> = [];
-					for (let i = WeekDay.Monday; i <= WeekDay.Sunday; i++) {
+					for (let i = WEEKDAY.MONDAY; i <= WEEKDAY.SUNDAY; i++) {
 						newSchedule[i - 1] = schedule.filter(
 							v => v.weekday === i
 						);
