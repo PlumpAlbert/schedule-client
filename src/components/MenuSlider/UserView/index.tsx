@@ -17,6 +17,7 @@ function UserView({user, onGroupChange}: IProps) {
 	const navigate = useNavigate();
 
 	const groupName = useMemo(() => {
+		if (!user.group) return "";
 		const words = user.group.specialty.split(" ");
 		const year = user.group.year.toString();
 		return (
@@ -24,7 +25,7 @@ function UserView({user, onGroupChange}: IProps) {
 			"-" +
 			year.slice(-2)
 		);
-	}, [user.group.specialty, user.group.year]);
+	}, [user.group]);
 
 	const handleGroupChange = useCallback(
 		group => {
@@ -46,11 +47,13 @@ function UserView({user, onGroupChange}: IProps) {
 
 	return (
 		<div className="app-menu__content">
-			<GroupSelectDialog
-				open={dialogOpened}
-				onClose={handleGroupChange}
-				{...user.group}
-			/>
+			{user.group && (
+				<GroupSelectDialog
+					open={dialogOpened}
+					onClose={handleGroupChange}
+					{...user.group}
+				/>
+			)}{" "}
 			<div className="menu-header">
 				<h1 className="app-title">Расписание ЛГТУ</h1>
 				<div className="user-info">

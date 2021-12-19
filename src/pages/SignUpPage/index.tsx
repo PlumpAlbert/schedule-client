@@ -68,7 +68,7 @@ function SignUpPage() {
 							group: user.group
 						} as IUser)
 					);
-					navigate(`/schedule?group=${user.group.id}`, {
+					navigate(`/schedule?group=${user.group?.id}`, {
 						replace: true
 					});
 				})

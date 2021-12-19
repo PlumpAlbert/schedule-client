@@ -32,7 +32,7 @@ function LoginPage() {
 						return;
 					}
 					sessionStorage.setItem("user", JSON.stringify(user));
-					navigate(`/schedule?group=${user.group.id}`, {
+					navigate(`/schedule?group=${user.group?.id}`, {
 						replace: true
 					});
 				});

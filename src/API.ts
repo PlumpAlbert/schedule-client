@@ -114,7 +114,7 @@ export default class ScheduleAPI {
 			body: JSON.stringify({
 				name: user.name,
 				login: user.login,
-				group_id: user.group.id,
+				group_id: user.group?.id,
 				password: user.password
 			}),
 			method: "POST"
