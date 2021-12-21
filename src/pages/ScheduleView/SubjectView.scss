@@ -6,10 +6,6 @@ body .app .subject-view {
 	position: relative;
 	background-color: $red;
 	&-wrapper {
-		z-index: 1;
-		flex: 1;
-		background-color: $white;
-		@include transition(transform 75ms ease-out);
 		.subject-view {
 			&-type {
 				display: flex;
@@ -87,21 +83,6 @@ body .app .subject-view {
 		}
 	}
 	&-action {
-		display: flex;
-		flex-direction: column;
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 0;
-		color: $white;
-		align-items: center;
-		justify-content: center;
-		padding: 0 0.5rem;
-		
-		&__icon {
-
-		}
 		&__text {
 			margin-top: 0.25em;
 		}

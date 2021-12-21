@@ -1,4 +1,5 @@
 import React, {forwardRef, useCallback, useMemo, useRef, useState} from "react";
+import "../styles/SwipeAction.scss";
 
 interface IProps {
 	action: React.ReactNode;
@@ -53,34 +54,32 @@ function SwipeAction({
 		}
 	}, [setX, touchTimeThreshold, swipeX, onAction]);
 
-	const wrapperClassName = useMemo(
-		() =>
-			className
-				.split(" ")
-				.map(c => c + "-wrapper")
-				.join(" "),
-		[className]
-	);
-	const actionClassName = useMemo(
-		() =>
-			className
-				.split(" ")
-				.map(c => c + "-action")
-				.join(" "),
+	const createClassName = useCallback(
+		(suffix: string) => {
+			let classes = ["swipe"];
+			if (className) {
+				classes.push(...className.split(" "));
+			}
+			return classes.map(c => c + suffix).join(" ");
+		},
 		[className]
 	);
 
 	return (
-		<div>
+		<div className={createClassName("-root")}>
 			<div
-				className={wrapperClassName}
+				className={createClassName("-wrapper")}
 				onTouchMove={handleSwipe}
 				onTouchEnd={handleSwipeEnd}
 				style={{transform: swipeX > 0 ? "" : `translateX(${swipeX}px)`}}
 			>
 				{children}
 			</div>
-			<div className={actionClassName} ref={actionRef} onClick={onAction}>
+			<div
+				className={createClassName("-action")}
+				ref={actionRef}
+				onClick={onAction}
+			>
 				{action}
 			</div>
 		</div>
