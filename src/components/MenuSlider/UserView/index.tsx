@@ -6,6 +6,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import GroupSelectDialog from "./GroupSelectDialog";
 import {IGroup, IUser, UserType} from "../../../types";
 import ScheduleAPI from "../../../API";
+import {actions as appActions} from "../../../store/app";
+import {actions as scheduleActions} from "../../../store/schedule";
+import {useDispatch} from "../../../store";
 
 interface IProps {
 	user: IUser;
@@ -15,6 +18,7 @@ interface IProps {
 function UserView({user, onGroupChange}: IProps) {
 	const [dialogOpened, setDialogOpened] = useState(false);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const groupName = useMemo(() => {
 		if (!user.group) return "";
@@ -30,20 +34,25 @@ function UserView({user, onGroupChange}: IProps) {
 	const handleGroupChange = useCallback(
 		group => {
 			onGroupChange(group);
+			dispatch(appActions.setUserGroup(group));
 			setDialogOpened(false);
 		},
-		[onGroupChange]
+		[onGroupChange, dispatch]
 	);
 	const handleEditGroupClick = useCallback(() => {
 		setDialogOpened(true);
 	}, [setDialogOpened]);
 
 	const handleSignOutClick = useCallback(() => {
-		sessionStorage.removeItem("user");
 		ScheduleAPI.signOut().then(() => {
+			dispatch(appActions.signOut());
 			navigate("/");
 		});
-	}, []);
+	}, [dispatch]);
+
+	const handleEditScheduleClick = useCallback(() => {
+		dispatch(scheduleActions.toggleEditing());
+	}, [dispatch]);
 
 	return (
 		<div className="app-menu__content">
@@ -53,7 +62,7 @@ function UserView({user, onGroupChange}: IProps) {
 					onClose={handleGroupChange}
 					{...user.group}
 				/>
-			)}{" "}
+			)}
 			<div className="menu-header">
 				<h1 className="app-title">Расписание ЛГТУ</h1>
 				<div className="user-info">
@@ -69,7 +78,10 @@ function UserView({user, onGroupChange}: IProps) {
 			<div className="menu-settings">
 				<h3 className="menu-settings__header">Настройки</h3>
 				{user.type === UserType.ADMIN && (
-					<p className="menu-settings__option">
+					<p
+						className="menu-settings__option"
+						onClick={handleEditScheduleClick}
+					>
 						<EditIcon classes={{root: "option__icon"}} />
 						<span className="option__text">
 							Редактировать расписание

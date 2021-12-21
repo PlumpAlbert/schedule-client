@@ -31,7 +31,7 @@ export enum SUBJECT_TYPE {
 export interface ISubject {
 	id: number;
 	audience: string;
-	type: number;
+	type: SUBJECT_TYPE;
 	title: string;
 	time: number;
 	weekday: WEEKDAY;

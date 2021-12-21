@@ -3,7 +3,7 @@
 body .app-menu {
 	display: flex;
 	min-width: 85%;
-	width: auto;
+	width: min-content;
 	overflow-x: hidden;
 	flex-direction: column;
 	color: $black;

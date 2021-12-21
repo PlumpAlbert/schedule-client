@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import Button from "@mui/material/Button";
 import "../styles/LandingPage.scss";
 
-export default function LandingPage(props: any) {
+const LandingPage = () => {
 	const navigate = useNavigate();
 	const groupBtnClick = useCallback(() => {
 		navigate("/groups");
@@ -42,4 +42,6 @@ export default function LandingPage(props: any) {
 			</Button>
 		</div>
 	);
-}
+};
+
+export default LandingPage;

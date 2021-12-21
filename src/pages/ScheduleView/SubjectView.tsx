@@ -12,20 +12,23 @@ interface ILoadable {
 	loading?: boolean;
 }
 interface IProps {
-	type: SUBJECT_TYPE;
+	isEditable?: boolean;
+	type?: SUBJECT_TYPE;
 	value?: ISubject;
 	onClick?: (s: ISubject) => void;
-	onDelete?: (s: Partial<ISubject>) => void;
+	onDelete?: (s: ISubject) => void;
 }
 
 function SubjectView({
 	onClick = undefined,
 	onDelete = undefined,
 	loading = false,
-	value: subject
+	isEditable,
+	value,
+	type = value?.type
 }: IProps & ILoadable) {
 	let typeClass;
-	switch (subject?.type) {
+	switch (type || value?.type) {
 		case SUBJECT_TYPE.ЛЕКЦИЯ:
 			typeClass = "lecture";
 			break;
@@ -40,28 +43,28 @@ function SubjectView({
 	const handleClick = useCallback<React.MouseEventHandler<HTMLLIElement>>(
 		e => {
 			e.preventDefault();
-			if (onClick && subject) {
+			if (onClick && value) {
 				onClick({
-					audience: subject.audience || "",
-					id: subject.id || -1,
-					teacher: subject.teacher || {id: -1, name: ""},
-					time: subject.time || new Date(),
-					title: subject.title || "",
-					type: subject.type,
-					weekType: subject.weekType || WEEK_TYPE.WHITE,
-					weekday: subject.weekday || 1
+					audience: value.audience || "",
+					id: value.id || -1,
+					teacher: value.teacher || {id: -1, name: ""},
+					time: value.time || Date.now(),
+					title: value.title || "",
+					type: value.type,
+					weekType: value.weekType || WEEK_TYPE.WHITE,
+					weekday: value.weekday || 1
 				});
 			}
 		},
-		[onClick, subject]
+		[onClick, value]
 	);
 
 	const handleDeleteClick = useCallback(
 		(e?: React.MouseEvent) => {
 			if (e) e.stopPropagation();
-			if (onDelete && subject) onDelete(subject);
+			if (onDelete && value) onDelete(value);
 		},
-		[onDelete, subject]
+		[onDelete, value]
 	);
 
 	return (
@@ -71,6 +74,7 @@ function SubjectView({
 		>
 			<SwipeAction
 				className="subject-view"
+				canSwipe={isEditable}
 				onAction={handleDeleteClick}
 				action={
 					<>
@@ -93,16 +97,16 @@ function SubjectView({
 				<div className="subject-view-content">
 					<div className="subject-view__header">
 						<span className="subject-view-time">
-							{renderTime(subject?.time)}
+							{renderTime(value?.time)}
 						</span>
 						<span className="subject-view-location">
-							{subject && SUBJECT_TYPE[subject.type]} в{" "}
-							{subject?.audience}
+							{value && SUBJECT_TYPE[value.type]} в{" "}
+							{value?.audience}
 						</span>
 					</div>
-					<span className="subject-view-title">{subject?.title}</span>
+					<span className="subject-view-title">{value?.title}</span>
 					<span className="subject-view-teacher">
-						{subject?.teacher?.name}
+						{value?.teacher?.name}
 					</span>
 				</div>
 			</SwipeAction>

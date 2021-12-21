@@ -7,39 +7,32 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import Collapse from "@mui/material/Collapse";
+import {SearchDisplay, actions as headerActions} from "../../store/app/header";
+import {useSelector, useDispatch} from "../../store";
 
-interface IProps {
-	variant: SearchDisplayType;
-	value: string;
-	dispatch: React.Dispatch<import(".").Action<any>>;
-}
-export enum SearchDisplayType {
-	NONE = 0,
-	FULL,
-	ICON
-}
-
-const SearchInput = ({value, variant, dispatch}: IProps) => {
+const SearchInput = () => {
 	const searchInputRef = useRef<HTMLInputElement>(null);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const {variant, value} = useSelector(state => ({
+		variant: state.application.header.searchDisplay,
+		value: state.application.header.searchValue
+	}));
 
 	//#region ACTION CREATORS
 	const setSearchDisplayType = useCallback(
-		(type: SearchDisplayType) => {
-			dispatch({
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: type
-			});
+		(type: SearchDisplay) => {
+			dispatch(headerActions.setSearchDisplay(type));
 		},
 		[dispatch]
 	);
 
-	const setSearchValue = useCallback((value: string) => {
-		dispatch({
-			type: "SET-SEARCH_VALUE",
-			payload: value
-		});
-	}, []);
+	const setSearchValue = useCallback(
+		(value: string) => {
+			dispatch(headerActions.setSearchValue(value));
+		},
+		[dispatch]
+	);
 	//#endregion
 
 	//#region CALLBACKS
@@ -66,17 +59,21 @@ const SearchInput = ({value, variant, dispatch}: IProps) => {
 		if (searchInputRef.current) {
 			searchInputRef.current.focus();
 		}
-		setSearchDisplayType(SearchDisplayType.FULL);
+		setSearchDisplayType(SearchDisplay.FULL);
 	}, [setSearchDisplayType]);
 
 	const handleSearchInputBlur = useCallback(
 		e => {
 			if (!e.target.value) {
-				setSearchDisplayType(SearchDisplayType.ICON);
+				setSearchDisplayType(SearchDisplay.ICON);
 			}
 		},
 		[setSearchDisplayType]
 	);
+
+	const handleCollapseEntered = useCallback(() => {
+		searchInputRef.current?.focus();
+	}, []);
 	//#endregion
 
 	return (
@@ -92,19 +89,14 @@ const SearchInput = ({value, variant, dispatch}: IProps) => {
 			</IconWrapper>
 			<Collapse
 				orientation="horizontal"
-				in={variant === SearchDisplayType.FULL}
+				in={variant === SearchDisplay.FULL}
 				className="page-header__search-input-collapse"
-				onEntered={() => {
-					searchInputRef.current?.focus();
-				}}
+				onEntered={handleCollapseEntered}
 			>
 				<Input
 					inputRef={searchInputRef}
 					className="page-header__search-input"
 					onBlur={handleSearchInputBlur}
-					onFocus={() => {
-						console.log("got focus");
-					}}
 					placeholder="Введите название группы"
 					value={value}
 					onChange={handleSearchValueChanged}

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -10,12 +10,13 @@ import Snackbar from "@mui/material/Snackbar";
 import PageFooter from "../PageFooter";
 import UserView from "./UserView";
 import ScheduleAPI from "../../API";
-import {IGroup, IUser} from "../../types";
+import {IGroup} from "../../types";
+import {useSelector} from "../../store";
+import {selectUser} from "../../store/app";
 
 import "../../styles/MenuSlider.scss";
 
 interface IProps {
-	showMenu: boolean;
 	onClose: () => void;
 	onOpen: () => void;
 }
@@ -25,8 +26,7 @@ interface IAlert {
 	type: AlertColor;
 }
 
-const MenuSlider = ({showMenu, onClose, onOpen}: IProps) => {
-	const [user, setUser] = useState<IUser | null>(null);
+const MenuSlider = ({onClose, onOpen}: IProps) => {
 	const [alert, setAlert] = useState<IAlert>({
 		show: false,
 		message: "",
@@ -34,25 +34,17 @@ const MenuSlider = ({showMenu, onClose, onOpen}: IProps) => {
 	});
 	const location = useLocation();
 	const navigate = useNavigate();
+	const user = useSelector(selectUser);
+	const showMenu = useSelector(store => store.application.showMenu);
 
 	useEffect(() => {
 		onClose();
 	}, [location.pathname]);
 
-	const userJson = sessionStorage.getItem("user");
-	useEffect(() => {
-		if (userJson) {
-			setUser(JSON.parse(userJson));
-		} else {
-			setUser(null);
-		}
-	}, [userJson]);
-
 	const handleGroupChange = useCallback(
 		(newGroup: IGroup | null) => {
 			if (!user || !newGroup) return;
 			user.group = newGroup;
-			sessionStorage.setItem("user", JSON.stringify(user));
 			ScheduleAPI.changeGroup(newGroup).then(success => {
 				setAlert({
 					show: true,

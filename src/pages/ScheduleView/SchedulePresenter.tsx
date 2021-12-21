@@ -1,35 +1,51 @@
-import React, {useState, useEffect, useCallback} from "react";
-import {useNavigate} from "react-router-dom";
+import React, {useState, useEffect, useCallback, useMemo} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import ScheduleAPI from "../../API";
-import {ISubject, WEEKDAY} from "../../types";
+import {ISubject, SUBJECT_TYPE, WEEKDAY} from "../../types";
 import SubjectView from "./SubjectView";
 import {WEEK_TYPE} from "../../types";
 
+import {actions as scheduleActions} from "../../store/schedule";
+import {useDispatch, useSelector} from "../../store";
+import {selectUser} from "../../store/app";
+
 interface IProps {
-	groupId?: number;
+	isEditing?: boolean;
 	weekday: number;
 	weekType: WEEK_TYPE;
 }
 
-function SchedulePresenter({groupId, weekday, weekType}: IProps) {
-	const [subjects, setSubjects] = useState<Array<ISubject[]>>([]);
+function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
 	const [isLoading, setLoading] = useState(true);
+	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const subjects = useSelector(state => {
+		let newSchedule: Array<ISubject[]> = [];
+		for (let i = WEEKDAY.MONDAY; i <= WEEKDAY.SUNDAY; i++) {
+			newSchedule[i - 1] = state.schedule.subjects.filter(
+				v => v.weekday === i
+			);
+		}
+		return newSchedule;
+	});
+	const user = useSelector(selectUser);
+
+	const groupId = useMemo(() => {
+		const query = new URLSearchParams(location.search);
+		const groupId = query.get("group");
+		if (groupId) return Number(groupId);
+		if (user) return user.group?.id;
+	}, [location.search]);
 
 	useEffect(() => {
 		const abortController = new AbortController();
 		try {
 			ScheduleAPI.fetchSchedule(groupId || 1, abortController).then(
 				schedule => {
-					let newSchedule: Array<ISubject[]> = [];
-					for (let i = WEEKDAY.MONDAY; i <= WEEKDAY.SUNDAY; i++) {
-						newSchedule[i - 1] = schedule.filter(
-							v => v.weekday === i
-						);
-					}
-					setSubjects(newSchedule);
+					dispatch(scheduleActions.setSchedule(schedule));
 					setLoading(false);
 				}
 			);
@@ -46,37 +62,47 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 
 	const handleSubjectClick = useCallback<(s: ISubject) => void>(
 		subject => {
-			navigate("/subject?id=" + subject.id, {
-				state: {subject},
-				replace: false
-			});
+			navigate("/subject?id=" + subject.id);
 		},
 		[navigate]
 	);
 
-	const handleSubjectDelete = useCallback<(s: Partial<ISubject>) => void>(
+	const handleSubjectDelete = useCallback<(s: ISubject) => void>(
 		subject => {
-			if (subject.weekday) {
-				const index = subject.weekday - 1;
-				setSubjects([
-					...subjects.slice(0, index),
-					subjects[index].filter(s => s.id !== subject.id),
-					...subjects.slice(index + 1)
-				]);
-			}
+			dispatch(scheduleActions.deleteSubject(subject));
 		},
-		[setSubjects, subjects]
+		[dispatch]
 	);
 
 	return (
 		<List className="schedule-view-page__schedule">
 			{isLoading ? (
 				<>
-					<SubjectView key="subject-view-0" loading type={0} />
-					<SubjectView key="subject-view-1" loading type={2} />
-					<SubjectView key="subject-view-2" loading type={1} />
-					<SubjectView key="subject-view-3" loading type={2} />
-					<SubjectView key="subject-view-4" loading type={0} />
+					<SubjectView
+						key="subject-view-0"
+						loading
+						type={SUBJECT_TYPE.ЛЕКЦИЯ}
+					/>
+					<SubjectView
+						key="subject-view-1"
+						loading
+						type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
+					/>
+					<SubjectView
+						key="subject-view-2"
+						loading
+						type={SUBJECT_TYPE.ПРАКТИКА}
+					/>
+					<SubjectView
+						key="subject-view-3"
+						loading
+						type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
+					/>
+					<SubjectView
+						key="subject-view-4"
+						loading
+						type={SUBJECT_TYPE.ЛЕКЦИЯ}
+					/>
 				</>
 			) : (
 				subjects[weekday - 1].map(
@@ -86,7 +112,7 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 								key={`subject-view-${i}`}
 								onClick={handleSubjectClick}
 								onDelete={handleSubjectDelete}
-								type={s.type}
+								isEditable={isEditing}
 								value={s}
 							/>
 						)

@@ -6,6 +6,8 @@ import Input from "@mui/material/Input";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
 import ScheduleAPI from "../API";
+import {useDispatch} from "../store";
+import {actions as appActions} from "../store/app";
 
 import "../styles/LoginPage.scss";
 
@@ -14,6 +16,7 @@ function LoginPage() {
 	const loginRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	//#region CALLBACKS
 	const handleSubmit = useCallback<React.FormEventHandler<HTMLFormElement>>(
@@ -31,7 +34,7 @@ function LoginPage() {
 						setError(true);
 						return;
 					}
-					sessionStorage.setItem("user", JSON.stringify(user));
+					dispatch(appActions.setUser(user));
 					navigate(`/schedule?group=${user.group?.id}`, {
 						replace: true
 					});
@@ -40,7 +43,7 @@ function LoginPage() {
 				console.log(err);
 			}
 		},
-		[setError, navigate]
+		[setError, navigate, dispatch]
 	);
 
 	const handleInputChange = useCallback<

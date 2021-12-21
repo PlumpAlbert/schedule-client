@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo} from "react";
 import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import PageHeader from "./components/PageHeader";
 import MenuSlider from "./components/MenuSlider";
@@ -9,36 +9,40 @@ import EditSubjectPage from "./pages/EditSubjectPage";
 import LoginPage from "./pages/LoginPage";
 import GroupsListPage from "./pages/GroupsListPage";
 import Page404 from "./pages/Page404";
-import {GetWeekType} from "./Helpers";
-import {WEEK_TYPE} from "./types";
-import "./styles/App.scss";
 import SignUpPage from "./pages/SignUpPage";
 import SearchPage from "./pages/SearchPage";
+import {WEEK_TYPE} from "./types";
+import {useDispatch, useSelector} from "./store";
+import {actions as appActions} from "./store/app";
+
+import "./styles/App.scss";
 
 function App() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const [weekday, setWeekday] = useState<number | undefined>(undefined);
-	const [weekType, setWeekType] = useState<WEEK_TYPE>(GetWeekType());
-	const [showMenu, setShowMenu] = useState(false);
-	const [showFooter, setShowFooter] = useState(location.pathname === "/");
+	const dispatch = useDispatch();
+	const {showMenu, showFooter, user, weekType} = useSelector(state => ({
+		showMenu: state.application.showMenu,
+		showFooter: state.application.showFooter,
+		user: state.application.user,
+		weekType: state.schedule.weekType
+	}));
 
 	useEffect(() => {
-		setShowMenu(false);
-		const userInfo = sessionStorage.getItem("user");
+		dispatch(appActions.closeMenu());
 		if (location.pathname === "/") {
-			if (userInfo) {
+			if (user) {
 				navigate("/schedule", {replace: true});
 			} else {
-				setShowFooter(true);
+				dispatch(appActions.showFooter());
 			}
 		} else {
-			setShowFooter(false);
-			if (location.pathname === "/login" && userInfo) {
+			dispatch(appActions.hideFooter());
+			if (location.pathname === "/login" && user) {
 				navigate("/schedule", {replace: true});
 			}
 		}
-	}, [location.pathname]);
+	}, [location.pathname]); // eslint-disable-line
 
 	useEffect(() => {
 		document.addEventListener("keydown", e => {
@@ -52,57 +56,32 @@ function App() {
 		};
 	}, []);
 
-	const menuButtonClicked = useCallback(() => {
-		setShowMenu(!showMenu);
-	}, [showMenu]);
-
-	const todayButtonClicked = useCallback(() => {
-		setWeekType(GetWeekType());
-		let day = new Date().getDay();
-		setWeekday(day === 0 ? 7 : day);
-	}, [setWeekType, setWeekday]);
-
-	const backButtonClicked = useCallback(() => {
-		navigate(-1);
-	}, []);
+	const toggleMenuVisibility = useCallback(() => {
+		dispatch(appActions.toggleMenu());
+	}, [dispatch]);
 
 	const appClassName = useMemo(() => {
 		let className = ["app"];
 		if (showMenu) className.push("menu-active");
 		if (location.pathname === "/schedule") {
-			className.push(weekType === WEEK_TYPE.WHITE ? "white" : "green");
-			if (showFooter) setShowFooter(false);
+			className.push(WEEK_TYPE[weekType].toLowerCase());
+			if (showFooter) dispatch(appActions.hideFooter());
 		}
 		return className.join(" ");
-	}, [weekType, showMenu, location.pathname, showFooter]);
+	}, [weekType, showMenu, location.pathname, showFooter, dispatch]);
 
 	return (
 		<div className={appClassName}>
-			<PageHeader
-				menuIsShown={showMenu}
-				onBackClick={backButtonClicked}
-				onMenuClick={menuButtonClicked}
-				onTodayClick={todayButtonClicked}
-			/>
+			<PageHeader />
 			<MenuSlider
-				showMenu={showMenu}
-				onClose={() => setShowMenu(false)}
-				onOpen={() => setShowMenu(true)}
+				onClose={toggleMenuVisibility}
+				onOpen={toggleMenuVisibility}
 			/>
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
 				<Route path="/signup" element={<SignUpPage />} />
 				<Route path="/login" element={<LoginPage />} />
-				<Route
-					path="/schedule"
-					element={
-						<ScheduleView
-							weekday={weekday}
-							weekType={weekType}
-							setWeekType={setWeekType}
-						/>
-					}
-				/>
+				<Route path="/schedule" element={<ScheduleView />} />
 				<Route path="/subject" element={<EditSubjectPage />} />
 				<Route path="/groups/*" element={<GroupsListPage />} />
 				<Route path="/search" element={<SearchPage />} />

@@ -4,10 +4,12 @@ import {
 	TypedUseSelectorHook
 } from "react-redux";
 import {configureStore} from "@reduxjs/toolkit";
+import applicationReducer from "./app";
 import scheduleReducer from "./schedule";
 
 const store = configureStore({
 	reducer: {
+		application: applicationReducer,
 		schedule: scheduleReducer
 	}
 });

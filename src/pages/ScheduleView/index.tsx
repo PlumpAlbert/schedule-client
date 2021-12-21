@@ -1,36 +1,25 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import {GetWeekdayName} from "../../Helpers";
 import SchedulePresenter from "./SchedulePresenter";
-import {WEEK_TYPE} from "../../types";
-import {useLocation} from "react-router";
+import {WEEKDAY, WEEK_TYPE} from "../../types";
+import {useDispatch, useSelector} from "../../store";
+import {actions as scheduleActions, selectSchedule} from "../../store/schedule";
 
 import "../../styles/ScheduleView.scss";
-interface IProps {
-	weekday?: number;
-	weekType: WEEK_TYPE;
-	setWeekType: (w: WEEK_TYPE) => void;
-}
 
-const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
-	const [currentDay, setCurrentDay] = useState(() => {
-		if (weekday) return weekday;
-		let day = new Date().getDay();
-		return day === 0 ? 7 : day;
-	});
-	const location = useLocation();
+const ScheduleView = () => {
 	const weekdayRefs = useRef<Array<HTMLParagraphElement | null>>([]);
+	const dispatch = useDispatch();
+	const {isEditing, weekday, weekType} = useSelector(selectSchedule);
 
 	useEffect(() => {
-		weekdayRefs.current[currentDay - 1]?.scrollIntoView({
+		weekdayRefs.current[weekday - 1]?.scrollIntoView({
 			behavior: "smooth",
 			block: "center",
 			inline: "center"
 		});
-	}, [currentDay]);
-	useEffect(() => {
-		if (weekday) setCurrentDay(weekday);
 	}, [weekday]);
 
 	//#region CALLBACKS
@@ -39,21 +28,20 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 	>(
 		({currentTarget}) => {
 			const {dataset} = currentTarget;
-			setCurrentDay(Number(dataset["weekday"]));
+			const newDay: WEEKDAY = Number(dataset["weekday"]);
+			dispatch(scheduleActions.setWeekday(newDay));
 		},
-		[setCurrentDay]
+		[dispatch]
 	);
 
 	const handleSwapClick = useCallback<React.MouseEventHandler>(() => {
-		setWeekType(
-			weekType === WEEK_TYPE.GREEN ? WEEK_TYPE.WHITE : WEEK_TYPE.GREEN
-		);
-	}, [weekType, setWeekType]);
+		dispatch(scheduleActions.toggleWeekType());
+	}, [dispatch]);
 	//#endregion
 
 	const weekdays = useMemo(() => {
-		let array = [];
-		for (let i = 1; i <= 7; i++) {
+		let array = new Array(WEEKDAY.SUNDAY);
+		for (let i = WEEKDAY.MONDAY; i <= WEEKDAY.SUNDAY; i++) {
 			let name = GetWeekdayName(i);
 			array.push(
 				<p
@@ -64,22 +52,16 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 					id={name}
 					data-weekday={i}
 					onClick={handleWeekdayClick}
-					className={`weekday${currentDay === i ? " active" : ""}`}
+					className={`weekday${weekday === i ? " active" : ""}`}
 				>
 					{name}
 				</p>
 			);
 		}
 		return array;
-	}, [handleWeekdayClick, currentDay]);
+	}, [handleWeekdayClick, weekday]);
 
 	const greenWeek = useMemo(() => weekType === WEEK_TYPE.GREEN, [weekType]);
-
-	const groupId = useMemo(() => {
-		const query = new URLSearchParams(location.search);
-		const groupId = query.get("group");
-		return groupId ? parseInt(groupId) : undefined;
-	}, [location.search]);
 
 	return (
 		<div className="page schedule-view-page">
@@ -96,9 +78,9 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 			</div>
 			<div className="schedule-view-page__days">{weekdays}</div>
 			<SchedulePresenter
-				groupId={groupId}
+				isEditing={isEditing}
 				weekType={weekType}
-				weekday={currentDay}
+				weekday={weekday}
 			/>
 		</div>
 	);

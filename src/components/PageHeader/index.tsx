@@ -1,5 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useReducer} from "react";
-import {useLocation} from "react-router";
+import React, {useCallback, useEffect, useMemo} from "react";
+import {AnyAction} from "@reduxjs/toolkit";
+import {useLocation, useNavigate} from "react-router";
 import AppBar from "@mui/material/AppBar";
 import Icon from "@mui/material/Icon";
 import BackIcon from "@mui/icons-material/NavigateBefore";
@@ -8,171 +9,92 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Check";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
-import SearchInput, {SearchDisplayType} from "./SearchInput";
+import SearchInput from "./SearchInput";
 import "../../styles/PageHeader.scss";
+import {
+	selectAppHeader,
+	SearchDisplay,
+	LeftIcon,
+	RightIcon,
+	actions as headerActions
+} from "../../store/app/header";
+import {actions as scheduleActions} from "../../store/schedule";
+import {actions as appActions} from "../../store/app";
+import {useDispatch, useSelector} from "../../store";
+import {GetWeekType} from "../../Helpers";
 
-interface IProps {
-	onMenuClick?: React.MouseEventHandler;
-	onTodayClick?: React.MouseEventHandler;
-	onBackClick?: React.MouseEventHandler;
-	menuIsShown: boolean;
-}
-interface IState {
-	searchValue: string;
-	searchDisplayType: SearchDisplayType;
-	leftIcon: LeftIcon;
-	rightIcon: RightIcon;
-}
-export interface Action<T extends any> {
-	type: string;
-	payload: T;
-}
-type CombinedAction = Action<Action<any>[]> & {type: "COMBINED"};
-
-enum LeftIcon {
-	NONE = 0,
-	MENU,
-	BACK,
-	CANCEL
-}
-enum RightIcon {
-	NONE = 0,
-	SEARCH,
-	TODAY,
-	SAVE
-}
-
-const PageHeaderReducer: React.Reducer<IState, Action<any>> = (
-	state,
-	action
-) => {
-	switch (action.type) {
-		case "SET-SEARCH_VALUE":
-			return {...state, searchValue: action.payload};
-		case "SET-SEARCH_DISPLAY_TYPE":
-			return {
-				...state,
-				searchDisplayType: action.payload,
-				rightIcon:
-					action.payload !== SearchDisplayType.NONE
-						? RightIcon.SEARCH
-						: state.rightIcon
-			};
-		case "SET-RIGHT_ICON":
-			return {...state, rightIcon: action.payload};
-		case "SET-LEFT_ICON":
-			return {...state, leftIcon: action.payload};
-		case "COMBINED":
-			return (action.payload as Action<any>[]).reduce(
-				(s, a) => PageHeaderReducer(s, a),
-				state
-			);
-		default:
-			return state;
-	}
-};
-
-function PageHeader({
-	onMenuClick,
-	onTodayClick,
-	onBackClick,
-	menuIsShown
-}: IProps) {
-	const [state, dispatch] = useReducer(PageHeaderReducer, {
-		searchValue: "",
-		searchDisplayType: SearchDisplayType.NONE,
-		leftIcon: LeftIcon.MENU,
-		rightIcon: RightIcon.NONE
-	});
+function PageHeader() {
+	const {title, leftIcon, rightIcon, searchValue, searchDisplay} =
+		useSelector(selectAppHeader);
+	const dispatch = useDispatch();
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		let action: CombinedAction = {type: "COMBINED", payload: []};
-		if (!menuIsShown) {
-			action.payload.push({
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: SearchDisplayType.NONE
-			});
-		} else if (state.searchValue) {
-			action.payload.push({
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: SearchDisplayType.FULL
-			});
-		} else {
-			action.payload.push({
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: SearchDisplayType.ICON
-			});
-		}
+		let actions: AnyAction[] = [];
 		const uri = location.pathname.split("/");
 		// Matches root path
 		if (uri.length === 1) {
-			action.payload.push({
-				type: "SET-SEARCH_DISPLAY_TYPE",
-				payload: state.searchValue
-					? SearchDisplayType.FULL
-					: SearchDisplayType.ICON
-			});
+			actions.push(
+				headerActions.setSearchDisplay(
+					searchValue ? SearchDisplay.FULL : SearchDisplay.ICON
+				)
+			);
 		} else {
 			switch (uri[1]) {
 				case "groups": {
 					if (uri[2]) {
-						action.payload.push({
-							type: "SET-LEFT_ICON",
-							payload: LeftIcon.BACK
-						});
+						actions.push(headerActions.setLeftIcon(LeftIcon.BACK));
 					} else {
-						action.payload.push({
-							type: "SET-LEFT_ICON",
-							payload: LeftIcon.MENU
-						});
-						action.payload.push({
-							type: "SET-RIGHT_ICON",
-							payload: RightIcon.NONE
-						});
+						actions.push(
+							headerActions.setLeftIcon(LeftIcon.MENU),
+							headerActions.setRightIcon(RightIcon.NONE)
+						);
 					}
 					break;
 				}
 				case "schedule": {
-					action.payload.push({
-						type: "SET-RIGHT_ICON",
-						payload: RightIcon.TODAY
-					});
+					actions.push(headerActions.setRightIcon(RightIcon.TODAY));
 					break;
 				}
 				case "subject": {
-					action.payload.push(
-						{
-							type: "SET-LEFT_ICON",
-							payload: LeftIcon.CANCEL
-						},
-						{
-							type: "SET-RIGHT_ICON",
-							payload: RightIcon.SAVE
-						}
+					actions.push(
+						headerActions.setLeftIcon(LeftIcon.CANCEL),
+						headerActions.setRightIcon(RightIcon.SAVE),
+						headerActions.setTitle("Редактирование")
 					);
 					break;
 				}
 				default: {
-					action.payload.push({
-						type: "SET-SEARCH_DISPLAY_TYPE",
-						payload: SearchDisplayType.NONE
-					});
-					action.payload.push({
-						type: "SET-LEFT_ICON",
-						payload: LeftIcon.MENU
-					});
+					actions.push(
+						headerActions.setSearchDisplay(SearchDisplay.NONE),
+						headerActions.setLeftIcon(LeftIcon.MENU)
+					);
 					break;
 				}
 			}
 		}
-		dispatch(action);
-	}, [menuIsShown, location.pathname]); // eslint-disable-line
+		actions.forEach(a => dispatch(a));
+	}, [location.pathname, dispatch]); // eslint-disable-line
 
 	const onSaveClick = useCallback(() => {}, []);
 
+	const onMenuClick = useCallback(() => {
+		dispatch(appActions.toggleMenu());
+	}, [dispatch]);
+
+	const onTodayClick = useCallback(() => {
+		let today = new Date();
+		dispatch(scheduleActions.setWeekday(today.getDay()));
+		dispatch(scheduleActions.setWeekType(GetWeekType(today)));
+	}, [dispatch]);
+
+	const onBackClick = useCallback(() => {
+		navigate(-1);
+	}, [navigate]);
+
 	const leftSideIcon = useMemo(() => {
-		switch (state.leftIcon) {
+		switch (leftIcon) {
 			case LeftIcon.MENU: {
 				return (
 					<Icon
@@ -212,21 +134,15 @@ function PageHeader({
 			default:
 				return null;
 		}
-	}, [onMenuClick, state.leftIcon]);
+	}, [onMenuClick, onBackClick, leftIcon]);
 
 	const rightSideIcon = useMemo(() => {
-		switch (state.rightIcon) {
+		switch (rightIcon) {
 			case RightIcon.NONE: {
 				return null;
 			}
 			case RightIcon.SEARCH: {
-				return (
-					<SearchInput
-						value={state.searchValue}
-						dispatch={dispatch}
-						variant={state.searchDisplayType}
-					/>
-				);
+				return <SearchInput />;
 			}
 			case RightIcon.TODAY: {
 				return (
@@ -253,10 +169,11 @@ function PageHeader({
 		}
 	}, [
 		onTodayClick,
+		onSaveClick,
 		dispatch,
-		state.rightIcon,
-		state.searchValue,
-		state.searchDisplayType
+		rightIcon,
+		searchValue,
+		searchDisplay
 	]);
 
 	const isScrolled = useScrollTrigger({
@@ -267,6 +184,7 @@ function PageHeader({
 	return (
 		<AppBar elevation={isScrolled ? 3 : 0} className="page-header">
 			{leftSideIcon}
+			{title && <h1 className="page-header__title">{title}</h1>}
 			{rightSideIcon}
 		</AppBar>
 	);
