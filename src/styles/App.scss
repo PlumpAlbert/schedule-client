@@ -23,16 +23,11 @@ body {
 	display: flex;
 	flex-direction: column;
 	&.white {
-		background-color: $white;
+		background-color: $offWhite;
 	}
 	&.green {
 		background-color: $green;
 		color: $white;
-	}
-	&.menu-active {
-		.page-header {
-			color: $grey;
-		}
 	}
 }
 
