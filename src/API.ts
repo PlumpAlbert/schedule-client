@@ -41,7 +41,7 @@ export default class ScheduleAPI {
 		> = await response.json();
 		return result.body.map(s => ({
 			...s,
-			time: new Date(`1999-01-13T${s.time}`)
+			time: new Date(`1999-01-13T${s.time}`).getTime()
 		}));
 	};
 
@@ -75,8 +75,7 @@ export default class ScheduleAPI {
 
 	/**
 	 * Method for fetching specialties for selected `faculty`
-	 * @param {string} faculty Faculty to use
-	 * @returns {ISpecialty} Array of specialties and group id's
+	 * @param faculty Faculty to use
 	 */
 	static fetchSpecialties = async (
 		faculty: string,
@@ -103,7 +102,6 @@ export default class ScheduleAPI {
 	/**
 	 * Method for creating new users
 	 * @param user New user to create
-	 * @returns {Promise<number|undefined>} On success returns user's id
 	 */
 	static signUp = async (
 		user: Omit<IUser, "id"> & IAuthenticated,

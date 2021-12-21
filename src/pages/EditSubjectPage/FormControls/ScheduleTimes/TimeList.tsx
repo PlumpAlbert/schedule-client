@@ -10,7 +10,7 @@ import SwipeAction from "../../../../components/SwipeAction";
 export interface ITimeItem {
 	weekType: WEEK_TYPE;
 	weekday: WEEKDAY;
-	time: Date;
+	time: number;
 	audience: string;
 }
 interface IProps extends ITimeItem {

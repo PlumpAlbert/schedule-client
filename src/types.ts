@@ -33,7 +33,7 @@ export interface ISubject {
 	audience: string;
 	type: number;
 	title: string;
-	time: Date;
+	time: number;
 	weekday: WEEKDAY;
 	weekType: WEEK_TYPE;
 	teacher: IUser;

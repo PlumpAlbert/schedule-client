@@ -67,15 +67,15 @@ export function CalculateCourse(groupYear: number) {
  * Pretty printing of subject's start and end time
  * @param time Start time of subject
  */
-export function renderTime(time: Date = new Date()) {
-	const endTime = new Date(time.valueOf());
+export function renderTime(time: number = Date.now()) {
+	const endTime = new Date(time);
 	endTime.setHours(endTime.getHours() + 1);
 	endTime.setMinutes(endTime.getMinutes() + 30);
 	let locale = "ru";
 	if (navigator.languages.length > 1) {
 		locale = navigator.languages[1];
 	}
-	return `${time.toLocaleTimeString(locale, {
+	return `${new Date(time).toLocaleTimeString(locale, {
 		hour: "2-digit",
 		minute: "2-digit"
 	})} - ${endTime.toLocaleTimeString(locale, {
