@@ -3,6 +3,7 @@ import "../styles/SwipeAction.scss";
 
 interface IProps {
 	action: React.ReactNode;
+	canSwipe?: boolean;
 	children: React.ReactNode[];
 	className?: string;
 	touchTimeThreshold?: number;
@@ -11,6 +12,7 @@ interface IProps {
 
 function SwipeAction({
 	action,
+	canSwipe = true,
 	children,
 	className = "swipe",
 	touchTimeThreshold = 150,
@@ -69,8 +71,8 @@ function SwipeAction({
 		<div className={createClassName("-root")}>
 			<div
 				className={createClassName("-wrapper")}
-				onTouchMove={handleSwipe}
-				onTouchEnd={handleSwipeEnd}
+				onTouchMove={canSwipe ? handleSwipe : undefined}
+				onTouchEnd={canSwipe ? handleSwipeEnd : undefined}
 				style={{transform: swipeX > 0 ? "" : `translateX(${swipeX}px)`}}
 			>
 				{children}
