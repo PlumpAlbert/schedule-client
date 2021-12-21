@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useReducer} from "react";
+import React, {useCallback, useEffect, useMemo, useReducer} from "react";
 import {useLocation} from "react-router";
 import AppBar from "@mui/material/AppBar";
 import Icon from "@mui/material/Icon";
@@ -168,6 +168,8 @@ function PageHeader({
 		}
 		dispatch(action);
 	}, [menuIsShown, location.pathname]); // eslint-disable-line
+
+	const onSaveClick = useCallback(() => {}, []);
 
 	const leftSideIcon = useMemo(() => {
 		switch (state.leftIcon) {

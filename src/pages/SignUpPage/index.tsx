@@ -48,27 +48,33 @@ function SignUpPage() {
 				setError("password");
 				return;
 			}
-			let user: IUser & IAuthenticated = {name, login, password, group};
 			const abortController = new AbortController();
-			ScheduleAPI.signUp(user, abortController)
+			ScheduleAPI.signUp(
+				{
+					name,
+					login,
+					password,
+					group
+				},
+				abortController
+			)
 				.then(id => {
 					if (!id) {
 						setError("login");
 						return;
 					}
-					user.id = id;
-					user.type = UserType.STUDENT;
+					const authenticatedUser: IUser = {
+						id,
+						name: name,
+						login: login,
+						group: group,
+						type: UserType.STUDENT
+					};
 					sessionStorage.setItem(
 						"user",
-						JSON.stringify({
-							id,
-							type: UserType.STUDENT,
-							name: user.name,
-							login: user.login,
-							group: user.group
-						} as IUser)
+						JSON.stringify(authenticatedUser)
 					);
-					navigate(`/schedule?group=${user.group?.id}`, {
+					navigate(`/schedule?group=${group?.id}`, {
 						replace: true
 					});
 				})

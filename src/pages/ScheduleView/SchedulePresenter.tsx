@@ -86,14 +86,8 @@ function SchedulePresenter({groupId, weekday, weekType}: IProps) {
 								key={`subject-view-${i}`}
 								onClick={handleSubjectClick}
 								onDelete={handleSubjectDelete}
-								id={s.id}
 								type={s.type}
-								weekType={s.weekType}
-								weekday={s.weekday}
-								audience={s.audience}
-								teacher={s.teacher}
-								time={s.time}
-								title={s.title}
+								value={s}
 							/>
 						)
 				)

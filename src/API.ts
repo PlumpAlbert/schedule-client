@@ -106,7 +106,7 @@ export default class ScheduleAPI {
 	 * @returns {Promise<number|undefined>} On success returns user's id
 	 */
 	static signUp = async (
-		user: IUser & IAuthenticated,
+		user: Omit<IUser, "id"> & IAuthenticated,
 		controller?: AbortController
 	) => {
 		const response = await fetch(`${ScheduleAPI.HOST}/user`, {
