@@ -39,6 +39,10 @@
 		.weekday {
 			margin: 0 1rem;
 			user-select: none;
+			text-transform: lowercase;
+			&::first-letter {
+				text-transform: uppercase;
+			}
 			&:first-child {
 				margin-left: 0;
 			}

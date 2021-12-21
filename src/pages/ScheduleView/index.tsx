@@ -66,7 +66,7 @@ const ScheduleView = ({weekday, weekType, setWeekType}: IProps) => {
 					onClick={handleWeekdayClick}
 					className={`weekday${currentDay === i ? " active" : ""}`}
 				>
-					{name.charAt(0).toUpperCase() + name.slice(1)}
+					{name}
 				</p>
 			);
 		}
