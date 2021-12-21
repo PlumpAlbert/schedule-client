@@ -11,29 +11,28 @@ import SwipeAction from "../../components/SwipeAction";
 interface ILoadable {
 	loading?: boolean;
 }
-interface IProps extends Partial<ISubject> {
+interface IProps {
 	type: SUBJECT_TYPE;
+	value?: ISubject;
 	onClick?: (s: ISubject) => void;
 	onDelete?: (s: Partial<ISubject>) => void;
 }
-
-const TOUCH_TIME_THRESHOLD = 150;
 
 function SubjectView({
 	onClick = undefined,
 	onDelete = undefined,
 	loading = false,
-	...subject
+	value: subject
 }: IProps & ILoadable) {
 	let typeClass;
-	switch (subject.type) {
-		case 0:
+	switch (subject?.type) {
+		case SUBJECT_TYPE.ЛЕКЦИЯ:
 			typeClass = "lecture";
 			break;
-		case 1:
+		case SUBJECT_TYPE.ПРАКТИКА:
 			typeClass = "practice";
 			break;
-		case 2:
+		case SUBJECT_TYPE.ЛАБОРАТОРНАЯ:
 			typeClass = "lab";
 			break;
 	}
@@ -41,7 +40,7 @@ function SubjectView({
 	const handleClick = useCallback<React.MouseEventHandler<HTMLLIElement>>(
 		e => {
 			e.preventDefault();
-			if (onClick) {
+			if (onClick && subject) {
 				onClick({
 					audience: subject.audience || "",
 					id: subject.id || -1,
@@ -60,9 +59,9 @@ function SubjectView({
 	const handleDeleteClick = useCallback(
 		(e?: React.MouseEvent) => {
 			if (e) e.stopPropagation();
-			if (onDelete) onDelete(subject);
+			if (onDelete && subject) onDelete(subject);
 		},
-		[onDelete]
+		[onDelete, subject]
 	);
 
 	return (
@@ -94,15 +93,16 @@ function SubjectView({
 				<div className="subject-view-content">
 					<div className="subject-view__header">
 						<span className="subject-view-time">
-							{renderTime(subject.time)}
+							{renderTime(subject?.time)}
 						</span>
 						<span className="subject-view-location">
-							{SUBJECT_TYPE[subject.type]} в {subject.audience}
+							{subject && SUBJECT_TYPE[subject.type]} в{" "}
+							{subject?.audience}
 						</span>
 					</div>
-					<span className="subject-view-title">{subject.title}</span>
+					<span className="subject-view-title">{subject?.title}</span>
 					<span className="subject-view-teacher">
-						{subject.teacher?.name}
+						{subject?.teacher?.name}
 					</span>
 				</div>
 			</SwipeAction>
