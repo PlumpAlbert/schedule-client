@@ -11,6 +11,7 @@ import TimeControl from "./FormControls/TimeControl";
 import Button from "@mui/material/Button";
 
 import "../../styles/EditSubjectPage.scss";
+import ScheduleTimes from "./FormControls/ScheduleTimes";
 
 function EditSubjectPage() {
 	const location = useLocation();
@@ -33,11 +34,8 @@ function EditSubjectPage() {
 			<form className="edit-subject-form">
 				<TitleControl dispatch={dispatch} value={state.title} />
 				<TypeControl dispatch={dispatch} value={state.type} />
-				<AudienceControl dispatch={dispatch} value={state.audience} />
 				<TeacherControl dispatch={dispatch} value={state.teacher} />
-				<WeekTypeControl dispatch={dispatch} value={state.weekType} />
-				<WeekdayControl dispatch={dispatch} value={state.weekday} />
-				<TimeControl dispatch={dispatch} value={state.time} />
+				<ScheduleTimes dispatch={dispatch} weekType={state.weekType} />
 				<Button className="edit-subject-form__save-btn">
 					Сохранить
 				</Button>

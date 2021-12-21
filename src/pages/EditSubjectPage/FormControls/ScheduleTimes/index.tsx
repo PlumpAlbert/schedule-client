@@ -5,10 +5,21 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TimeList, {ITimeItem} from "./TimeList";
 import {WEEK_TYPE} from "../../../../types";
+import {Action, ACTIONS} from "../../reducer";
 
-const ScheduleTimes = () => {
-	const [weekType, setWeekType] = useState(WEEK_TYPE.WHITE);
+interface IProps {
+	dispatch: React.Dispatch<Action<any>>;
+	weekType: WEEK_TYPE;
+}
+const ScheduleTimes = ({dispatch, weekType}: IProps) => {
 	const [times, setTimes] = useState<ITimeItem[]>([]);
+
+	const setWeekType = useCallback(weekType => {
+		dispatch({
+			type: ACTIONS.setWeekType,
+			payload: weekType
+		});
+	}, []);
 
 	const handleWeekTypeChange = useCallback(
 		(_, value) => {
@@ -16,6 +27,7 @@ const ScheduleTimes = () => {
 		},
 		[setWeekType]
 	);
+
 	return (
 		<div className="schedule-times">
 			<div className="schedule-times__header">
@@ -43,7 +55,7 @@ const ScheduleTimes = () => {
 					label="Зеленая неделя"
 				/>
 			</Tabs>
-			<TimeList times={times} setTimes={setTimes} />
+			<TimeList times={times} setTimes={setTimes} weekType={weekType} />
 		</div>
 	);
 };
