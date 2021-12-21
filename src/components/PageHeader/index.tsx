@@ -4,6 +4,8 @@ import AppBar from "@mui/material/AppBar";
 import Icon from "@mui/material/Icon";
 import BackIcon from "@mui/icons-material/NavigateBefore";
 import MenuIcon from "@mui/icons-material/Menu";
+import CancelIcon from "@mui/icons-material/Cancel";
+import SaveIcon from "@mui/icons-material/Check";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import SearchInput, {SearchDisplayType} from "./SearchInput";
@@ -30,12 +32,14 @@ type CombinedAction = Action<Action<any>[]> & {type: "COMBINED"};
 enum LeftIcon {
 	NONE = 0,
 	MENU,
-	BACK
+	BACK,
+	CANCEL
 }
 enum RightIcon {
 	NONE = 0,
 	SEARCH,
-	TODAY
+	TODAY,
+	SAVE
 }
 
 const PageHeaderReducer: React.Reducer<IState, Action<any>> = (
@@ -136,6 +140,19 @@ function PageHeader({
 					});
 					break;
 				}
+				case "subject": {
+					action.payload.push(
+						{
+							type: "SET-LEFT_ICON",
+							payload: LeftIcon.CANCEL
+						},
+						{
+							type: "SET-RIGHT_ICON",
+							payload: RightIcon.SAVE
+						}
+					);
+					break;
+				}
 				default: {
 					action.payload.push({
 						type: "SET-SEARCH_DISPLAY_TYPE",
@@ -158,7 +175,9 @@ function PageHeader({
 				return (
 					<Icon
 						onClick={onMenuClick}
-						classes={{root: "page-header__menu-icon"}}
+						classes={{
+							root: "page-header__icon left-icon menu-icon"
+						}}
 					>
 						<MenuIcon />
 					</Icon>
@@ -168,9 +187,23 @@ function PageHeader({
 				return (
 					<Icon
 						onClick={onBackClick}
-						classes={{root: "page-header__menu-icon"}}
+						classes={{
+							root: "page-header__icon left-icon back-icon"
+						}}
 					>
 						<BackIcon />
+					</Icon>
+				);
+			}
+			case LeftIcon.CANCEL: {
+				return (
+					<Icon
+						onClick={onBackClick}
+						classes={{
+							root: "page-header__icon left-icon menu-icon"
+						}}
+					>
+						<CancelIcon />
 					</Icon>
 				);
 			}
@@ -181,9 +214,10 @@ function PageHeader({
 
 	const rightSideIcon = useMemo(() => {
 		switch (state.rightIcon) {
-			case RightIcon.NONE:
+			case RightIcon.NONE: {
 				return null;
-			case RightIcon.SEARCH:
+			}
+			case RightIcon.SEARCH: {
 				return (
 					<SearchInput
 						value={state.searchValue}
@@ -191,14 +225,29 @@ function PageHeader({
 						variant={state.searchDisplayType}
 					/>
 				);
-			case RightIcon.TODAY:
+			}
+			case RightIcon.TODAY: {
 				return (
 					<Icon onClick={onTodayClick}>
 						<CalendarTodayIcon
-							classes={{root: "page-header__calendar-icon"}}
+							classes={{
+								root: "page-header__icon right-icon calendar-icon"
+							}}
 						/>
 					</Icon>
 				);
+			}
+			case RightIcon.SAVE: {
+				return (
+					<Icon onClick={onSaveClick}>
+						<SaveIcon
+							classes={{
+								root: "page-header__icon right-icon calendar-icon"
+							}}
+						/>
+					</Icon>
+				);
+			}
 		}
 	}, [
 		onTodayClick,
