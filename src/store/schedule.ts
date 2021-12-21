@@ -61,8 +61,7 @@ export const scheduleSlice = createSlice({
 	}
 });
 
-export const {addSubject, setSchedule, deleteSubject, updateSubject} =
-	scheduleSlice.actions;
+export const {addSubject, deleteSubject, setSchedule, updateSubject} = actions;
 
 export const selectSchedule = (state: RootState) => state.schedule;
 

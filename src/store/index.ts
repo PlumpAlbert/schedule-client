@@ -17,3 +17,5 @@ export type AppDispatch = typeof store.dispatch;
 
 export const useDispatch = () => reduxUseDispatch<AppDispatch>();
 export const useSelector: TypedUseSelectorHook<RootState> = reduxUseSelector;
+
+export default store;
