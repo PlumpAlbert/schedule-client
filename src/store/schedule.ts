@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from ".";
 import {ISubject} from "../types";
 
@@ -6,38 +6,58 @@ type ScheduleState = ISubject[];
 
 const initialState: ScheduleState = [];
 
-interface ISubjectPayload<T> {
+interface ISubjectPayload {
 	id: number;
 	property: keyof ISubject;
-	value: T;
+	value: ISubject[keyof ISubject];
 }
+
+const actions = {
+	setSchedule: createAction<ISubject[]>("setSchedule"),
+	addSubject: createAction<ISubject>("addSubject"),
+	deleteSubject: createAction<ISubject>("deleteSubject"),
+	updateSubject: createAction<ISubjectPayload>("updateSubject")
+};
 
 export const scheduleSlice = createSlice({
 	name: "schedule",
 	initialState,
-	reducers: {
-		setSchedule: (_, action: PayloadAction<ISubject[]>) => {
-			return action.payload;
-		},
-		addSubject: (state, action: PayloadAction<ISubject>) => {
-			return [...state, action.payload];
-		},
-		deleteSubject: (state, action: PayloadAction<ISubject>) => {
-			const index = state.findIndex(s => s.id === action.payload.id);
-			return [...state.slice(0, index), ...state.slice(index + 1)];
-		},
-		updateSubject: <T>(
-			state: ScheduleState,
-			action: PayloadAction<ISubjectPayload<T>>
-		) => {
-			const {id, property, value} = action.payload;
-			const index = state.findIndex(s => s.id === id);
-			return [
-				...state.slice(0, index),
-				{...state[index], [property]: value},
-				...state.slice(index + 1)
-			];
-		}
+	reducers: {},
+	extraReducers: builder => {
+		builder
+			.addCase(
+				actions.setSchedule,
+				(_, action: PayloadAction<ISubject[]>) => {
+					return action.payload;
+				}
+			)
+			.addCase(
+				actions.addSubject,
+				(state, action: PayloadAction<ISubject>) => {
+					state.push(action.payload);
+				}
+			)
+			.addCase(
+				actions.deleteSubject,
+				(state, action: PayloadAction<ISubject>) => {
+					const index = state.findIndex(
+						s => s.id === action.payload.id
+					);
+					state.splice(index, 1);
+				}
+			)
+			.addCase(
+				actions.updateSubject,
+				(
+					state: ScheduleState,
+					action: PayloadAction<ISubjectPayload>
+				) => {
+					const {id, property, value} = action.payload;
+					const subject = state.find(s => s.id === id);
+					if (!subject) return;
+					subject[property] = value as never;
+				}
+			);
 	}
 });
 
