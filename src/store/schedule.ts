@@ -1,4 +1,4 @@
-import {createAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAction, createSlice} from "@reduxjs/toolkit";
 import {RootState} from ".";
 import {GetWeekType} from "../Helpers";
 import {ISubject, WEEKDAY, WEEK_TYPE} from "../types";

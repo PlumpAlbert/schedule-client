@@ -44,16 +44,7 @@ function SubjectView({
 		e => {
 			e.preventDefault();
 			if (onClick && value) {
-				onClick({
-					audience: value.audience || "",
-					id: value.id || -1,
-					teacher: value.teacher || {id: -1, name: ""},
-					time: value.time || Date.now(),
-					title: value.title || "",
-					type: value.type,
-					weekType: value.weekType || WEEK_TYPE.WHITE,
-					weekday: value.weekday || 1
-				});
+				onClick(value);
 			}
 		},
 		[onClick, value]

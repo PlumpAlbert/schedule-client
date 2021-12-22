@@ -20,6 +20,7 @@ interface IProps {
 	onClose: () => void;
 	onOpen: () => void;
 }
+
 interface IAlert {
 	show: boolean;
 	message: string;
