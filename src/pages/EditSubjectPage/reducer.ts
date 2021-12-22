@@ -1,47 +1,77 @@
-import {ISubject} from "../../types";
+import {createSlice, createAction, nanoid} from "@reduxjs/toolkit";
+import {IUser, SUBJECT_TYPE, WEEKDAY, WEEK_TYPE} from "../../types";
 
-interface IState extends Omit<ISubject, "id"> {
-	id?: number;
+export interface ISubjectTime {
+	id: string;
+	weekType: WEEK_TYPE;
+	weekday: WEEKDAY;
+	time: number;
+	audience: string;
 }
-export enum ACTIONS {
-	setAudience = "SET_AUDIENCE",
-	setTeacher = "SET_TEACHER",
-	setTitle = "SET_TITLE",
-	setTime = "SET_TIME",
-	setType = "SET_TYPE",
-	setWeekDay = "SET_WEEKDAY",
-	setWeekType = "SET_WEEK-TYPE"
-}
-export type Action<T> = {type: ACTIONS; payload: T};
 
-export default function reducer(state: IState, action: Action<any>): IState {
-	switch (action.type) {
-		case ACTIONS.setAudience: {
-			return {...state, audience: action.payload};
-		}
-		case ACTIONS.setTime: {
-			return {...state, time: action.payload};
-		}
-		case ACTIONS.setTitle: {
-			return {...state, title: action.payload};
-		}
-		case ACTIONS.setType: {
-			return {...state, type: action.payload};
-		}
-		case ACTIONS.setWeekDay: {
-			return {...state, weekday: action.payload};
-		}
-		case ACTIONS.setWeekType: {
-			return {...state, weekType: action.payload};
-		}
-		case ACTIONS.setTeacher: {
-			return {
-				...state,
-				teacher: {
-					id: action.payload.id,
-					name: action.payload.name
+export interface IEditSubjectPageState {
+	title: string;
+	type: SUBJECT_TYPE;
+	teacher: IUser;
+	times: ISubjectTime[];
+}
+
+const initialState: IEditSubjectPageState = {
+	title: "",
+	type: SUBJECT_TYPE.ЛЕКЦИЯ,
+	teacher: {id: 0, name: ""},
+	times: []
+};
+
+export const actions = {
+	setProperty: createAction<{
+		property: keyof Omit<IEditSubjectPageState, "times" | "id">;
+		value: IEditSubjectPageState[keyof Omit<
+			IEditSubjectPageState,
+			"times" | "id"
+		>];
+	}>("setProperty"),
+	// Time related actions
+	addTime: createAction<Omit<ISubjectTime, "id">>("addTime"),
+	deleteTime: createAction<ISubjectTime>("deleteTime"),
+	updateTime: createAction<{
+		id: string;
+		property: keyof Omit<ISubjectTime, "id">;
+		value: ISubjectTime[keyof Omit<ISubjectTime, "id">];
+	}>("updateTime")
+};
+
+const store = createSlice({
+	name: "application/EditSubjectPage",
+	initialState,
+	reducers: {},
+	extraReducers: builder => {
+		builder
+			.addCase(actions.setProperty, (state, {payload}) => {
+				const {property, value} = payload;
+				(state[property] as IEditSubjectPageState[typeof property]) =
+					value;
+			})
+			.addCase(actions.addTime, (state, {payload}) => {
+				state.times.push({...payload, id: nanoid()});
+			})
+			.addCase(actions.deleteTime, ({times}, {payload}) => {
+				const index = times.findIndex(t => t.id === payload.id);
+				times.splice(index, 1);
+			})
+			.addCase(actions.updateTime, ({times}, {payload}) => {
+				const {id, property, value} = payload;
+				const time = times.find(t => t.id === id);
+				if (time) {
+					(time[property] as ISubjectTime[typeof property]) = value;
 				}
-			};
-		}
+			});
 	}
+});
+
+export function init(initState?: IEditSubjectPageState) {
+	if (!initState) return initialState;
+	return initState;
 }
+
+export default store.reducer;

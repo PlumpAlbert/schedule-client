@@ -3,15 +3,10 @@ import PropTypes from "prop-types";
 import FormControl from "@mui/material/FormControl";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {ACTIONS} from "../reducer";
 import {IProps, propTypes} from ".";
+import {IUser} from "../../../types";
 
-interface ITeacher {
-	id: number;
-	name: string;
-}
-
-function TeacherControl({dispatch, value}: IProps<ITeacher>) {
+function TeacherControl({dispatch, value}: IProps<IUser>) {
 	const handleTeacherChanged = useCallback<
 		(event: SelectChangeEvent<number>) => void
 	>(

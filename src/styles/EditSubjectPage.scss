@@ -1,25 +1,16 @@
 @import "./Colors.scss";
 
 .edit-subject-page {
-	padding: 1.5rem 2rem 3rem;
+	padding: 1.5rem 0 3rem;
 	.edit-subject-form {
 		display: flex;
 		flex-direction: column;
 
-		&__save-btn {
-			margin: 2rem 0 0;
-			font-family: "Roboto", sans-serif;
-			font-weight: 500;
-			color: $white;
-			background-color: $blue;
-			&:hover {
-				background-color: $blue;
-			}
-		}
 		.form-group {
 			display: flex;
 			align-items: baseline;
 			margin-bottom: 1rem;
+			padding-inline: 1rem;
 			&:last-of-type {
 				margin-bottom: 0;
 			}
@@ -46,8 +37,7 @@
 				}
 			}
 			.form__title-textarea {
-				width: calc(100% + 1rem);
-				margin-left: -0.5rem;
+				width: 100%;
 				padding: 0.5rem;
 				box-sizing: border-box;
 				border-color: rgba(0, 0, 0, 0.23);
@@ -57,17 +47,6 @@
 				resize: none;
 				&:focus {
 					outline-color: $blue;
-				}
-			}
-			.MuiSwitch-root {
-				.form__week-type--checked {
-					color: $green !important;
-					& ~ .MuiSwitch-track {
-						background-color: $green !important;
-					}
-				}
-				.MuiSwitch-track {
-					background-color: hsl(0, 0%, 30%) !important;
 				}
 			}
 		}
@@ -96,21 +75,121 @@
 				}
 			}
 		}
-		.form__weekday-select {
-			text-transform: capitalize;
+
+		.schedule-times {
+			&__header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding-inline: 1rem;
+
+				.header {
+					&-title {
+						margin-left: 1rem;
+					}
+					&-action {
+						color: $blue;
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						&__text {
+							margin-right: 0.5em;
+						}
+						&__icon {
+							width: fit-content;
+							height: fit-content;
+							& svg {
+								width: 1rem;
+								height: 1rem;
+								margin: 0;
+								top: 0;
+							}
+						}
+					}
+				}
+			}
+			&__week-type-tabs {
+				min-height: unset;
+				.week-type-tabs__indicator {
+					&.green {
+						background-color: $green;
+					}
+					&.white {
+						background-color: $purple;
+					}
+				}
+				.schedule-times__week-type {
+					padding: 0.5em 1em;
+					font-size: 0.8rem;
+					flex: 1;
+					&.white-week.Mui-selected {
+						color: $purple;
+					}
+					&.green-week.Mui-selected {
+						color: $green;
+					}
+				}
+			}
+			.time-list {
+				display: flex;
+				flex-direction: column;
+
+				.time-item-swipe-root {
+					.time-item {
+						padding: 1rem 1rem 1rem 2rem;
+						align-items: flex-start;
+						justify-content: space-between;
+
+						&__left-content {
+							display: flex;
+							flex-direction: column;
+
+							.left-content {
+								&__weekday {
+									text-transform: capitalize;
+								}
+								&__audience {
+									margin-top: 0.5rem;
+									font-size: 0.8rem;
+									color: $grey;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
+
+.app .page-header {
+	padding-inline: 1.5rem;
+	padding-bottom: 1rem;
+}
+
 .weekday-control__option {
 	text-transform: capitalize;
 }
 
 @media (max-width: 380px) {
-	.form-group-horizontal {
-		flex-direction: column !important;
-		.form__textfield {
-			margin-top: 0.5rem;
-			width: 100% !important;
+	.edit-subject-page {
+		.edit-subject-form {
+			.form-group-horizontal {
+				flex-direction: column !important;
+				.form__textfield {
+					margin-top: 0.5rem;
+					width: 100% !important;
+				}
+			}
+			.schedule-times {
+				&__header {
+					.header-action {
+						.header-action__text {
+							display: none;
+						}
+					}
+				}
+			}
 		}
 	}
 }

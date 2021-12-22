@@ -3,14 +3,20 @@ import PropTypes from "prop-types";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import {IProps, propTypes} from ".";
-import {ACTIONS} from "../reducer";
+import {actions} from "../../../store/schedule";
 
-function AudienceControl({dispatch, value}: IProps<string>) {
+function AudienceControl({id, dispatch, value}: IProps<string>) {
 	const handleAudienceChange = useCallback<
 		React.FocusEventHandler<HTMLInputElement>
 	>(
 		({target}) => {
-			dispatch({type: ACTIONS.setAudience, payload: target.value});
+			dispatch(
+				actions.updateSubject({
+					id,
+					property: "audience",
+					value: target.value
+				})
+			);
 		},
 		[dispatch]
 	);

@@ -5,17 +5,14 @@ import Button from "@mui/material/Button";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import TextField from "@mui/material/TextField";
-import {WEEKDAY} from "../../../../types";
+import {WEEKDAY, WEEK_TYPE} from "../../../../types";
+import {ISubjectTime} from "../../reducer";
 
 interface IProps {
 	open: boolean;
-	onClose: (timeData?: ISubjectTime) => void;
-}
-export interface ISubjectTime {
-	id: string;
-	audience: string;
-	time: Date;
-	weekday: WEEKDAY;
+	value?: ISubjectTime;
+	weekType: WEEK_TYPE;
+	onClose: (timeData?: Omit<ISubjectTime, "id">) => void;
 }
 
 function shortWeekdayName(day: WEEKDAY) {
@@ -25,10 +22,12 @@ function shortWeekdayName(day: WEEKDAY) {
 	return date.toLocaleString(locale, {weekday: "short"});
 }
 
-const AddTimeDialog = ({open, onClose}: IProps) => {
-	const [weekday, setWeekday] = useState<WEEKDAY>(WEEKDAY.MONDAY);
-	const [time, setTime] = useState<number>(-1);
-	const [audience, setAudience] = useState<string>("");
+const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
+	const [weekday, setWeekday] = useState<WEEKDAY>(
+		value?.weekday || WEEKDAY.MONDAY
+	);
+	const [time, setTime] = useState<number>(value?.time || -1);
+	const [audience, setAudience] = useState<string>(value?.audience || "");
 
 	const weekdayButtons = useMemo(() => {
 		let buttons = [];
@@ -44,10 +43,10 @@ const AddTimeDialog = ({open, onClose}: IProps) => {
 
 	const handleSaveClick = useCallback(() => {
 		onClose({
-			id: `${weekday}-${time}`,
 			audience,
-			time: new Date(time),
-			weekday
+			time,
+			weekday,
+			weekType
 		});
 	}, [onClose]);
 

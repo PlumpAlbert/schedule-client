@@ -3,17 +3,16 @@ import PropTypes from "prop-types";
 import FormControl from "@mui/material/FormControl";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 import {IProps, propTypes} from ".";
-import {ACTIONS} from "../reducer";
+import {actions} from "../reducer";
 
 function TitleControl({dispatch, value}: IProps<string>) {
 	const handleTitleChanged = useCallback<
 		React.FocusEventHandler<HTMLTextAreaElement>
 	>(
 		({target}) => {
-			dispatch({
-				type: ACTIONS.setTitle,
-				payload: target.value
-			});
+			dispatch(
+				actions.setProperty({property: "title", value: target.value})
+			);
 		},
 		[dispatch]
 	);

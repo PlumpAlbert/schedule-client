@@ -1,44 +1,74 @@
 import React, {useReducer} from "react";
-import {useLocation} from "react-router";
-import reducer from "./reducer";
+import {useLocation, useNavigate} from "react-router";
 import TitleControl from "./FormControls/TitleControl";
 import TypeControl from "./FormControls/TypeControl";
-import AudienceControl from "./FormControls/AudienceControl";
 import TeacherControl from "./FormControls/TeacherControl";
-import WeekTypeControl from "./FormControls/WeekTypeControl";
-import WeekdayControl from "./FormControls/WeekdayControl";
-import TimeControl from "./FormControls/TimeControl";
-import Button from "@mui/material/Button";
+import ScheduleTimes from "./FormControls/ScheduleTimes";
+import {useSelector} from "../../store";
+import reducer, {IEditSubjectPageState, init} from "./reducer";
 
 import "../../styles/EditSubjectPage.scss";
-import ScheduleTimes from "./FormControls/ScheduleTimes";
 
 function EditSubjectPage() {
 	const location = useLocation();
-	const [state, dispatch] = useReducer(reducer, {
-		audience: location.state?.subject.audience,
-		teacher: location.state?.subject.teacher,
-		title: location.state?.subject.title,
-		time: location.state?.subject.time,
-		type: location.state?.subject.type,
-		weekType: location.state?.subject.weekType,
-		weekday: location.state?.subject.weekday
-	});
+	const navigate = useNavigate();
+	let subjectId: number | undefined;
+	if (location.search) {
+		const params = new URLSearchParams(location.search);
+		subjectId = Number(params.get("id"));
+	}
+	const subject = useSelector<IEditSubjectPageState | undefined>(
+		({schedule}) => {
+			if (!subjectId) return;
+			const subject = schedule.subjects.find(s => s.id === subjectId);
+			if (!subject) return;
+			const twins = schedule.subjects.filter(
+				s =>
+					s.title === subject.title &&
+					s.type === subject.type &&
+					s.teacher.id === subject.teacher.id
+			);
+			return {
+				teacher: subject.teacher,
+				type: subject.type,
+				title: subject.title,
+				times: twins.map(s => ({
+					id: s.id.toString(),
+					time: s.time,
+					weekday: s.weekday,
+					weekType: s.weekType,
+					audience: s.audience
+				}))
+			};
+		}
+	);
 
-	if (!location.state) {
-		document.location.replace("/schedule");
+	const [state, dispatch] = useReducer(reducer, subject, init);
+
+	if (!subject || !subjectId) {
+		navigate("/schedule", {replace: true});
 		return null;
 	}
+
 	return (
 		<div className="page edit-subject-page">
 			<form className="edit-subject-form">
-				<TitleControl dispatch={dispatch} value={state.title} />
-				<TypeControl dispatch={dispatch} value={state.type} />
-				<TeacherControl dispatch={dispatch} value={state.teacher} />
-				<ScheduleTimes dispatch={dispatch} weekType={state.weekType} />
-				<Button className="edit-subject-form__save-btn">
-					Сохранить
-				</Button>
+				<TitleControl
+					id={subjectId}
+					dispatch={dispatch}
+					value={state.title}
+				/>
+				<TypeControl
+					id={subjectId}
+					dispatch={dispatch}
+					value={state.type}
+				/>
+				<TeacherControl
+					id={subjectId}
+					dispatch={dispatch}
+					value={state.teacher}
+				/>
+				<ScheduleTimes dispatch={dispatch} times={subject.times} />
 			</form>
 		</div>
 	);

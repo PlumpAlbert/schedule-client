@@ -1,28 +1,34 @@
 import React, {useCallback, useMemo} from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {WEEKDAY, WEEK_TYPE} from "../../../../types";
+import {WEEK_TYPE} from "../../../../types";
 import {GetWeekdayName, renderTime} from "../../../../Helpers";
 import SwipeAction from "../../../../components/SwipeAction";
+import {ISubjectTime} from "../../reducer";
 
-export interface ITimeItem {
-	weekType: WEEK_TYPE;
-	weekday: WEEKDAY;
-	time: number;
-	audience: string;
-}
-interface IProps extends ITimeItem {
+interface ITimeProps extends ISubjectTime {
 	className: string;
-	onDelete: () => void;
+	onDelete: (time: ISubjectTime) => void;
+	onClick: (time: ISubjectTime) => void;
 }
 
-const Time = ({audience, time, weekday, className, onDelete}: IProps) => (
-	<ListItem className={className}>
+const Time = ({className, onDelete, onClick, ...time}: ITimeProps) => {
+	const handleDelete = useCallback(() => {
+		onDelete(time);
+	}, [onDelete]);
+
+	const handleClick = useCallback(() => {
+		onClick(time);
+	}, [onClick]);
+
+	return (
 		<SwipeAction
-			className={className}
-			onAction={onDelete}
+			key={time.id}
+			className={className + "-swipe"}
+			onAction={handleDelete}
 			action={
 				<>
 					<Icon
@@ -40,30 +46,34 @@ const Time = ({audience, time, weekday, className, onDelete}: IProps) => (
 				</>
 			}
 		>
-			<div className={className + "__left-content"}>
-				<span className={"left-content__weekday"}>
-					{GetWeekdayName(weekday)}
-				</span>
-				<span className="left-content__time">{renderTime(time)}</span>
-			</div>
-			<div className={className + "__right-content"}>{audience}</div>
+			<ListItem className={className} onClick={handleClick}>
+				<div className={className + "__left-content"}>
+					<span className={"left-content__weekday"}>
+						{GetWeekdayName(time.weekday)}
+					</span>
+					<span className="left-content__audience">
+						В аудитории № {time.audience}
+					</span>
+				</div>
+				<div className={className + "__right-content"}>
+					<span className="right-content__time">
+						{renderTime(time.time)}
+					</span>
+					<span className="right-content__dummy"></span>
+				</div>
+			</ListItem>
 		</SwipeAction>
-	</ListItem>
-);
+	);
+};
 
 interface ITimeListProps {
 	weekType: WEEK_TYPE;
-	times: ITimeItem[];
-	setTimes: React.Dispatch<React.SetStateAction<ITimeItem[]>>;
+	times: ISubjectTime[];
+	onDelete: (time: ISubjectTime) => void;
+	onClick: (time: ISubjectTime) => void;
 }
-const TimeList = ({times, weekType, setTimes}: ITimeListProps) => {
-	const handleItemDelete = useCallback(
-		(index: number) => () => {
-			setTimes([...times.slice(0, index), ...times.slice(index + 1)]);
-		},
-		[times, setTimes]
-	);
 
+const TimeList = ({times, weekType, onDelete, onClick}: ITimeListProps) => {
 	const timeNodes = useMemo(
 		() =>
 			times.map((t, i) =>
@@ -72,14 +82,24 @@ const TimeList = ({times, weekType, setTimes}: ITimeListProps) => {
 						{...t}
 						key={`time-list-item-${i}`}
 						className="time-item"
-						onDelete={handleItemDelete(i)}
+						onDelete={onDelete}
+						onClick={onClick}
 					/>
 				) : null
 			),
-		[times]
+		[times, onDelete, onClick]
 	);
 
-	return <List className="time-list">{timeNodes}</List>;
+	return (
+		<List className="time-list">
+			{timeNodes.map(t => (
+				<>
+					{t}
+					<Divider variant="middle" />
+				</>
+			))}
+		</List>
+	);
 };
 
 export default TimeList;
