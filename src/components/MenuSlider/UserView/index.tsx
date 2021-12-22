@@ -52,6 +52,7 @@ function UserView({user, onGroupChange}: IProps) {
 
 	const handleEditScheduleClick = useCallback(() => {
 		dispatch(scheduleActions.toggleEditing());
+		dispatch(appActions.toggleMenu());
 	}, [dispatch]);
 
 	return (
