@@ -5,12 +5,11 @@ import AppBar from "@mui/material/AppBar";
 import Icon from "@mui/material/Icon";
 import BackIcon from "@mui/icons-material/NavigateBefore";
 import MenuIcon from "@mui/icons-material/Menu";
-import CancelIcon from "@mui/icons-material/Cancel";
+import CancelIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Check";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import SearchInput from "./SearchInput";
-import "../../styles/PageHeader.scss";
 import {
 	selectAppHeader,
 	SearchDisplay,
@@ -22,6 +21,8 @@ import {actions as scheduleActions} from "../../store/schedule";
 import {actions as appActions} from "../../store/app";
 import {useDispatch, useSelector} from "../../store";
 import {GetWeekType} from "../../Helpers";
+
+import "../../styles/PageHeader.scss";
 
 function PageHeader() {
 	const {title, leftIcon, rightIcon, searchValue, searchDisplay} =
@@ -44,31 +45,42 @@ function PageHeader() {
 			switch (uri[1]) {
 				case "groups": {
 					if (uri[2]) {
-						actions.push(headerActions.setLeftIcon(LeftIcon.BACK));
+						actions.push(
+							headerActions.setLeftIcon(LeftIcon.BACK),
+							headerActions.setTitle(""),
+							headerActions.setRightIcon(RightIcon.NONE)
+						);
 					} else {
 						actions.push(
 							headerActions.setLeftIcon(LeftIcon.MENU),
+							headerActions.setTitle(""),
 							headerActions.setRightIcon(RightIcon.NONE)
 						);
 					}
 					break;
 				}
 				case "schedule": {
-					actions.push(headerActions.setRightIcon(RightIcon.TODAY));
+					actions.push(
+						headerActions.setLeftIcon(LeftIcon.MENU),
+						headerActions.setTitle(""),
+						headerActions.setRightIcon(RightIcon.TODAY)
+					);
 					break;
 				}
 				case "subject": {
 					actions.push(
 						headerActions.setLeftIcon(LeftIcon.CANCEL),
-						headerActions.setRightIcon(RightIcon.SAVE),
-						headerActions.setTitle("Редактирование")
+						headerActions.setTitle("Редактирование"),
+						headerActions.setRightIcon(RightIcon.SAVE)
 					);
 					break;
 				}
 				default: {
 					actions.push(
 						headerActions.setSearchDisplay(SearchDisplay.NONE),
-						headerActions.setLeftIcon(LeftIcon.MENU)
+						headerActions.setTitle(""),
+						headerActions.setLeftIcon(LeftIcon.MENU),
+						headerActions.setRightIcon(RightIcon.NONE)
 					);
 					break;
 				}
@@ -160,7 +172,7 @@ function PageHeader() {
 					<Icon onClick={onSaveClick}>
 						<SaveIcon
 							classes={{
-								root: "page-header__icon right-icon calendar-icon"
+								root: "page-header__icon right-icon save-icon"
 							}}
 						/>
 					</Icon>
