@@ -1,10 +1,10 @@
-import React, {forwardRef, useCallback, useMemo, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import "../styles/SwipeAction.scss";
 
 interface IProps {
 	action: React.ReactNode;
 	canSwipe?: boolean;
-	children: React.ReactNode[];
+	children: React.ReactNode | React.ReactNode[];
 	className?: string;
 	touchTimeThreshold?: number;
 	onAction: () => void;
@@ -73,7 +73,10 @@ function SwipeAction({
 				className={createClassName("-wrapper")}
 				onTouchMove={canSwipe ? handleSwipe : undefined}
 				onTouchEnd={canSwipe ? handleSwipeEnd : undefined}
-				style={{transform: swipeX > 0 ? "" : `translateX(${swipeX}px)`}}
+				style={{
+					transform: swipeX > 0 ? "" : `translateX(${swipeX}px)`,
+					borderRadius: swipeX > -1 ? "" : "4px"
+				}}
 			>
 				{children}
 			</div>
