@@ -1,28 +1,39 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
 import {RootState} from ".";
 import {GetWeekType} from "../Helpers";
-import {ISubject, WEEKDAY, WEEK_TYPE} from "../types";
+import {
+	IAttendTime,
+	ISubject,
+	SUBJECT_TYPE,
+	WEEKDAY,
+	WEEK_TYPE
+} from "../types";
 
-interface ScheduleState {
+interface IAttendTimePayload {
+	id: number;
+	property: keyof Omit<IAttendTime, "id">;
+	value: IAttendTime[keyof Omit<IAttendTime, "id">];
+}
+
+interface ISubjectPayload extends Omit<ISubject, "times"> {
+	property: keyof Omit<ISubject, "times">;
+	value: ISubject[keyof Omit<ISubject, "times">];
+}
+
+interface SchedulePageState {
 	subjects: ISubject[];
-	weekday: WEEKDAY;
-	weekType: WEEK_TYPE;
+	currentDay: WEEKDAY;
+	currentWeek: WEEK_TYPE;
 	editMode: "create" | "edit" | undefined;
 }
 
 const today = new Date();
-const initialState: ScheduleState = {
+const initialState: SchedulePageState = {
 	editMode: undefined,
 	subjects: [],
-	weekday: today.getDay() === 0 ? 7 : today.getDay(),
-	weekType: GetWeekType(today)
+	currentDay: today.getDay() === 0 ? 7 : today.getDay(),
+	currentWeek: GetWeekType(today)
 };
-
-interface ISubjectPayload {
-	id: number;
-	property: keyof ISubject;
-	value: ISubject[keyof ISubject];
-}
 
 export const actions = {
 	// View actions
@@ -35,8 +46,25 @@ export const actions = {
 	setSchedule: createAction<ISubject[]>("setSchedule"),
 	addSubject: createAction<ISubject>("addSubject"),
 	deleteSubject: createAction<ISubject>("deleteSubject"),
-	updateSubject: createAction<ISubjectPayload>("updateSubject")
+	updateSubject: createAction<ISubjectPayload>("updateSubject"),
+	// Attend time actions
+	addAttendTime: createAction<{value: IAttendTime} & Omit<ISubject, "times">>(
+		"addAttendTime"
+	),
+	deleteAttendTime: createAction<number>("deleteAttendTime"),
+	updateAttendTime: createAction<IAttendTimePayload>("updateAttendTime")
 };
+
+/**
+ *	Helper that creates callback for array `find` method to find subject
+ *	@param teacherId - The identifier of teacher
+ *	@param type - Subject's type
+ *	@param title - Subject's title
+ *	@returns Callback for `find` method of array
+ */
+const findSubjectCallback =
+	(teacherId: number, type: SUBJECT_TYPE, title: string) => (s: ISubject) =>
+		s.teacher.id === teacherId && s.type === type && s.title === title;
 
 const scheduleSlice = createSlice({
 	name: "schedule",
@@ -46,14 +74,14 @@ const scheduleSlice = createSlice({
 		builder
 			// View actions
 			.addCase(actions.setWeekday, (state, {payload}) => {
-				state.weekday = payload;
+				state.currentDay = payload;
 			})
 			.addCase(actions.setWeekType, (state, {payload}) => {
-				state.weekType = payload;
+				state.currentWeek = payload;
 			})
 			.addCase(actions.toggleWeekType, state => {
-				state.weekType =
-					state.weekType === WEEK_TYPE.WHITE
+				state.currentWeek =
+					state.currentWeek === WEEK_TYPE.WHITE
 						? WEEK_TYPE.GREEN
 						: WEEK_TYPE.WHITE;
 			})
@@ -69,14 +97,53 @@ const scheduleSlice = createSlice({
 				subjects.push(payload);
 			})
 			.addCase(actions.deleteSubject, ({subjects}, {payload}) => {
-				const index = subjects.findIndex(s => s.id === payload.id);
+				const index = subjects.findIndex(
+					findSubjectCallback(
+						payload.teacher.id,
+						payload.type,
+						payload.title
+					)
+				);
+				if (!index) return;
 				subjects.splice(index, 1);
 			})
 			.addCase(actions.updateSubject, ({subjects}, {payload}) => {
-				const {id, property, value} = payload;
-				const subject = subjects.find(s => s.id === id);
+				const {teacher, type, title, property, value} = payload;
+				const subject = subjects.find(
+					findSubjectCallback(teacher.id, type, title)
+				);
 				if (!subject) return;
-				subject[property] = value as never;
+				(subject[property] as ISubject[typeof property]) = value;
+			})
+			// Attend time actions
+			.addCase(actions.addAttendTime, ({subjects}, {payload}) => {
+				const {type, title, teacher, value} = payload;
+				const subject = subjects.find(
+					findSubjectCallback(teacher.id, type, title)
+				);
+				if (!subject) return;
+				subject.times.push(value);
+			})
+			.addCase(actions.deleteAttendTime, ({subjects}, {payload}) => {
+				let timeIndex = -1;
+				const subject = subjects.find(s => {
+					timeIndex = s.times.findIndex(t => t.id === payload);
+					return timeIndex !== -1;
+				});
+				if (!subject) return;
+				subject.times.splice(timeIndex, 1);
+			})
+			.addCase(actions.updateAttendTime, ({subjects}, {payload}) => {
+				const {id, property, value} = payload;
+				let timeIndex = -1;
+				const subject = subjects.find(s => {
+					timeIndex = s.times.findIndex(t => t.id === id);
+					return timeIndex !== -1;
+				});
+				if (!subject) return;
+				(subject.times[timeIndex][
+					property
+				] as IAttendTime[typeof property]) = value;
 			});
 	}
 });

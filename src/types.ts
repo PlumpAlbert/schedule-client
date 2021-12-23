@@ -28,15 +28,19 @@ export enum SUBJECT_TYPE {
 	ЛАБОРАТОРНАЯ = 2
 }
 
-export interface ISubject {
+export interface IAttendTime {
 	id: number;
-	audience: string;
-	type: SUBJECT_TYPE;
-	title: string;
-	time: number;
-	weekday: WEEKDAY;
 	weekType: WEEK_TYPE;
+	weekday: WEEKDAY;
+	time: number;
+	audience: string;
+}
+
+export interface ISubject {
+	title: string;
+	type: SUBJECT_TYPE;
 	teacher: IUser;
+	times: IAttendTime[];
 }
 
 export enum UserType {

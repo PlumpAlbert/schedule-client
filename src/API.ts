@@ -26,7 +26,6 @@ export default class ScheduleAPI {
 	/**
 	 * Method for fetching group's schedule
 	 * @param groupId Group identifier
-	 * @returns
 	 */
 	static fetchSchedule = async (
 		groupId: number,
@@ -36,13 +35,8 @@ export default class ScheduleAPI {
 			`${ScheduleAPI.HOST}/subject?group=${groupId}`,
 			{signal: controller?.signal}
 		);
-		const result: IResponse<
-			Array<Omit<ISubject, "time"> & {time: string}>
-		> = await response.json();
-		return result.body.map(s => ({
-			...s,
-			time: new Date(`1999-01-13T${s.time}`).getTime()
-		}));
+		const result: IResponse<Array<ISubject>> = await response.json();
+		return result.body;
 	};
 
 	/**
