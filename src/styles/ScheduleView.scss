@@ -4,6 +4,7 @@
 	display: flex;
 	flex-direction: column;
 	flex: 1;
+	position: relative;
 
 	&__week-type {
 		display: flex;
@@ -68,6 +69,17 @@
 			&:first-child {
 				margin-top: 0;
 			}
+		}
+	}
+
+	& .schedule-view-page__fab {
+		position: absolute;
+		background-color: $blue;
+		bottom: 3rem;
+		right: 1.5rem;
+
+		.fab-icon {
+			color: $white;
 		}
 	}
 }

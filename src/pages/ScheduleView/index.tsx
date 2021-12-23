@@ -45,7 +45,7 @@ const ScheduleView = () => {
 
 	const handleAddSubject = useCallback(() => {
 		dispatch(scheduleActions.toggleEditing("create"));
-		navigate("/subject", {state: {createNew: true}});
+		navigate("/create", {state: {createNew: true}});
 	}, []);
 	//#endregion
 
@@ -75,18 +75,6 @@ const ScheduleView = () => {
 
 	return (
 		<div className="page schedule-view-page">
-			{editMode && (
-				<FAB
-					className="schedule-view-page__fab"
-					variant="circular"
-					size="medium"
-					onClick={handleAddSubject}
-				>
-					<Icon className="fab-icon">
-						<AddIcon />
-					</Icon>
-				</FAB>
-			)}
 			<div className="schedule-view-page__week-type">
 				<h2 className="week-type__text">
 					{greenWeek ? "Зеленая неделя" : "Белая неделя"}
@@ -104,6 +92,16 @@ const ScheduleView = () => {
 				weekType={weekType}
 				weekday={weekday}
 			/>
+			{editMode && (
+				<FAB
+					className="schedule-view-page__fab"
+					variant="circular"
+					size="medium"
+					onClick={handleAddSubject}
+				>
+					<AddIcon className="fab-icon" />
+				</FAB>
+			)}
 		</div>
 	);
 };

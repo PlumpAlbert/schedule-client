@@ -75,6 +75,14 @@ function PageHeader() {
 					);
 					break;
 				}
+				case "create": {
+					actions.push(
+						headerActions.setLeftIcon(LeftIcon.CANCEL),
+						headerActions.setTitle("Создание"),
+						headerActions.setRightIcon(RightIcon.SAVE)
+					);
+					break;
+				}
 				default: {
 					actions.push(
 						headerActions.setSearchDisplay(SearchDisplay.NONE),

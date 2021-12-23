@@ -82,6 +82,7 @@ function App() {
 				<Route path="/signup" element={<SignUpPage />} />
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/schedule" element={<ScheduleView />} />
+				<Route path="/create" element={<EditSubjectPage />} />
 				<Route path="/subject" element={<EditSubjectPage />} />
 				<Route path="/groups/*" element={<GroupsListPage />} />
 				<Route path="/search" element={<SearchPage />} />
