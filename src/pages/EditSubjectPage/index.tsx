@@ -4,48 +4,71 @@ import TitleControl from "./FormControls/TitleControl";
 import TypeControl from "./FormControls/TypeControl";
 import TeacherControl from "./FormControls/TeacherControl";
 import ScheduleTimes from "./FormControls/ScheduleTimes";
+import reducer, {
+	IEditSubjectPageState,
+	initialState,
+	ISubjectTime
+} from "./reducer";
 import {useSelector} from "../../store";
-import reducer, {IEditSubjectPageState, init} from "./reducer";
 
 import "../../styles/EditSubjectPage.scss";
+import {WEEK_TYPE} from "../../types";
 
 function EditSubjectPage() {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const editMode = useSelector(store => store.schedule.editMode);
+
 	let subjectId: number | undefined;
 	if (location.search) {
 		const params = new URLSearchParams(location.search);
 		subjectId = Number(params.get("id"));
 	}
-	const subject = useSelector<IEditSubjectPageState | undefined>(
-		({schedule}) => {
-			if (!subjectId) return;
-			const subject = schedule.subjects.find(s => s.id === subjectId);
-			if (!subject) return;
-			const twins = schedule.subjects.filter(
-				s =>
-					s.title === subject.title &&
-					s.type === subject.type &&
-					s.teacher.id === subject.teacher.id
-			);
-			return {
-				teacher: subject.teacher,
-				type: subject.type,
-				title: subject.title,
-				times: twins.map(s => ({
-					id: s.id.toString(),
-					time: s.time,
-					weekday: s.weekday,
-					weekType: s.weekType,
-					audience: s.audience
-				}))
-			};
+
+	const initState = useSelector<IEditSubjectPageState>(({schedule}) => {
+		if (!subjectId) return initialState;
+		const subject = schedule.subjects.find(s => s.id === subjectId);
+		if (!subject) return initialState;
+		const twins = schedule.subjects.filter(
+			s =>
+				s.title === subject.title &&
+				s.type === subject.type &&
+				s.teacher.id === subject.teacher.id
+		);
+		let times: Record<WEEK_TYPE, ISubjectTime[]> = {
+			[WEEK_TYPE.WHITE]: [],
+			[WEEK_TYPE.GREEN]: []
+		};
+		for (let i = 0; i < twins.length; ++i) {
+			const {weekType, time, id, weekday, audience} = twins[i];
+			if (weekType === WEEK_TYPE.WHITE) {
+				times[WEEK_TYPE.WHITE].push({
+					id: id.toString(),
+					time,
+					weekday,
+					audience
+				});
+			} else {
+				times[WEEK_TYPE.GREEN].push({
+					id: id.toString(),
+					time,
+					weekday,
+					audience
+				});
+			}
 		}
-	);
+		return {
+			weekType: subject.weekType,
+			teacher: subject.teacher,
+			type: subject.type,
+			title: subject.title,
+			times
+		};
+	});
 
-	const [state, dispatch] = useReducer(reducer, subject, init);
+	const [state, dispatch] = useReducer(reducer, initState);
 
-	if (!subject || !subjectId) {
+	if (editMode !== "create" && !subjectId) {
 		navigate("/schedule", {replace: true});
 		return null;
 	}
@@ -53,22 +76,13 @@ function EditSubjectPage() {
 	return (
 		<div className="page edit-subject-page">
 			<form className="edit-subject-form">
-				<TitleControl
-					id={subjectId}
+				<TitleControl dispatch={dispatch} value={state.title} />
+				<TypeControl dispatch={dispatch} value={state.type} />
+				<TeacherControl dispatch={dispatch} value={state.teacher} />
+				<ScheduleTimes
 					dispatch={dispatch}
-					value={state.title}
+					value={state.times[state.weekType]}
 				/>
-				<TypeControl
-					id={subjectId}
-					dispatch={dispatch}
-					value={state.type}
-				/>
-				<TeacherControl
-					id={subjectId}
-					dispatch={dispatch}
-					value={state.teacher}
-				/>
-				<ScheduleTimes dispatch={dispatch} times={subject.times} />
 			</form>
 		</div>
 	);
