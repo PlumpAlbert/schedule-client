@@ -1,5 +1,5 @@
 import React from "react";
-import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import GithubIcon from "@mui/icons-material/GitHub";
 import GmailIcon from "@mui/icons-material/Mail";
@@ -12,15 +12,24 @@ export default function PageFooter() {
 				© {new Date().getFullYear()} Plump Albert
 			</p>
 			<div className="page-footer__links">
-				<IconButton className="page-footer__link">
+				<Link
+					className="page-footer__link"
+					href="https://github.com/PlumpAlbert"
+				>
 					<GithubIcon className="github-icon page-footer__icon" />
-				</IconButton>
-				<IconButton className="page-footer__link">
+				</Link>
+				<Link
+					className="page-footer__link"
+					href="mailto:plumpalbert@gmail.com"
+				>
 					<GmailIcon className="mail-icon page-footer__icon" />
-				</IconButton>
-				<IconButton className="page-footer__link">
+				</Link>
+				<Link
+					className="page-footer__link"
+					href="https://t.me/plump_albert"
+				>
 					<TelegramIcon className="telegram-icon page-footer__icon" />
-				</IconButton>
+				</Link>
 			</div>
 		</footer>
 	);
