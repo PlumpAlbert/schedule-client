@@ -7,12 +7,12 @@ interface ScheduleState {
 	subjects: ISubject[];
 	weekday: WEEKDAY;
 	weekType: WEEK_TYPE;
-	isEditing: boolean;
+	editMode: "create" | "edit" | undefined;
 }
 
 const today = new Date();
 const initialState: ScheduleState = {
-	isEditing: false,
+	editMode: undefined,
 	subjects: [],
 	weekday: today.getDay() === 0 ? 7 : today.getDay(),
 	weekType: GetWeekType(today)
@@ -30,7 +30,7 @@ export const actions = {
 	setWeekType: createAction<WEEK_TYPE>("setWeekType"),
 	toggleWeekType: createAction("toggleWeekType"),
 	// Editing actions
-	toggleEditing: createAction("toggleEditing"),
+	toggleEditing: createAction<"create" | "edit" | undefined>("toggleEditing"),
 	// Schedule actions
 	setSchedule: createAction<ISubject[]>("setSchedule"),
 	addSubject: createAction<ISubject>("addSubject"),
@@ -58,8 +58,8 @@ const scheduleSlice = createSlice({
 						: WEEK_TYPE.WHITE;
 			})
 			// Editing actions
-			.addCase(actions.toggleEditing, state => {
-				state.isEditing = !state.isEditing;
+			.addCase(actions.toggleEditing, (state, {payload}) => {
+				state.editMode = payload;
 			})
 			// Schedule actions
 			.addCase(actions.setSchedule, (state, {payload}) => {

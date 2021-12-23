@@ -1,4 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useRef} from "react";
+import {useNavigate} from "react-router-dom";
+import FAB from "@mui/material/Fab";
+import Icon from "@mui/material/Icon";
+import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import {GetWeekdayName} from "../../Helpers";
@@ -12,7 +16,8 @@ import "../../styles/ScheduleView.scss";
 const ScheduleView = () => {
 	const weekdayRefs = useRef<Array<HTMLParagraphElement | null>>([]);
 	const dispatch = useDispatch();
-	const {isEditing, weekday, weekType} = useSelector(selectSchedule);
+	const navigate = useNavigate();
+	const {editMode, weekday, weekType} = useSelector(selectSchedule);
 
 	useEffect(() => {
 		weekdayRefs.current[weekday - 1]?.scrollIntoView({
@@ -37,6 +42,11 @@ const ScheduleView = () => {
 	const handleSwapClick = useCallback<React.MouseEventHandler>(() => {
 		dispatch(scheduleActions.toggleWeekType());
 	}, [dispatch]);
+
+	const handleAddSubject = useCallback(() => {
+		dispatch(scheduleActions.toggleEditing("create"));
+		navigate("/subject", {state: {createNew: true}});
+	}, []);
 	//#endregion
 
 	const weekdays = useMemo(() => {
@@ -65,6 +75,18 @@ const ScheduleView = () => {
 
 	return (
 		<div className="page schedule-view-page">
+			{editMode && (
+				<FAB
+					className="schedule-view-page__fab"
+					variant="circular"
+					size="medium"
+					onClick={handleAddSubject}
+				>
+					<Icon className="fab-icon">
+						<AddIcon />
+					</Icon>
+				</FAB>
+			)}
 			<div className="schedule-view-page__week-type">
 				<h2 className="week-type__text">
 					{greenWeek ? "Зеленая неделя" : "Белая неделя"}
@@ -78,7 +100,7 @@ const ScheduleView = () => {
 			</div>
 			<div className="schedule-view-page__days">{weekdays}</div>
 			<SchedulePresenter
-				isEditing={isEditing}
+				isEditing={editMode === "edit"}
 				weekType={weekType}
 				weekday={weekday}
 			/>
