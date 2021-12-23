@@ -2,7 +2,7 @@ import React, {useCallback} from "react";
 import ListItem from "@mui/material/ListItem";
 import Icon from "@mui/material/Icon";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {ISubject, SUBJECT_TYPE, WEEK_TYPE} from "../../types";
+import {IAttendTime, ISubject, SUBJECT_TYPE} from "../../types";
 
 import "./SubjectView.scss";
 import {renderTime} from "../../Helpers";
@@ -11,12 +11,15 @@ import SwipeAction from "../../components/SwipeAction";
 interface ILoadable {
 	loading?: boolean;
 }
+
+export type DisplaySubject = Omit<ISubject, "times"> & IAttendTime;
+
 interface IProps {
 	isEditable?: boolean;
 	type?: SUBJECT_TYPE;
-	value?: ISubject;
-	onClick?: (s: ISubject) => void;
-	onDelete?: (s: ISubject) => void;
+	value?: DisplaySubject;
+	onClick?: (s: DisplaySubject) => void;
+	onDelete?: (s: DisplaySubject) => void;
 }
 
 function SubjectView({

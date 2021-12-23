@@ -15,10 +15,12 @@ interface IAttendTimePayload {
 	value: IAttendTime[keyof Omit<IAttendTime, "id">];
 }
 
-interface ISubjectPayload extends Omit<ISubject, "times"> {
+interface ISubjectPayload extends SubjectIndex {
 	property: keyof Omit<ISubject, "times">;
 	value: ISubject[keyof Omit<ISubject, "times">];
 }
+
+type SubjectIndex = Omit<ISubject, "times" | "teacher"> & {teacher: number};
 
 interface SchedulePageState {
 	subjects: ISubject[];
@@ -45,7 +47,7 @@ export const actions = {
 	// Schedule actions
 	setSchedule: createAction<ISubject[]>("setSchedule"),
 	addSubject: createAction<ISubject>("addSubject"),
-	deleteSubject: createAction<ISubject>("deleteSubject"),
+	deleteSubject: createAction<SubjectIndex>("deleteSubject"),
 	updateSubject: createAction<ISubjectPayload>("updateSubject"),
 	// Attend time actions
 	addAttendTime: createAction<{value: IAttendTime} & Omit<ISubject, "times">>(
@@ -99,7 +101,7 @@ const scheduleSlice = createSlice({
 			.addCase(actions.deleteSubject, ({subjects}, {payload}) => {
 				const index = subjects.findIndex(
 					findSubjectCallback(
-						payload.teacher.id,
+						payload.teacher,
 						payload.type,
 						payload.title
 					)
@@ -110,7 +112,7 @@ const scheduleSlice = createSlice({
 			.addCase(actions.updateSubject, ({subjects}, {payload}) => {
 				const {teacher, type, title, property, value} = payload;
 				const subject = subjects.find(
-					findSubjectCallback(teacher.id, type, title)
+					findSubjectCallback(teacher, type, title)
 				);
 				if (!subject) return;
 				(subject[property] as ISubject[typeof property]) = value;

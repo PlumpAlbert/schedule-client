@@ -3,8 +3,8 @@ import {useLocation, useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import ScheduleAPI from "../../API";
-import {ISubject, SUBJECT_TYPE, WEEKDAY} from "../../types";
-import SubjectView from "./SubjectView";
+import {IAttendTime, ISubject, SUBJECT_TYPE, WEEKDAY} from "../../types";
+import SubjectView, {DisplaySubject} from "./SubjectView";
 import {WEEK_TYPE} from "../../types";
 
 import {actions as scheduleActions} from "../../store/schedule";
@@ -22,14 +22,18 @@ function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const subjects = useSelector(state => {
-		let newSchedule: Array<ISubject[]> = [];
-		for (let i = WEEKDAY.MONDAY; i <= WEEKDAY.SUNDAY; i++) {
-			newSchedule[i - 1] = state.schedule.subjects.filter(
-				v => v.weekday === i
-			);
-		}
-		return newSchedule;
+	const subjects = useSelector<DisplaySubject[]>(({schedule}) => {
+		return schedule.subjects.reduce<DisplaySubject[]>(
+			(displayList, {times, ...subject}) => {
+				return displayList.concat(
+					times.map<DisplaySubject>(time => ({
+						...time,
+						...subject
+					}))
+				);
+			},
+			[]
+		);
 	});
 	const user = useSelector(selectUser);
 
@@ -60,16 +64,22 @@ function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
 		}
 	}, [groupId]);
 
-	const handleSubjectClick = useCallback<(s: ISubject) => void>(
+	const handleSubjectClick = useCallback<(s: DisplaySubject) => void>(
 		subject => {
 			navigate("/subject?id=" + subject.id);
 		},
 		[navigate]
 	);
 
-	const handleSubjectDelete = useCallback<(s: ISubject) => void>(
+	const handleSubjectDelete = useCallback<(s: DisplaySubject) => void>(
 		subject => {
-			dispatch(scheduleActions.deleteSubject(subject));
+			dispatch(
+				scheduleActions.deleteSubject({
+					title: subject.title,
+					type: subject.type,
+					teacher: subject.teacher.id
+				})
+			);
 		},
 		[dispatch]
 	);
@@ -105,8 +115,9 @@ function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
 					/>
 				</>
 			) : (
-				subjects[weekday - 1].map(
+				subjects.map(
 					(s, i) =>
+						s.weekday === weekday &&
 						s.weekType === weekType && (
 							<SubjectView
 								key={`subject-view-${i}`}
