@@ -1,5 +1,4 @@
 import React, {useCallback, useState} from "react";
-import {AnyAction} from "@reduxjs/toolkit";
 import TimeIcon from "@mui/icons-material/AddAlarmOutlined";
 import Icon from "@mui/material/Icon";
 import Tab from "@mui/material/Tab";
@@ -8,19 +7,18 @@ import TimeList from "./TimeList";
 import {WEEK_TYPE} from "../../../../types";
 import {actions, ISubjectTime} from "../../reducer";
 import AddTimeDialog from "./AddTimeDialog";
+import {IProps} from "..";
 
-interface IProps {
-	dispatch: React.Dispatch<AnyAction>;
-	times: ISubjectTime[];
-}
-
-const ScheduleTimes = ({dispatch, times}: IProps) => {
+const ScheduleTimes = ({dispatch, value}: IProps<ISubjectTime[]>) => {
 	const [weekType, setWeekType] = useState(WEEK_TYPE.WHITE);
 	const [showDialog, setShowDialog] = useState(false);
 	const [editTime, setEditTime] = useState<ISubjectTime | undefined>();
 
 	const handleWeekTypeChange = useCallback(
-		(_, value) => void setWeekType(value),
+		(_, value) => {
+			setWeekType(value);
+			dispatch(actions.setProperty({property: "weekType", value}));
+		},
 		[setWeekType]
 	);
 
@@ -107,10 +105,9 @@ const ScheduleTimes = ({dispatch, times}: IProps) => {
 				/>
 			</Tabs>
 			<TimeList
-				times={times}
+				times={value}
 				onClick={handleTimeClick}
 				onDelete={handleTimeDelete}
-				weekType={weekType}
 			/>
 		</div>
 	);

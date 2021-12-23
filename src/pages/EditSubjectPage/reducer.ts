@@ -3,7 +3,6 @@ import {IUser, SUBJECT_TYPE, WEEKDAY, WEEK_TYPE} from "../../types";
 
 export interface ISubjectTime {
 	id: string;
-	weekType: WEEK_TYPE;
 	weekday: WEEKDAY;
 	time: number;
 	audience: string;
@@ -13,14 +12,19 @@ export interface IEditSubjectPageState {
 	title: string;
 	type: SUBJECT_TYPE;
 	teacher: IUser;
-	times: ISubjectTime[];
+	times: Record<WEEK_TYPE, ISubjectTime[]>;
+	weekType: WEEK_TYPE;
 }
 
-const initialState: IEditSubjectPageState = {
+export const initialState: IEditSubjectPageState = {
 	title: "",
 	type: SUBJECT_TYPE.ЛЕКЦИЯ,
 	teacher: {id: 0, name: ""},
-	times: []
+	times: {
+		[WEEK_TYPE.WHITE]: [],
+		[WEEK_TYPE.GREEN]: []
+	},
+	weekType: WEEK_TYPE.WHITE
 };
 
 export const actions = {
@@ -52,26 +56,23 @@ const store = createSlice({
 				(state[property] as IEditSubjectPageState[typeof property]) =
 					value;
 			})
-			.addCase(actions.addTime, (state, {payload}) => {
-				state.times.push({...payload, id: nanoid()});
+			.addCase(actions.addTime, ({times, weekType}, {payload}) => {
+				times[weekType].push({...payload, id: nanoid()});
 			})
-			.addCase(actions.deleteTime, ({times}, {payload}) => {
-				const index = times.findIndex(t => t.id === payload.id);
-				times.splice(index, 1);
+			.addCase(actions.deleteTime, ({times, weekType}, {payload}) => {
+				const index = times[weekType].findIndex(
+					t => t.id === payload.id
+				);
+				times[weekType].splice(index, 1);
 			})
-			.addCase(actions.updateTime, ({times}, {payload}) => {
+			.addCase(actions.updateTime, ({times, weekType}, {payload}) => {
 				const {id, property, value} = payload;
-				const time = times.find(t => t.id === id);
+				const time = times[weekType].find(t => t.id === id);
 				if (time) {
 					(time[property] as ISubjectTime[typeof property]) = value;
 				}
 			});
 	}
 });
-
-export function init(initState?: IEditSubjectPageState) {
-	if (!initState) return initialState;
-	return initState;
-}
 
 export default store.reducer;

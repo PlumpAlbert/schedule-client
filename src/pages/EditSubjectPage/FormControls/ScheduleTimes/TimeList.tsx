@@ -67,26 +67,23 @@ const Time = ({className, onDelete, onClick, ...time}: ITimeProps) => {
 };
 
 interface ITimeListProps {
-	weekType: WEEK_TYPE;
 	times: ISubjectTime[];
 	onDelete: (time: ISubjectTime) => void;
 	onClick: (time: ISubjectTime) => void;
 }
 
-const TimeList = ({times, weekType, onDelete, onClick}: ITimeListProps) => {
+const TimeList = ({times, onDelete, onClick}: ITimeListProps) => {
 	const timeNodes = useMemo(
 		() =>
-			times.map((t, i) =>
-				t.weekType === weekType ? (
-					<Time
-						{...t}
-						key={`time-list-item-${i}`}
-						className="time-item"
-						onDelete={onDelete}
-						onClick={onClick}
-					/>
-				) : null
-			),
+			times.map((t, i) => (
+				<Time
+					{...t}
+					key={`time-list-item-${i}`}
+					className="time-item"
+					onDelete={onDelete}
+					onClick={onClick}
+				/>
+			)),
 		[times, onDelete, onClick]
 	);
 
