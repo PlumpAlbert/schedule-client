@@ -27,6 +27,7 @@ interface ApplicationHeaderState {
 	rightIcon: RightIcon;
 	searchDisplay: SearchDisplay;
 	searchValue: string;
+	save: boolean;
 }
 
 export const initialState: ApplicationHeaderState = {
@@ -34,7 +35,8 @@ export const initialState: ApplicationHeaderState = {
 	searchDisplay: SearchDisplay.NONE,
 	leftIcon: LeftIcon.MENU,
 	rightIcon: RightIcon.NONE,
-	title: ""
+	title: "",
+	save: false
 };
 
 export const actions = {
@@ -42,7 +44,8 @@ export const actions = {
 	setSearchValue: createAction<string>("setSearchValue"),
 	setSearchDisplay: createAction<SearchDisplay>("setSearchDisplay"),
 	setRightIcon: createAction<RightIcon>("setRightIcon"),
-	setLeftIcon: createAction<LeftIcon>("setLeftIcon")
+	setLeftIcon: createAction<LeftIcon>("setLeftIcon"),
+	saveClicked: createAction<boolean>("saveClicked")
 };
 
 const store = createSlice({
@@ -65,6 +68,9 @@ const store = createSlice({
 			})
 			.addCase(actions.setRightIcon, (state, {payload}) => {
 				state.rightIcon = payload;
+			})
+			.addCase(actions.saveClicked, (state, {payload}) => {
+				state.save = payload;
 			});
 	}
 });

@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import FAB from "@mui/material/Fab";
-import Icon from "@mui/material/Icon";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
@@ -17,15 +16,15 @@ const ScheduleView = () => {
 	const weekdayRefs = useRef<Array<HTMLParagraphElement | null>>([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const {editMode, weekday, weekType} = useSelector(selectSchedule);
+	const {editMode, currentDay, currentWeek} = useSelector(selectSchedule);
 
 	useEffect(() => {
-		weekdayRefs.current[weekday - 1]?.scrollIntoView({
+		weekdayRefs.current[currentDay - 1]?.scrollIntoView({
 			behavior: "smooth",
 			block: "center",
 			inline: "center"
 		});
-	}, [weekday]);
+	}, [currentDay]);
 
 	//#region CALLBACKS
 	const handleWeekdayClick = useCallback<
@@ -62,16 +61,19 @@ const ScheduleView = () => {
 					id={name}
 					data-weekday={i}
 					onClick={handleWeekdayClick}
-					className={`weekday${weekday === i ? " active" : ""}`}
+					className={`weekday${currentDay === i ? " active" : ""}`}
 				>
 					{name}
 				</p>
 			);
 		}
 		return array;
-	}, [handleWeekdayClick, weekday]);
+	}, [handleWeekdayClick, currentDay]);
 
-	const greenWeek = useMemo(() => weekType === WEEK_TYPE.GREEN, [weekType]);
+	const greenWeek = useMemo(
+		() => currentWeek === WEEK_TYPE.GREEN,
+		[currentWeek]
+	);
 
 	return (
 		<div className="page schedule-view-page">
@@ -89,8 +91,8 @@ const ScheduleView = () => {
 			<div className="schedule-view-page__days">{weekdays}</div>
 			<SchedulePresenter
 				isEditing={editMode === "edit"}
-				weekType={weekType}
-				weekday={weekday}
+				weekType={currentWeek}
+				weekday={currentDay}
 			/>
 			{editMode && (
 				<FAB

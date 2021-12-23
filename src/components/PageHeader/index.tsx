@@ -97,7 +97,9 @@ function PageHeader() {
 		actions.forEach(a => dispatch(a));
 	}, [location.pathname, dispatch]); // eslint-disable-line
 
-	const onSaveClick = useCallback(() => {}, []);
+	const onSaveClick = useCallback(() => {
+		dispatch(headerActions.saveClicked(true));
+	}, [dispatch]);
 
 	const onMenuClick = useCallback(() => {
 		dispatch(appActions.toggleMenu());
