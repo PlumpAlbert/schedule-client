@@ -23,6 +23,14 @@ export default class ScheduleAPI {
 		process.env.NODE_ENV === "development"
 			? `http://${document.location.host}/api`
 			: "https://www.plumpalbert.xyz/api";
+
+	private static handleError(err: any) {
+		if (process.env.NODE_ENV === "development") {
+			console.error(err);
+		}
+		return undefined;
+	}
+
 	/**
 	 * Method for fetching group's schedule
 	 * @param groupId Group identifier
@@ -201,6 +209,28 @@ export default class ScheduleAPI {
 				console.error(err);
 			}
 			return {};
+		}
+	};
+
+	/**
+	 * Method for fetching teachers from server
+	 *
+	 * @async
+	 * @param [controller] - abort controller to cancel fetch
+	 * @returns List of teachers
+	 */
+	static getTeachers = async (controller?: AbortController) => {
+		try {
+			const response = await fetch(`${ScheduleAPI.HOST}/user/teacher`, {
+				signal: controller?.signal
+			});
+			if (response.status !== 200) return;
+			const result: IResponse<IUser[]> = await response.json();
+			return result.error
+				? ScheduleAPI.handleError(result.message)
+				: result.body;
+		} catch (err) {
+			return ScheduleAPI.handleError(err);
 		}
 	};
 }
