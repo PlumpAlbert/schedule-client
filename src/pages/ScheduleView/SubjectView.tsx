@@ -46,6 +46,7 @@ function SubjectView({
 	const handleClick = useCallback<React.MouseEventHandler<HTMLLIElement>>(
 		e => {
 			e.preventDefault();
+			if (!isEditable) return;
 			if (onClick && value) {
 				onClick(value);
 			}
