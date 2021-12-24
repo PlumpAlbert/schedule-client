@@ -4,15 +4,14 @@ import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {WEEK_TYPE} from "../../../../types";
+import {IAttendTime} from "../../../../types";
 import {GetWeekdayName, renderTime} from "../../../../Helpers";
 import SwipeAction from "../../../../components/SwipeAction";
-import {ISubjectTime} from "../../reducer";
 
-interface ITimeProps extends ISubjectTime {
+interface ITimeProps extends IAttendTime {
 	className: string;
-	onDelete: (time: ISubjectTime) => void;
-	onClick: (time: ISubjectTime) => void;
+	onDelete: (time: IAttendTime) => void;
+	onClick: (time: IAttendTime) => void;
 }
 
 const Time = ({className, onDelete, onClick, ...time}: ITimeProps) => {
@@ -67,9 +66,9 @@ const Time = ({className, onDelete, onClick, ...time}: ITimeProps) => {
 };
 
 interface ITimeListProps {
-	times: ISubjectTime[];
-	onDelete: (time: ISubjectTime) => void;
-	onClick: (time: ISubjectTime) => void;
+	times: IAttendTime[];
+	onDelete: (time: IAttendTime) => void;
+	onClick: (time: IAttendTime) => void;
 }
 
 const TimeList = ({times, onDelete, onClick}: ITimeListProps) => {
