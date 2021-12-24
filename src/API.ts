@@ -135,7 +135,14 @@ export default class ScheduleAPI {
 		return result.error ? false : result.body.success;
 	};
 
-	static signOut = async (controller?: AbortController) => {
+	/**
+	 * Method for logging out currently logged in user
+	 *
+	 * @async
+	 * @param [controller] - Abort controller to cancel fetch
+	 * @returns Boolean value representing success of operation
+	 */
+	static signOut = async (controller?: AbortController): Promise<boolean> => {
 		return fetch(`${ScheduleAPI.HOST}/signout`, {
 			signal: controller?.signal
 		})
@@ -148,6 +155,13 @@ export default class ScheduleAPI {
 			});
 	};
 
+	/**
+	 * Method for searching group by string
+	 *
+	 * @async
+	 * @param {string} searchString - string used for search
+	 * @param {AbortController} [controller] - abort controller to cancel fetch
+	 */
 	static searchGroup = async (
 		searchString: string,
 		controller?: AbortController
