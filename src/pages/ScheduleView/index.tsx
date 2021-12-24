@@ -98,7 +98,8 @@ const ScheduleView = () => {
 				<FAB
 					className="schedule-view-page__fab"
 					variant="circular"
-					size="medium"
+					size="large"
+					color="primary"
 					onClick={handleAddSubject}
 				>
 					<AddIcon className="fab-icon" />

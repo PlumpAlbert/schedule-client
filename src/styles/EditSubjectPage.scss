@@ -157,6 +157,9 @@
 						}
 					}
 				}
+				.time-item-divider:last-child {
+					display: none;
+				}
 			}
 		}
 	}

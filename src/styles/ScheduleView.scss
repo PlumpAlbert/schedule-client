@@ -73,6 +73,7 @@
 	}
 
 	& .schedule-view-page__fab {
+		z-index: 99;
 		position: absolute;
 		background-color: $blue;
 		bottom: 3rem;
@@ -81,14 +82,5 @@
 		.fab-icon {
 			color: $white;
 		}
-	}
-}
-
-@keyframes glow {
-	0% {
-		background-position-x: 100%;
-	}
-	100% {
-		background-position-x: 0%;
 	}
 }
