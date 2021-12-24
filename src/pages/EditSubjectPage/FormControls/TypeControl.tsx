@@ -5,7 +5,7 @@ import Select, {SelectChangeEvent} from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import {IProps, propTypes} from ".";
 import {SUBJECT_TYPE} from "../../../types";
-import {actions} from "../reducer";
+import {actions} from "../../../store/schedule/subject";
 import {GetSubjectTypeAsString} from "../../../Helpers";
 
 function TypeControl({dispatch, value}: IProps<SUBJECT_TYPE>) {
@@ -14,7 +14,7 @@ function TypeControl({dispatch, value}: IProps<SUBJECT_TYPE>) {
 	>(
 		({target}) => {
 			dispatch(
-				actions.setProperty({property: "type", value: target.value})
+				actions.updateProperty({property: "type", value: target.value})
 			);
 		},
 		[dispatch]

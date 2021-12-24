@@ -4,21 +4,18 @@ import Icon from "@mui/material/Icon";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import TimeList from "./TimeList";
-import {WEEK_TYPE} from "../../../../types";
-import {actions, ISubjectTime} from "../../reducer";
+import {IAttendTime, WEEK_TYPE} from "../../../../types";
+import {actions} from "../../../../store/schedule/subject";
 import AddTimeDialog from "./AddTimeDialog";
 import {IProps} from "..";
 
-const ScheduleTimes = ({dispatch, value}: IProps<ISubjectTime[]>) => {
+const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 	const [weekType, setWeekType] = useState(WEEK_TYPE.WHITE);
 	const [showDialog, setShowDialog] = useState(false);
-	const [editTime, setEditTime] = useState<ISubjectTime | undefined>();
+	const [editTime, setEditTime] = useState<IAttendTime | undefined>();
 
 	const handleWeekTypeChange = useCallback(
-		(_, value) => {
-			setWeekType(value);
-			dispatch(actions.setProperty({property: "weekType", value}));
-		},
+		(_, value) => void setWeekType(value),
 		[setWeekType]
 	);
 
@@ -29,7 +26,7 @@ const ScheduleTimes = ({dispatch, value}: IProps<ISubjectTime[]>) => {
 
 	//#region TimeList callbacks
 	const handleTimeClick = useCallback(
-		(time: ISubjectTime) => {
+		(time: IAttendTime) => {
 			setEditTime(time);
 			setShowDialog(true);
 		},
@@ -37,21 +34,21 @@ const ScheduleTimes = ({dispatch, value}: IProps<ISubjectTime[]>) => {
 	);
 
 	const handleTimeDelete = useCallback(
-		(time: ISubjectTime) => void dispatch(actions.deleteTime(time)),
+		(time: IAttendTime) => void dispatch(actions.deleteAttendTime(time.id)),
 		[dispatch]
 	);
 	//#endregion
 
 	//#region AddTimeDialog callbacks
 	const handleDialogClose = useCallback(
-		(time?: Omit<ISubjectTime, "id">) => {
+		(time?: Omit<IAttendTime, "id">) => {
 			setShowDialog(false);
 			setEditTime(undefined);
 			if (!time) return;
 			if (editTime) {
 				(Object.keys(time) as Array<keyof typeof time>).forEach(key => {
 					dispatch(
-						actions.updateTime({
+						actions.updateAttendTime({
 							id: editTime.id,
 							property: key,
 							value: time[key]
@@ -59,7 +56,7 @@ const ScheduleTimes = ({dispatch, value}: IProps<ISubjectTime[]>) => {
 					);
 				});
 			} else {
-				dispatch(actions.addTime(time));
+				dispatch(actions.addAttendTime(time));
 			}
 		},
 		[dispatch, setShowDialog, editTime]

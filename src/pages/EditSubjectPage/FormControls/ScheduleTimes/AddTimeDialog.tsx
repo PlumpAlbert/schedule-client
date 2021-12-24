@@ -5,14 +5,13 @@ import Button from "@mui/material/Button";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import TextField from "@mui/material/TextField";
-import {WEEKDAY, WEEK_TYPE} from "../../../../types";
-import {ISubjectTime} from "../../reducer";
+import {IAttendTime, WEEKDAY, WEEK_TYPE} from "../../../../types";
 
 interface IProps {
 	open: boolean;
-	value?: ISubjectTime;
+	value?: IAttendTime;
 	weekType: WEEK_TYPE;
-	onClose: (timeData?: Omit<ISubjectTime, "id">) => void;
+	onClose: (timeData?: Omit<IAttendTime, "id">) => void;
 }
 
 function shortWeekdayName(day: WEEKDAY) {
@@ -45,7 +44,8 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 		onClose({
 			audience,
 			time,
-			weekday
+			weekday,
+			weekType
 		});
 	}, [onClose]);
 

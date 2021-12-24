@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import FormControl from "@mui/material/FormControl";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 import {IProps, propTypes} from ".";
-import {actions} from "../reducer";
+import {actions} from "../../../store/schedule/subject";
 
 function TitleControl({dispatch, value}: IProps<string>) {
 	const handleTitleChanged = useCallback<
@@ -11,7 +11,7 @@ function TitleControl({dispatch, value}: IProps<string>) {
 	>(
 		({target}) => {
 			dispatch(
-				actions.setProperty({property: "title", value: target.value})
+				actions.updateProperty({property: "title", value: target.value})
 			);
 		},
 		[dispatch]
