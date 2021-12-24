@@ -12,7 +12,9 @@ type SubjectPayload = {
 	value: ISubject[keyof Omit<ISubject, "times">];
 };
 
-export type SubjectState = ISubject;
+export type SubjectState = Omit<ISubject, "times"> & {
+	times: Array<IAttendTime & {isCreated?: boolean}>;
+};
 
 export const initialState: SubjectState = {
 	type: SUBJECT_TYPE.ЛЕКЦИЯ,
@@ -40,7 +42,7 @@ export const slice = createSlice({
 				(state[property] as ISubject[typeof property]) = value;
 			})
 			.addCase(actions.addAttendTime, (state, {payload}) => {
-				state.times.push({...payload, id: Date.now()});
+				state.times.push({...payload, id: Date.now(), isCreated: true});
 			})
 			.addCase(actions.deleteAttendTime, (state, {payload}) => {
 				const index = state.times.findIndex(t => t.id === payload);
