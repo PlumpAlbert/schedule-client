@@ -4,7 +4,7 @@ import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {IAttendTime} from "../../../../types";
+import {IAttendTime, WEEK_TYPE} from "../../../../types";
 import {GetWeekdayName, renderTime} from "../../../../Helpers";
 import SwipeAction from "../../../../components/SwipeAction";
 
@@ -66,36 +66,37 @@ const Time = ({className, onDelete, onClick, ...time}: ITimeProps) => {
 };
 
 interface ITimeListProps {
+	currentWeek: WEEK_TYPE;
 	times: IAttendTime[];
 	onDelete: (time: IAttendTime) => void;
 	onClick: (time: IAttendTime) => void;
 }
 
-const TimeList = ({times, onDelete, onClick}: ITimeListProps) => {
+const TimeList = ({currentWeek, times, onDelete, onClick}: ITimeListProps) => {
 	const timeNodes = useMemo(
 		() =>
-			times.map((t, i) => (
-				<Time
-					{...t}
-					key={`time-list-item-${i}`}
-					className="time-item"
-					onDelete={onDelete}
-					onClick={onClick}
-				/>
-			)),
+			times.map(
+				(t, i) =>
+					t.weekType === currentWeek && (
+						<>
+							<Time
+								{...t}
+								key={`time-list-item-${i}`}
+								className="time-item"
+								onDelete={onDelete}
+								onClick={onClick}
+							/>
+							<Divider
+								className="time-item-divider"
+								variant="middle"
+							/>
+						</>
+					)
+			),
 		[times, onDelete, onClick]
 	);
 
-	return (
-		<List className="time-list">
-			{timeNodes.map(t => (
-				<>
-					{t}
-					<Divider variant="middle" />
-				</>
-			))}
-		</List>
-	);
+	return <List className="time-list">{timeNodes}</List>;
 };
 
 export default TimeList;

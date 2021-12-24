@@ -102,6 +102,7 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 				/>
 			</Tabs>
 			<TimeList
+				currentWeek={weekType}
 				times={value}
 				onClick={handleTimeClick}
 				onDelete={handleTimeDelete}
