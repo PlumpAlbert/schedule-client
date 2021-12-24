@@ -1,14 +1,14 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
 import {RootState} from "..";
 import {GetWeekType} from "../../Helpers";
-import subjectReducer, {actions as subjectActions} from "./subjects";
+import subjectReducer, {actions as subjectActions} from "./subject";
 import {ISubject, SUBJECT_TYPE, WEEKDAY, WEEK_TYPE} from "../../types";
 
 type SubjectIndex = Omit<ISubject, "times" | "teacher"> & {teacher: number};
 
-type ForwardedAction<
-	T extends typeof subjectActions[keyof typeof subjectActions]
-> = SubjectIndex & {action: ReturnType<T>};
+type ForwardedAction = SubjectIndex & {
+	action: ReturnType<typeof subjectActions[keyof typeof subjectActions]>;
+};
 
 interface SchedulePageState {
 	subjects: ISubject[];
@@ -37,18 +37,7 @@ export const actions = {
 	addSubject: createAction<ISubject>("addSubject"),
 	deleteSubject: createAction<SubjectIndex>("deleteSubject"),
 	// Forwarded actions
-	updateSubject: createAction<
-		ForwardedAction<typeof subjectActions.updateProperty>
-	>("schedule/updateSubject"),
-	addAttendTime: createAction<
-		ForwardedAction<typeof subjectActions.addAttendTime>
-	>("schedule/addAttendTime"),
-	deleteAttendTime: createAction<
-		ForwardedAction<typeof subjectActions.deleteAttendTime>
-	>("schedule/deleteAttendTime"),
-	updateAttendTime: createAction<
-		ForwardedAction<typeof subjectActions.updateAttendTime>
-	>("schedule/updateAttendTime")
+	updateSubject: createAction<ForwardedAction>("schedule/updateSubject")
 };
 
 /**
@@ -68,13 +57,7 @@ const findSubjectCallback =
  * @param state - Main state of `SchedulePage`
  * @param action - Action to be forwarded
  */
-const forwardSubjectAction = <
-	T extends {
-		payload: ForwardedAction<
-			typeof subjectActions[keyof typeof subjectActions]
-		>;
-	}
->(
+const forwardSubjectAction = <T extends {payload: ForwardedAction}>(
 	{subjects}: SchedulePageState,
 	{payload}: T
 ) => {
@@ -125,10 +108,7 @@ const scheduleSlice = createSlice({
 				if (!index) return;
 				subjects.splice(index, 1);
 			})
-			.addCase(actions.updateSubject, forwardSubjectAction)
-			.addCase(actions.addAttendTime, forwardSubjectAction)
-			.addCase(actions.deleteAttendTime, forwardSubjectAction)
-			.addCase(actions.updateAttendTime, forwardSubjectAction);
+			.addCase(actions.updateSubject, forwardSubjectAction);
 	}
 });
 
