@@ -1,26 +1,14 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
-import {RootState} from ".";
-import {GetWeekType} from "../Helpers";
-import {
-	IAttendTime,
-	ISubject,
-	SUBJECT_TYPE,
-	WEEKDAY,
-	WEEK_TYPE
-} from "../types";
-
-interface IAttendTimePayload {
-	id: number;
-	property: keyof Omit<IAttendTime, "id">;
-	value: IAttendTime[keyof Omit<IAttendTime, "id">];
-}
-
-interface ISubjectPayload extends SubjectIndex {
-	property: keyof Omit<ISubject, "times">;
-	value: ISubject[keyof Omit<ISubject, "times">];
-}
+import {RootState} from "..";
+import {GetWeekType} from "../../Helpers";
+import subjectReducer, {actions as subjectActions} from "./subjects";
+import {ISubject, SUBJECT_TYPE, WEEKDAY, WEEK_TYPE} from "../../types";
 
 type SubjectIndex = Omit<ISubject, "times" | "teacher"> & {teacher: number};
+
+type ForwardedAction<
+	T extends typeof subjectActions[keyof typeof subjectActions]
+> = SubjectIndex & {action: ReturnType<T>};
 
 interface SchedulePageState {
 	subjects: ISubject[];
@@ -48,13 +36,19 @@ export const actions = {
 	setSchedule: createAction<ISubject[]>("setSchedule"),
 	addSubject: createAction<ISubject>("addSubject"),
 	deleteSubject: createAction<SubjectIndex>("deleteSubject"),
-	updateSubject: createAction<ISubjectPayload>("updateSubject"),
-	// Attend time actions
-	addAttendTime: createAction<{value: IAttendTime} & Omit<ISubject, "times">>(
-		"addAttendTime"
-	),
-	deleteAttendTime: createAction<number>("deleteAttendTime"),
-	updateAttendTime: createAction<IAttendTimePayload>("updateAttendTime")
+	// Forwarded actions
+	updateSubject: createAction<
+		ForwardedAction<typeof subjectActions.updateProperty>
+	>("schedule/updateSubject"),
+	addAttendTime: createAction<
+		ForwardedAction<typeof subjectActions.addAttendTime>
+	>("schedule/addAttendTime"),
+	deleteAttendTime: createAction<
+		ForwardedAction<typeof subjectActions.deleteAttendTime>
+	>("schedule/deleteAttendTime"),
+	updateAttendTime: createAction<
+		ForwardedAction<typeof subjectActions.updateAttendTime>
+	>("schedule/updateAttendTime")
 };
 
 /**
@@ -67,6 +61,28 @@ export const actions = {
 const findSubjectCallback =
 	(teacherId: number, type: SUBJECT_TYPE, title: string) => (s: ISubject) =>
 		s.teacher.id === teacherId && s.type === type && s.title === title;
+
+/**
+ * Reducer to perform action on single subject via `subjectReducer`
+ *
+ * @param state - Main state of `SchedulePage`
+ * @param action - Action to be forwarded
+ */
+const forwardSubjectAction = <
+	T extends {
+		payload: ForwardedAction<
+			typeof subjectActions[keyof typeof subjectActions]
+		>;
+	}
+>(
+	{subjects}: SchedulePageState,
+	{payload}: T
+) => {
+	const {title, type, teacher, action} = payload;
+	let index = subjects.findIndex(findSubjectCallback(teacher, type, title));
+	if (index === -1) return;
+	subjects[index] = subjectReducer(subjects[index], action);
+};
 
 const scheduleSlice = createSlice({
 	name: "schedule",
@@ -109,44 +125,10 @@ const scheduleSlice = createSlice({
 				if (!index) return;
 				subjects.splice(index, 1);
 			})
-			.addCase(actions.updateSubject, ({subjects}, {payload}) => {
-				const {teacher, type, title, property, value} = payload;
-				const subject = subjects.find(
-					findSubjectCallback(teacher, type, title)
-				);
-				if (!subject) return;
-				(subject[property] as ISubject[typeof property]) = value;
-			})
-			// Attend time actions
-			.addCase(actions.addAttendTime, ({subjects}, {payload}) => {
-				const {type, title, teacher, value} = payload;
-				const subject = subjects.find(
-					findSubjectCallback(teacher.id, type, title)
-				);
-				if (!subject) return;
-				subject.times.push(value);
-			})
-			.addCase(actions.deleteAttendTime, ({subjects}, {payload}) => {
-				let timeIndex = -1;
-				const subject = subjects.find(s => {
-					timeIndex = s.times.findIndex(t => t.id === payload);
-					return timeIndex !== -1;
-				});
-				if (!subject) return;
-				subject.times.splice(timeIndex, 1);
-			})
-			.addCase(actions.updateAttendTime, ({subjects}, {payload}) => {
-				const {id, property, value} = payload;
-				let timeIndex = -1;
-				const subject = subjects.find(s => {
-					timeIndex = s.times.findIndex(t => t.id === id);
-					return timeIndex !== -1;
-				});
-				if (!subject) return;
-				(subject.times[timeIndex][
-					property
-				] as IAttendTime[typeof property]) = value;
-			});
+			.addCase(actions.updateSubject, forwardSubjectAction)
+			.addCase(actions.addAttendTime, forwardSubjectAction)
+			.addCase(actions.deleteAttendTime, forwardSubjectAction)
+			.addCase(actions.updateAttendTime, forwardSubjectAction);
 	}
 });
 
