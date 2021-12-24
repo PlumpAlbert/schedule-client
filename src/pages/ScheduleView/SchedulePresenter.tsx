@@ -45,6 +45,10 @@ function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
 	}, [location.search]);
 
 	useEffect(() => {
+		if (subjects.length > 0) {
+			setLoading(false);
+			return;
+		}
 		const abortController = new AbortController();
 		try {
 			ScheduleAPI.fetchSchedule(groupId || 1, abortController).then(
