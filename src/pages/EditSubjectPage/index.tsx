@@ -1,10 +1,11 @@
-import React, {useEffect, useReducer} from "react";
+import React, {useEffect, useReducer, useRef} from "react";
 import {useLocation, useNavigate} from "react-router";
 import TitleControl from "./FormControls/TitleControl";
 import TypeControl from "./FormControls/TypeControl";
 import TeacherControl from "./FormControls/TeacherControl";
 import ScheduleTimes from "./FormControls/ScheduleTimes";
 import reducer, {
+	actions as subjectActions,
 	SubjectState,
 	initialState
 } from "../../store/schedule/subject";
@@ -45,17 +46,78 @@ function EditSubjectPage() {
 		}
 	);
 
+	const {current: initialStateRef} = useRef(
+		initState.title ? initState : undefined
+	);
 	const [state, dispatch] = useReducer(reducer, initState);
 
 	useEffect(() => {
 		if (!shouldSave) return;
-		state.times[WEEK_TYPE.WHITE].map(time => {
-			if (!time.isCreated) {
-				(Object.keys(time) as Array<keyof typeof time>).map(key => {
-					if (key === "id" || key === "isCreated") return;
-				});
-			}
-		});
+		// if subject existed
+		if (initialStateRef) {
+			// update properties of attend times
+			state.times.map(time => {
+				// If attend time was changed
+				if (!time.isCreated) {
+					(Object.keys(time) as Array<keyof typeof time>).map(key => {
+						if (key === "id" || key === "isCreated") return;
+						reduxDispatch(
+							scheduleActions.updateSubject({
+								type: initialStateRef.type,
+								title: initialStateRef.title,
+								teacher: initialStateRef.teacher.id,
+								action: subjectActions.updateAttendTime({
+									id: time.id,
+									property: key,
+									value: time[key]
+								})
+							})
+						);
+					});
+				}
+				// If attend time was created from scratch
+				else {
+					reduxDispatch(
+						scheduleActions.updateSubject({
+							type: initialStateRef.type,
+							title: initialStateRef.title,
+							teacher: initialStateRef.teacher.id,
+							action: subjectActions.addAttendTime({
+								weekType: time.weekType,
+								weekday: time.weekday,
+								time: time.time,
+								audience: time.audience
+							})
+						})
+					);
+				}
+			});
+			// update properties of subject
+			(Object.keys(state) as Array<keyof SubjectState>).forEach(key => {
+				if (key === "times") return;
+				if (state[key] === initialStateRef[key]) return;
+				reduxDispatch(
+					scheduleActions.updateSubject({
+						teacher: initialStateRef.teacher.id,
+						type: initialStateRef.type,
+						title: initialStateRef.title,
+						action: subjectActions.updateProperty({
+							property: key,
+							value: state[key]
+						})
+					})
+				);
+			});
+		}
+		// if subject was created from scratch
+		reduxDispatch(
+			scheduleActions.addSubject({
+				type: state.type,
+				teacher: state.teacher,
+				times: state.times,
+				title: state.title
+			})
+		);
 	}, [shouldSave]);
 
 	if (editMode !== "create" && !attendTimeId) {
