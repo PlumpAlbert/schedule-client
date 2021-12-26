@@ -55,6 +55,12 @@ function UserView({user, onGroupChange}: IProps) {
 		dispatch(appActions.toggleMenu());
 	}, [dispatch]);
 
+	const handleAddScheduleClick = useCallback(() => {
+		dispatch(scheduleActions.toggleEditing("create"));
+		dispatch(appActions.toggleMenu());
+		navigate("/groups");
+	}, [dispatch, navigate]);
+
 	return (
 		<div className="app-menu__content">
 			{user.group && (
@@ -79,15 +85,26 @@ function UserView({user, onGroupChange}: IProps) {
 			<div className="menu-settings">
 				<h3 className="menu-settings__header">Настройки</h3>
 				{user.type === UserType.ADMIN && (
-					<p
-						className="menu-settings__option"
-						onClick={handleEditScheduleClick}
-					>
-						<EditIcon classes={{root: "option__icon"}} />
-						<span className="option__text">
-							Редактировать расписание
-						</span>
-					</p>
+					<>
+						<p
+							className="menu-settings__option"
+							onClick={handleAddScheduleClick}
+						>
+							<EditIcon classes={{root: "option__icon"}} />
+							<span className="option__text">
+								Создать новое расписание
+							</span>
+						</p>
+						<p
+							className="menu-settings__option"
+							onClick={handleEditScheduleClick}
+						>
+							<EditIcon classes={{root: "option__icon"}} />
+							<span className="option__text">
+								Редактировать расписание
+							</span>
+						</p>
+					</>
 				)}
 				<p
 					className="menu-settings__option"
