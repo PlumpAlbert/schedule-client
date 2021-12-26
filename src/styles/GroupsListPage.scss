@@ -52,6 +52,7 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
+		position: relative;
 		&__no-items {
 			margin: auto 0;
 			padding: 0;
@@ -62,6 +63,15 @@
 				font-size: 1rem;
 				margin: 0;
 			}
+		}
+
+		& .specialties-wrapper__fab {
+			position: absolute;
+			z-index: 9;
+			bottom: 3rem;
+			right: 1.5rem;
+			background-color: $blue;
+			color: $white;
 		}
 	}
 }
