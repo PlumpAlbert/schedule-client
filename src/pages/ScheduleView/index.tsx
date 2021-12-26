@@ -90,7 +90,7 @@ const ScheduleView = () => {
 			</div>
 			<div className="schedule-view-page__days">{weekdays}</div>
 			<SchedulePresenter
-				isEditing={editMode === "edit"}
+				editMode={editMode}
 				weekType={currentWeek}
 				weekday={currentDay}
 			/>

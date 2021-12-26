@@ -3,25 +3,42 @@ import {useLocation, useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import ScheduleAPI from "../../API";
-import {IAttendTime, ISubject, SUBJECT_TYPE, WEEKDAY} from "../../types";
+import {SUBJECT_TYPE} from "../../types";
 import SubjectView, {DisplaySubject} from "./SubjectView";
 import {WEEK_TYPE} from "../../types";
-
-import {actions as scheduleActions} from "../../store/schedule";
+import {actions as scheduleActions, EditMode} from "../../store/schedule";
 import {useDispatch, useSelector} from "../../store";
 import {selectUser} from "../../store/app";
 
 interface IProps {
-	isEditing?: boolean;
+	editMode: EditMode;
 	weekday: number;
 	weekType: WEEK_TYPE;
 }
 
-function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
+const subjectPlaceholders = [
+	<SubjectView key="subject-view-0" loading type={SUBJECT_TYPE.ЛЕКЦИЯ} />,
+	<SubjectView
+		key="subject-view-1"
+		loading
+		type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
+	/>,
+	<SubjectView key="subject-view-2" loading type={SUBJECT_TYPE.ПРАКТИКА} />,
+	<SubjectView
+		key="subject-view-3"
+		loading
+		type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
+	/>,
+	<SubjectView key="subject-view-4" loading type={SUBJECT_TYPE.ЛЕКЦИЯ} />
+];
+
+function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 	const [isLoading, setLoading] = useState(true);
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const user = useSelector(selectUser);
+
 	const subjects = useSelector<DisplaySubject[]>(({schedule}) => {
 		return schedule.subjects.reduce<DisplaySubject[]>(
 			(displayList, {times, ...subject}) => {
@@ -35,7 +52,6 @@ function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
 			[]
 		);
 	});
-	const user = useSelector(selectUser);
 
 	const groupId = useMemo(() => {
 		const query = new URLSearchParams(location.search);
@@ -90,49 +106,21 @@ function SchedulePresenter({isEditing, weekday, weekType}: IProps) {
 
 	return (
 		<List className="schedule-view-page__schedule">
-			{isLoading ? (
-				<>
-					<SubjectView
-						key="subject-view-0"
-						loading
-						type={SUBJECT_TYPE.ЛЕКЦИЯ}
-					/>
-					<SubjectView
-						key="subject-view-1"
-						loading
-						type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
-					/>
-					<SubjectView
-						key="subject-view-2"
-						loading
-						type={SUBJECT_TYPE.ПРАКТИКА}
-					/>
-					<SubjectView
-						key="subject-view-3"
-						loading
-						type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
-					/>
-					<SubjectView
-						key="subject-view-4"
-						loading
-						type={SUBJECT_TYPE.ЛЕКЦИЯ}
-					/>
-				</>
-			) : (
-				subjects.map(
-					(s, i) =>
-						s.weekday === weekday &&
-						s.weekType === weekType && (
-							<SubjectView
-								key={`subject-view-${i}`}
-								onClick={handleSubjectClick}
-								onDelete={handleSubjectDelete}
-								isEditable={isEditing}
-								value={s}
-							/>
-						)
-				)
-			)}
+			{isLoading
+				? subjectPlaceholders
+				: subjects.map(
+						(s, i) =>
+							s.weekday === weekday &&
+							s.weekType === weekType && (
+								<SubjectView
+									key={`subject-view-${i}`}
+									onClick={handleSubjectClick}
+									onDelete={handleSubjectDelete}
+									isEditable={!!editMode}
+									value={s}
+								/>
+							)
+				  )}
 		</List>
 	);
 }

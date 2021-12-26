@@ -10,11 +10,12 @@ type ForwardedAction = SubjectIndex & {
 	action: ReturnType<typeof subjectActions[keyof typeof subjectActions]>;
 };
 
+export type EditMode = "create" | "edit" | undefined;
 interface SchedulePageState {
 	subjects: ISubject[];
 	currentDay: WEEKDAY;
 	currentWeek: WEEK_TYPE;
-	editMode: "create" | "edit" | undefined;
+	editMode: EditMode;
 }
 
 const today = new Date();
