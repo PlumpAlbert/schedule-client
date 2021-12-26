@@ -233,4 +233,35 @@ export default class ScheduleAPI {
 			return ScheduleAPI.handleError(err);
 		}
 	};
+
+	/**
+	 * Method for creating new groups
+	 *
+	 * @async
+	 * @param faculty - Group's faculty
+	 * @param specialty - Group's specialty
+	 * @param course - Group's course
+	 * @param [abortController] - Abort controller to cancel fetch
+	 */
+	static createGroup = async (
+		faculty: string,
+		specialty: string,
+		course: Course,
+		abortController?: AbortController
+	) => {
+		try {
+			const response = await fetch(`${ScheduleAPI.HOST}/group`, {
+				signal: abortController?.signal,
+				method: "POST",
+				body: JSON.stringify({faculty, specialty, course})
+			});
+			if (response.status !== 200) {
+				return ScheduleAPI.handleError("Request error");
+			}
+			const result: IResponse = await response.json();
+			return result.error;
+		} catch (err) {
+			return ScheduleAPI.handleError(err);
+		}
+	};
 }
