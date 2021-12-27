@@ -24,7 +24,7 @@ const SpecialtyAccordion = ({title, courses}: ISpecialty) => {
 	//#endregion
 	//#region MEMO
 	const courseElements = useMemo(() => {
-		const keys = Object.keys(courses) as Course[];
+		const keys = Object.keys(courses).map(c => Number(c)) as Course[];
 		return keys.sort().map(courseNumber => (
 			<p
 				key={`course-${courseNumber}-${courses[courseNumber]}`}

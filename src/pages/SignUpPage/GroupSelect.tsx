@@ -82,26 +82,26 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 					.split(" ")
 					.reduce((s, w) => (s += w[0].toUpperCase()), "");
 				const date = new Date();
-				const newOptions = Object.keys(
-					specialty.courses
-				).map<JSX.Element>(courseNumber => {
-					let year = date.getFullYear() - Number(courseNumber);
-					if (date.getMonth() >= 9) year += 1;
-					const item = {
-						name: `${shortName}-${year.toString().slice(-2)}`,
-						value: specialty.courses[courseNumber as Course]
-					};
-					return (
-						<MenuItem
-							key={item.name}
-							itemProp={specialty.title}
-							placeholder={year.toString()}
-							value={item.value}
-						>
-							{item.name}
-						</MenuItem>
-					);
-				});
+				const newOptions = Object.keys(specialty.courses).map<JSX.Element>(
+					courseNumber => {
+						let year = date.getFullYear() - Number(courseNumber);
+						if (date.getMonth() >= 9) year += 1;
+						const item = {
+							name: `${shortName}-${year.toString().slice(-2)}`,
+							value: specialty.courses[Number(courseNumber) as Course],
+						};
+						return (
+							<MenuItem
+								key={item.name}
+								itemProp={specialty.title}
+								placeholder={year.toString()}
+								value={item.value}
+							>
+								{item.name}
+							</MenuItem>
+						);
+					}
+				);
 				return options.concat(newOptions);
 			}, []),
 		[specialties]

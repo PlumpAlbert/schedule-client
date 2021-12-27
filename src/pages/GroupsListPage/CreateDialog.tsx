@@ -6,7 +6,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import {Course} from "../../types";
+import {BACHELOR_MAX, Course, MAGISTRACY_MAX} from "../../types";
 
 import "./CreateDialog.scss";
 import ScheduleAPI from "../../API";
@@ -25,7 +25,7 @@ interface IFieldsState {
 const CreateDialog = ({faculty, open, onClose}: IProps) => {
 	const [fields, setFields] = useState<IFieldsState>({
 		name: "",
-		course: "1"
+		course: 1,
 	});
 
 	const handleFieldChange = useCallback<
@@ -39,8 +39,6 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 	);
 
 	const courseOptions = useMemo(() => {
-		let bachelor = 4;
-		let magistrary = 2;
 		let options = [];
 		options.push(
 			<ListSubheader
@@ -50,7 +48,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				Бакалавриат
 			</ListSubheader>
 		);
-		for (let i = 0; i < bachelor; ++i) {
+		for (let i = 0; i < BACHELOR_MAX; ++i) {
 			options.push(
 				<MenuItem
 					key={`create-specialty-dialog__select-bachelor-${i}`}
@@ -69,12 +67,12 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				Магистратура
 			</ListSubheader>
 		);
-		for (let i = 0; i < magistrary; ++i) {
+		for (let i = 0; i < MAGISTRACY_MAX; ++i) {
 			options.push(
 				<MenuItem
 					key={`create-specialty-dialog__select-magistrary-${i}`}
 					className="create-specialty-dialog__select-option"
-					value={(bachelor + i + 1).toString()}
+					value={(BACHELOR_MAX + i + 1).toString()}
 				>
 					{i + 1} курс
 				</MenuItem>
@@ -100,13 +98,13 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				}
 			});
 		onClose();
-	}, [faculty]);
+	}, [faculty, fields]);
 
 	return (
 		<Dialog
 			className="create-specialty-dialog-wrapper"
 			classes={{
-				paper: "create-specialty-dialog"
+				paper: "create-specialty-dialog",
 			}}
 			open={open}
 			onClose={onClose}
@@ -142,20 +140,17 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				value={fields.course}
 				onChange={handleFieldChange}
 				InputLabelProps={{
-					className: "field-label"
+					className: "field-label",
 				}}
 				InputProps={{
 					startAdornment: (
-						<InputAdornment
-							position="start"
-							className="field-input__adornment"
-						>
-							{fields.course > "4" ? "М" : "Б"}
+						<InputAdornment position="start" className="field-input__adornment">
+							{fields.course > BACHELOR_MAX ? "М" : "Б"}
 						</InputAdornment>
-					)
+					),
 				}}
 				inputProps={{
-					className: "field-input"
+					className: "field-input",
 				}}
 			>
 				{courseOptions}
