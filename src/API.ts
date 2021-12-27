@@ -1,4 +1,4 @@
-import {calculateCourse, calculateYear} from "./Helpers";
+import {calculateCourse} from "./Helpers";
 import {
 	Course,
 	FACULTY,
@@ -241,22 +241,20 @@ export default class ScheduleAPI {
 	 * @param [abortController] - Abort controller to cancel fetch
 	 */
 	static createGroup = async (
-		faculty: string,
-		specialty: string,
-		course: Course,
+		group: Omit<IGroup, "id">,
 		abortController?: AbortController
 	) => {
 		try {
 			const response = await fetch(`${ScheduleAPI.HOST}/group`, {
 				signal: abortController?.signal,
 				method: "POST",
-				body: JSON.stringify({faculty, specialty, year: calculateYear(course)}),
+				body: JSON.stringify(group),
 			});
 			if (response.status !== 200) {
-				return ScheduleAPI.handleError("Request error");
+				return ScheduleAPI.handleError(await response.json());
 			}
 			const result: IResponse<{id: number}> = await response.json();
-			return !result.error ? result.body.id : undefined;
+			return result.body.id;
 		} catch (err) {
 			return ScheduleAPI.handleError(err);
 		}

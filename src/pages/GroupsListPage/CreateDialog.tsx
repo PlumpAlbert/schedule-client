@@ -6,15 +6,25 @@ import InputAdornment from "@mui/material/InputAdornment";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import {BACHELOR_MAX, Course, MAGISTRACY_MAX} from "../../types";
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import {
+	BACHELOR_MAX,
+	Course,
+	FACULTY,
+	IGroup,
+	MAGISTRACY_MAX,
+} from "../../types";
 
 import "./CreateDialog.scss";
 import ScheduleAPI from "../../API";
+import {calculateYear} from "../../Helpers";
 
 interface IProps {
-	faculty: string;
+	faculty: FACULTY;
 	open: boolean;
-	onClose: () => void;
+	onClose: (group?: IGroup) => void;
 }
 
 interface IFieldsState {
@@ -27,6 +37,8 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 		name: "",
 		course: 1,
 	});
+	const [isCreating, setCreating] = useState(false);
+	const [error, setError] = useState<string>();
 
 	const handleFieldChange = useCallback<
 		React.ChangeEventHandler<HTMLInputElement>
@@ -37,6 +49,11 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 		},
 		[setFields, fields]
 	);
+
+	const handleDialogClose = useCallback(() => {
+		if (isCreating) return;
+		onClose();
+	}, [isCreating]);
 
 	const courseOptions = useMemo(() => {
 		let options = [];
@@ -82,22 +99,32 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 	}, []);
 
 	const handleCreateClick = useCallback(() => {
+		setCreating(true);
 		const abortController = new AbortController();
-		ScheduleAPI.createGroup(
+		const group: Omit<IGroup, "id"> = {
 			faculty,
-			fields.name,
-			fields.course,
-			abortController
-		)
-			.then(() => {
-				onClose();
+			year: calculateYear(fields.course),
+			specialty: fields.name,
+		};
+		ScheduleAPI.createGroup(group, abortController)
+			.then(id => {
+				if (!id) {
+					setError("Группа уже существует");
+					setCreating(false);
+					return;
+				}
+				setCreating(false);
+				onClose({...group, id});
 			})
 			.catch(err => {
 				if (!abortController.signal.aborted) {
-					console.log(err);
+					console.error(err);
 				}
+				onClose();
 			});
-		onClose();
+		return () => {
+			abortController.abort();
+		};
 	}, [faculty, fields]);
 
 	return (
@@ -107,8 +134,19 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				paper: "create-specialty-dialog",
 			}}
 			open={open}
-			onClose={onClose}
+			onClose={handleDialogClose}
 		>
+			<Snackbar
+				open={!!error}
+				autoHideDuration={3000}
+				onClose={() => void setError(undefined)}
+				className="create-specialty-dialog__snackbar"
+				anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+			>
+				<Alert className="snackbar-alert" variant="filled" severity="error">
+					{error}
+				</Alert>
+			</Snackbar>
 			<DialogTitle className="create-specialty-dialog__title">
 				Создание группы
 			</DialogTitle>
@@ -160,7 +198,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				variant="contained"
 				onClick={handleCreateClick}
 			>
-				Создать
+				{isCreating ? <CircularProgress color="inherit" /> : "Создать"}
 			</Button>
 		</Dialog>
 	);
