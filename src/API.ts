@@ -1,4 +1,4 @@
-import {CalculateCourse} from "./Helpers";
+import {calculateCourse, calculateYear} from "./Helpers";
 import {
 	Course,
 	FACULTY,
@@ -6,7 +6,7 @@ import {
 	IGroup,
 	ISpecialty,
 	ISubject,
-	IUser
+	IUser,
 } from "./types";
 
 interface IResponse<T = any> {
@@ -62,13 +62,13 @@ export default class ScheduleAPI {
 			cache: "no-cache",
 			credentials: "same-origin",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				login,
-				password
+				password,
 			}),
-			signal: controller?.signal
+			signal: controller?.signal,
 		});
 		const result: IResponse<{success: true; user: IUser}> =
 			await jsonText.json();
@@ -97,7 +97,7 @@ export default class ScheduleAPI {
 		}
 		return Object.keys(result.body).map<ISpecialty>(key => ({
 			title: key,
-			courses: result.body[key]
+			courses: result.body[key],
 		}));
 	};
 
@@ -115,9 +115,9 @@ export default class ScheduleAPI {
 				name: user.name,
 				login: user.login,
 				group_id: user.group?.id,
-				password: user.password
+				password: user.password,
 			}),
-			method: "POST"
+			method: "POST",
 		});
 		const result: IResponse<{id: number}> = await response.json();
 		if (result.error) {
@@ -130,14 +130,11 @@ export default class ScheduleAPI {
 	 * Method for changing group of authenticated user
 	 * @param group New group to set
 	 */
-	static changeGroup = async (
-		group: IGroup,
-		controller?: AbortController
-	) => {
+	static changeGroup = async (group: IGroup, controller?: AbortController) => {
 		const response = await fetch(`${ScheduleAPI.HOST}/user/group`, {
 			method: "POST",
 			body: JSON.stringify({group_id: group.id}),
-			signal: controller?.signal
+			signal: controller?.signal,
 		});
 		const result: IResponse<ISuccessful> = await response.json();
 		return result.error ? false : result.body.success;
@@ -152,7 +149,7 @@ export default class ScheduleAPI {
 	 */
 	static signOut = async (controller?: AbortController): Promise<boolean> => {
 		return fetch(`${ScheduleAPI.HOST}/signout`, {
-			signal: controller?.signal
+			signal: controller?.signal,
 		})
 			.then(() => true)
 			.catch(err => {
@@ -189,14 +186,14 @@ export default class ScheduleAPI {
 				if (!faculty) {
 					faculty = [];
 				}
-				const courseNumber = CalculateCourse(group.year);
+				const courseNumber = calculateCourse(group.year);
 				const specialtyIndex = faculty.findIndex(
 					s => s.title === group.specialty
 				);
 				if (specialtyIndex === -1) {
 					faculty.push({
 						title: group.specialty,
-						courses: {[courseNumber]: group.id}
+						courses: {[courseNumber]: group.id},
 					});
 				} else {
 					faculty[specialtyIndex].courses[courseNumber] = group.id;
@@ -222,7 +219,7 @@ export default class ScheduleAPI {
 	static getTeachers = async (controller?: AbortController) => {
 		try {
 			const response = await fetch(`${ScheduleAPI.HOST}/user/teacher`, {
-				signal: controller?.signal
+				signal: controller?.signal,
 			});
 			if (response.status !== 200) return;
 			const result: IResponse<IUser[]> = await response.json();

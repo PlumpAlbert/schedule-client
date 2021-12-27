@@ -1,5 +1,11 @@
-import {Course, WEEK_TYPE} from "./types";
+import {BACHELOR_MAX, Course, SUBJECT_TYPE, WEEK_TYPE} from "./types";
 
+/**
+ * Returns string representation of a weekday
+ *
+ * @param weekday - weekday to pretty-print
+ * @returns String representation of a weekday
+ */
 export function GetWeekdayName(weekday: number) {
 	const monday = "2021-11-22";
 	let date = new Date(monday);
@@ -33,7 +39,13 @@ export function GetWeekType(date?: number | Date): WEEK_TYPE {
 	return weeksPassed % 2 ? WEEK_TYPE.GREEN : WEEK_TYPE.WHITE;
 }
 
-export function GetSubjectTypeAsString(type: number): string {
+/**
+ * Returns string representation of `SUBJECT_TYPE`
+ *
+ * @param {SUBJECT_TYPE} type - type of subject
+ * @returns {string} Localized string for `type`
+ */
+export function GetSubjectTypeAsString(type: SUBJECT_TYPE): string {
 	switch (type) {
 		case 0: {
 			return "Лекция";
@@ -52,15 +64,30 @@ export function GetSubjectTypeAsString(type: number): string {
 /**
  * Calculates group's course from year
  * @param groupYear Group's year
- * @returns {Course} Group's course
+ * @returns Group's course
  */
-export function CalculateCourse(groupYear: number) {
+export function calculateCourse(groupYear: number): Course {
 	const date = new Date();
 	let number = date.getFullYear() - groupYear;
 	if (date.getMonth() > 9) {
 		number += 1;
 	}
-	return number.toString() as Course;
+	return number as Course;
+}
+
+/**
+ * Calculates group's year from their course
+ *
+ * @param {Course} course - Course number of a group
+ * @returns {number} Year of group
+ */
+export function calculateYear(course: Course): number {
+	const today = new Date();
+	let year = today.getFullYear() - course;
+	if (today.getMonth() > 9) {
+		year += 1;
+	}
+	return year;
 }
 
 /**
@@ -77,9 +104,9 @@ export function renderTime(time: number = Date.now()) {
 	}
 	return `${new Date(time).toLocaleTimeString(locale, {
 		hour: "2-digit",
-		minute: "2-digit"
+		minute: "2-digit",
 	})} - ${endTime.toLocaleTimeString(locale, {
 		hour: "2-digit",
-		minute: "2-digit"
+		minute: "2-digit",
 	})}`;
 }
