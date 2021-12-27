@@ -26,6 +26,7 @@ function SpecialtiesView({faculty}: IProps) {
 	return (
 		<div className="specialties-wrapper">
 			<CreateDialog
+				faculty={faculty}
 				open={showDialog}
 				onClose={() => void setShowDialog(false)}
 			/>
@@ -42,9 +43,7 @@ function SpecialtiesView({faculty}: IProps) {
 				? specialtyElements
 				: !isLoading && (
 						<div className="specialties-wrapper__no-items">
-							<h3 className="no-items__header">
-								Упс, ничего не найдено!
-							</h3>
+							<h3 className="no-items__header">Упс, ничего не найдено!</h3>
 						</div>
 				  )}
 		</div>
@@ -52,7 +51,7 @@ function SpecialtiesView({faculty}: IProps) {
 }
 
 SpecialtiesView.propTypes = {
-	faculty: PropTypes.string.isRequired
+	faculty: PropTypes.string.isRequired,
 };
 
 export default SpecialtiesView;

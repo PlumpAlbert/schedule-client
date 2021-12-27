@@ -9,7 +9,9 @@ const GroupsListPage = () => {
 	const location = useLocation();
 	const currentFaculty = useMemo(() => {
 		const uri = location.pathname.split("/");
-		if (uri[uri.length - 1] !== "groups") return uri[uri.length - 1];
+		if (uri[uri.length - 1] !== "groups") {
+			return decodeURIComponent(uri[uri.length - 1]);
+		}
 		return "";
 	}, [location.pathname]);
 	return (
