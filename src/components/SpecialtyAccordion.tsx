@@ -4,16 +4,17 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {Course, ISpecialty} from "../types";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListSubheader from "@mui/material/ListSubheader";
+import {BACHELOR_MAX, Course, ISpecialty} from "../types";
 
 import "../styles/SpecialtyAccordion.scss";
 
 const SpecialtyAccordion = ({title, courses}: ISpecialty) => {
 	const navigate = useNavigate();
 	//#region CALLBACKS
-	const handleCourseClick = useCallback<
-		React.MouseEventHandler<HTMLParagraphElement>
-	>(
+	const handleCourseClick = useCallback<React.MouseEventHandler>(
 		({currentTarget}) => {
 			const elementId = currentTarget.id;
 			const id = parseInt(elementId.split("course-")[1]);
@@ -23,18 +24,37 @@ const SpecialtyAccordion = ({title, courses}: ISpecialty) => {
 	);
 	//#endregion
 	//#region MEMO
-	const courseElements = useMemo(() => {
+	const [bachelorGroups, magistracyGroups] = useMemo(() => {
 		const keys = Object.keys(courses).map(c => Number(c)) as Course[];
-		return keys.sort().map(courseNumber => (
-			<p
-				key={`course-${courseNumber}-${courses[courseNumber]}`}
-				id={`course-${courses[courseNumber]}`}
-				onClick={handleCourseClick}
-				className="specialty-course"
-			>
-				{courseNumber} курс
-			</p>
-		));
+		let bachelor: JSX.Element[] = [];
+		let magistracy: JSX.Element[] = [];
+		keys.sort().forEach(courseNumber => {
+			if (courseNumber > BACHELOR_MAX) {
+				magistracy.push(
+					<ListItem
+						key={`course-magistracy-${courseNumber}-${courses[courseNumber]}`}
+						id={`course-${courses[courseNumber]}`}
+						onClick={handleCourseClick}
+						className="specialty-course"
+					>
+						{courseNumber - BACHELOR_MAX} курс
+					</ListItem>
+				);
+			} else {
+				bachelor.push(
+					<ListItem
+						key={`course-bachelor-${courseNumber}-${courses[courseNumber]}`}
+						id={`course-${courses[courseNumber]}`}
+						onClick={handleCourseClick}
+						className="specialty-course"
+					>
+						{courseNumber} курс
+					</ListItem>
+				);
+			}
+			return;
+		});
+		return [bachelor, magistracy];
 	}, [courses, handleCourseClick]);
 	//#endregion
 	return (
@@ -51,7 +71,24 @@ const SpecialtyAccordion = ({title, courses}: ISpecialty) => {
 				{title}
 			</AccordionSummary>
 			<AccordionDetails className="specialty-details">
-				{courseElements}
+				<List className="specialty-details-list">
+					{!!bachelorGroups.length && (
+						<>
+							<ListSubheader className="specialty-details-list__subheader specialty-course">
+								Бакалавриат
+							</ListSubheader>
+							{bachelorGroups}
+						</>
+					)}
+					{!!magistracyGroups.length && (
+						<>
+							<ListSubheader className="specialty-details-list__subheader specialty-course">
+								Магистратура
+							</ListSubheader>
+							{magistracyGroups}
+						</>
+					)}
+				</List>
 			</AccordionDetails>
 		</Accordion>
 	);

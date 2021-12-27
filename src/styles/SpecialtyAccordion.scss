@@ -28,16 +28,27 @@
 		border-top: 1px solid transparentize($black, 0.84);
 		padding: 0;
 
-		.specialty-course {
-			cursor: pointer;
-			background-color: hsl(0, 0%, 95%);
-			margin: 0;
-			padding: 0.8rem 2rem;
-			border-style: solid;
-			border-color: $offWhite;
-			border-width: 0 0 1px;
-			&:last-child {
-				border-bottom: 0;
+		.specialty-details {
+			&-list {
+				padding: 0;
+				color: $black;
+				.specialty-course {
+					cursor: pointer;
+					background-color: hsl(0, 0%, 95%);
+					margin: 0;
+					padding: 0.8rem 2rem;
+					border-style: solid;
+					border-color: $offWhite;
+					border-width: 0 0 1px;
+					&:last-child {
+						border-bottom: 0;
+					}
+				}
+				& .specialty-details-list__subheader {
+					line-height: 1.5;
+					background-color: transparent;
+					color: $grey;
+				}
 			}
 		}
 	}
