@@ -20,7 +20,7 @@ export const initialState: SubjectState = {
 	type: SUBJECT_TYPE.ЛЕКЦИЯ,
 	times: [],
 	title: "",
-	teacher: {id: 0, name: ""}
+	teacher: {id: 0, name: ""},
 };
 
 export const actions = {
@@ -28,7 +28,7 @@ export const actions = {
 	// Attend time actions
 	addAttendTime: createAction<Omit<IAttendTime, "id">>("addAttendTime"),
 	deleteAttendTime: createAction<number>("deleteAttendTime"),
-	updateAttendTime: createAction<IAttendTimePayload>("updateAttendTime")
+	updateAttendTime: createAction<IAttendTimePayload>("updateAttendTime"),
 };
 
 export const slice = createSlice({
@@ -51,10 +51,9 @@ export const slice = createSlice({
 			.addCase(actions.updateAttendTime, (state, {payload}) => {
 				const {id, property, value} = payload;
 				const index = state.times.findIndex(t => t.id === id);
-				(state.times[index][property] as IAttendTime[typeof property]) =
-					value;
+				(state.times[index][property] as IAttendTime[typeof property]) = value;
 			});
-	}
+	},
 });
 
 export default slice.reducer;

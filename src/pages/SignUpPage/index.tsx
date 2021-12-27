@@ -54,7 +54,7 @@ function SignUpPage() {
 					name,
 					login,
 					password,
-					group
+					group,
 				},
 				abortController
 			)
@@ -68,14 +68,11 @@ function SignUpPage() {
 						name: name,
 						login: login,
 						group: group,
-						type: UserType.STUDENT
+						type: UserType.STUDENT,
 					};
-					sessionStorage.setItem(
-						"user",
-						JSON.stringify(authenticatedUser)
-					);
+					sessionStorage.setItem("user", JSON.stringify(authenticatedUser));
 					navigate(`/schedule?group=${group?.id}`, {
-						replace: true
+						replace: true,
 					});
 				})
 				.catch(err => {
@@ -136,15 +133,15 @@ function SignUpPage() {
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password"
-						}
+							autoComplete: "new-password",
+						},
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user"
+						htmlFor: "user",
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text"
+						className: "form-control__helper-text",
 					}}
 				/>
 				<TextField
@@ -166,15 +163,15 @@ function SignUpPage() {
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password"
-						}
+							autoComplete: "new-password",
+						},
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "username"
+						htmlFor: "username",
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text"
+						className: "form-control__helper-text",
 					}}
 				/>
 				<TextField
@@ -190,22 +187,21 @@ function SignUpPage() {
 					helperText={
 						<span>
 							Рекомендуем задать сложный пароль, чтобы всякие{" "}
-							<mark>керилы</mark> не смогли в будущем взломать Ваш
-							аккаунт
+							<mark>керилы</mark> не смогли в будущем взломать Ваш аккаунт
 						</span>
 					}
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password"
-						}
+							autoComplete: "new-password",
+						},
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user_password"
+						htmlFor: "user_password",
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text"
+						className: "form-control__helper-text",
 					}}
 				/>
 				<GroupSelect isError={error === "group"} ref={groupRef} />

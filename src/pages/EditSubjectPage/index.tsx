@@ -7,7 +7,7 @@ import ScheduleTimes from "./FormControls/ScheduleTimes";
 import reducer, {
 	actions as subjectActions,
 	SubjectState,
-	initialState
+	initialState,
 } from "../../store/schedule/subject";
 import {useSelector, useDispatch} from "../../store";
 import {actions as scheduleActions} from "../../store/schedule";
@@ -21,7 +21,7 @@ function EditSubjectPage() {
 	const {editMode, shouldSave} = useSelector(({application, schedule}) => ({
 		editMode: schedule.editMode,
 		shouldSave: application.header.save,
-		initState: schedule.subjects
+		initState: schedule.subjects,
 	}));
 	const reduxDispatch = useDispatch();
 
@@ -33,15 +33,14 @@ function EditSubjectPage() {
 
 	const initState = useSelector<SubjectState & {weekType: WEEK_TYPE}>(
 		({schedule}) => {
-			if (!attendTimeId)
-				return {...initialState, weekType: WEEK_TYPE.WHITE};
+			if (!attendTimeId) return {...initialState, weekType: WEEK_TYPE.WHITE};
 			const subject = schedule.subjects.find(s => {
 				return !!s.times.find(t => t.id === attendTimeId);
 			});
 			if (!subject) return {...initialState, weekType: WEEK_TYPE.WHITE};
 			return {
 				...subject,
-				weekType: WEEK_TYPE.WHITE
+				weekType: WEEK_TYPE.WHITE,
 			};
 		}
 	);
@@ -69,8 +68,8 @@ function EditSubjectPage() {
 								action: subjectActions.updateAttendTime({
 									id: time.id,
 									property: key,
-									value: time[key]
-								})
+									value: time[key],
+								}),
 							})
 						);
 					});
@@ -86,8 +85,8 @@ function EditSubjectPage() {
 								weekType: time.weekType,
 								weekday: time.weekday,
 								time: time.time,
-								audience: time.audience
-							})
+								audience: time.audience,
+							}),
 						})
 					);
 				}
@@ -103,8 +102,8 @@ function EditSubjectPage() {
 						title: initialStateRef.title,
 						action: subjectActions.updateProperty({
 							property: key,
-							value: state[key]
-						})
+							value: state[key],
+						}),
 					})
 				);
 			});
@@ -115,7 +114,7 @@ function EditSubjectPage() {
 				type: state.type,
 				teacher: state.teacher,
 				times: state.times,
-				title: state.title
+				title: state.title,
 			})
 		);
 	}, [shouldSave]);

@@ -18,18 +18,10 @@ interface IProps {
 
 const subjectPlaceholders = [
 	<SubjectView key="subject-view-0" loading type={SUBJECT_TYPE.ЛЕКЦИЯ} />,
-	<SubjectView
-		key="subject-view-1"
-		loading
-		type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
-	/>,
+	<SubjectView key="subject-view-1" loading type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ} />,
 	<SubjectView key="subject-view-2" loading type={SUBJECT_TYPE.ПРАКТИКА} />,
-	<SubjectView
-		key="subject-view-3"
-		loading
-		type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}
-	/>,
-	<SubjectView key="subject-view-4" loading type={SUBJECT_TYPE.ЛЕКЦИЯ} />
+	<SubjectView key="subject-view-3" loading type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ} />,
+	<SubjectView key="subject-view-4" loading type={SUBJECT_TYPE.ЛЕКЦИЯ} />,
 ];
 
 function SchedulePresenter({editMode, weekday, weekType}: IProps) {
@@ -45,7 +37,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 				return displayList.concat(
 					times.map<DisplaySubject>(time => ({
 						...time,
-						...subject
+						...subject,
 					}))
 				);
 			},
@@ -97,7 +89,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 				scheduleActions.deleteSubject({
 					title: subject.title,
 					type: subject.type,
-					teacher: subject.teacher.id
+					teacher: subject.teacher.id,
 				})
 			);
 		},
@@ -126,7 +118,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 }
 
 SchedulePresenter.propTypes = {
-	groupId: PropTypes.number
+	groupId: PropTypes.number,
 };
 
 export default SchedulePresenter;

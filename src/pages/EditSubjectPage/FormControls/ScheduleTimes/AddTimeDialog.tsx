@@ -45,7 +45,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 			audience,
 			time,
 			weekday,
-			weekType
+			weekType,
 		});
 	}, [onClose]);
 
@@ -62,11 +62,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 	);
 
 	return (
-		<Dialog
-			className="add-time-dialog"
-			open={open}
-			onClose={handleCancelClick}
-		>
+		<Dialog className="add-time-dialog" open={open} onClose={handleCancelClick}>
 			<DialogTitle className="add-time-dialog__title">
 				Добавить время проведения
 			</DialogTitle>
@@ -96,10 +92,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 					<label htmlFor="" className="field-label">
 						Аудитория
 					</label>
-					<TextField
-						className="field-input"
-						placeholder="Номер аудитории"
-					/>
+					<TextField className="field-input" placeholder="Номер аудитории" />
 				</div>
 			</div>
 			<div className="add-time-dialog__footer">

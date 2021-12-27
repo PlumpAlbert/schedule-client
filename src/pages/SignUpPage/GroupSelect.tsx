@@ -5,7 +5,7 @@ import React, {
 	useImperativeHandle,
 	useMemo,
 	useReducer,
-	useState
+	useState,
 } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -34,7 +34,7 @@ const groupReducer: React.Reducer<IState, Action> = (state, action) => {
 					const newState = groupReducer(s, a);
 					return {
 						...s,
-						...newState
+						...newState,
 					};
 				},
 				state
@@ -54,13 +54,13 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 		id: 0,
 		faculty: "",
 		specialty: "",
-		year: 0
+		year: 0,
 	});
 	const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
 	useImperativeHandle<any, IGroupSelect>(
 		ref,
 		() => ({
-			getState: () => ({...group, faculty: group.faculty as FACULTY})
+			getState: () => ({...group, faculty: group.faculty as FACULTY}),
 		}),
 		[group]
 	);
@@ -143,7 +143,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 					action.payload = [
 						{type: "SET-SPECIALTY", payload: specialty},
 						{type: "SET-ID", payload: target.value},
-						{type: "SET-YEAR", payload: year}
+						{type: "SET-YEAR", payload: year},
 					];
 					break;
 				}
@@ -169,14 +169,14 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 				SelectProps={{
 					className: "form-control__input",
 					onChange: handleSelectChange,
-					value: group.faculty
+					value: group.faculty,
 				}}
 				InputLabelProps={{
 					className: "form-control__label",
-					htmlFor: "group_faculty"
+					htmlFor: "group_faculty",
 				}}
 				FormHelperTextProps={{
-					className: "form-control__helper-text"
+					className: "form-control__helper-text",
 				}}
 			>
 				{facultyOptions}
@@ -194,14 +194,14 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 				SelectProps={{
 					className: "form-control__input",
 					onChange: handleSelectChange,
-					value: group.id !== 0 ? group.id : ""
+					value: group.id !== 0 ? group.id : "",
 				}}
 				InputLabelProps={{
 					className: "form-control__label",
-					htmlFor: "group_name"
+					htmlFor: "group_name",
 				}}
 				FormHelperTextProps={{
-					className: "form-control__helper-text"
+					className: "form-control__helper-text",
 				}}
 			>
 				{groupOptions}

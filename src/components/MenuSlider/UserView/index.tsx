@@ -73,11 +73,7 @@ function UserView({user, onGroupChange}: IProps) {
 			<div className="menu-header">
 				<h1 className="app-title">Расписание ЛГТУ</h1>
 				<div className="user-info">
-					<img
-						src="/assets/user.png"
-						alt="user-avatar"
-						className="user-pic"
-					/>
+					<img src="/assets/user.png" alt="user-avatar" className="user-pic" />
 					<h2 className="user-name">{user.name}</h2>
 					<p className="user-group">{groupName}</p>
 				</div>
@@ -91,32 +87,22 @@ function UserView({user, onGroupChange}: IProps) {
 							onClick={handleAddScheduleClick}
 						>
 							<EditIcon classes={{root: "option__icon"}} />
-							<span className="option__text">
-								Создать новое расписание
-							</span>
+							<span className="option__text">Создать новое расписание</span>
 						</p>
 						<p
 							className="menu-settings__option"
 							onClick={handleEditScheduleClick}
 						>
 							<EditIcon classes={{root: "option__icon"}} />
-							<span className="option__text">
-								Редактировать расписание
-							</span>
+							<span className="option__text">Редактировать расписание</span>
 						</p>
 					</>
 				)}
-				<p
-					className="menu-settings__option"
-					onClick={handleEditGroupClick}
-				>
+				<p className="menu-settings__option" onClick={handleEditGroupClick}>
 					<ManageAccountsIcon classes={{root: "option__icon"}} />
 					<span className="option__text">Изменить группу</span>
 				</p>
-				<p
-					className="menu-settings__option"
-					onClick={handleSignOutClick}
-				>
+				<p className="menu-settings__option" onClick={handleSignOutClick}>
 					<LogoutIcon classes={{root: "option__icon"}} />
 					<span className="option__text">Выйти</span>
 				</p>

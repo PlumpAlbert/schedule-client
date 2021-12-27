@@ -46,8 +46,7 @@
 					box-sizing: content-box;
 					color: $lightGrey;
 					&::after {
-						border-bottom: 2px solid
-							transparentize($lightGrey, 0.64);
+						border-bottom: 2px solid transparentize($lightGrey, 0.64);
 						left: 0;
 						bottom: 0;
 						content: "";
@@ -56,9 +55,7 @@
 						pointer-events: none;
 						transform: scaleX(0);
 						transform-origin: right;
-						@include transition(
-							transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms
-						);
+						@include transition(transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms);
 					}
 				}
 				.page-header__search-input-collapse {

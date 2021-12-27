@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 export function propTypes<T>(validator: T) {
 	return {
 		dispatch: PropTypes.func.isRequired,
-		value: validator
+		value: validator,
 	};
 }
 

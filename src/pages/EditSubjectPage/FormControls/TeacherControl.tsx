@@ -38,9 +38,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 			const teacherId = target.value;
 			const teacher = teachers.find(t => t.id === teacherId);
 			if (!teacher) return;
-			dispatch(
-				actions.updateProperty({property: "teacher", value: teacher})
-			);
+			dispatch(actions.updateProperty({property: "teacher", value: teacher}));
 		},
 		[dispatch]
 	);
@@ -75,7 +73,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 TeacherControl.propTypes = propTypes(
 	PropTypes.shape({
 		id: PropTypes.number.isRequired,
-		name: PropTypes.string.isRequired
+		name: PropTypes.string.isRequired,
 	})
 );
 

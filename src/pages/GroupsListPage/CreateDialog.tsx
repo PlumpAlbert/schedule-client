@@ -124,10 +124,10 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				value={fields.name}
 				onChange={handleFieldChange}
 				InputLabelProps={{
-					className: "field-label"
+					className: "field-label",
 				}}
 				inputProps={{
-					className: "field-input"
+					className: "field-input",
 				}}
 			/>
 			<TextField

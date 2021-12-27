@@ -55,9 +55,7 @@ const Time = ({className, onDelete, onClick, ...time}: ITimeProps) => {
 					</span>
 				</div>
 				<div className={className + "__right-content"}>
-					<span className="right-content__time">
-						{renderTime(time.time)}
-					</span>
+					<span className="right-content__time">{renderTime(time.time)}</span>
 					<span className="right-content__dummy"></span>
 				</div>
 			</ListItem>
@@ -86,10 +84,7 @@ const TimeList = ({currentWeek, times, onDelete, onClick}: ITimeListProps) => {
 								onDelete={onDelete}
 								onClick={onClick}
 							/>
-							<Divider
-								className="time-item-divider"
-								variant="middle"
-							/>
+							<Divider className="time-item-divider" variant="middle" />
 						</>
 					)
 			),

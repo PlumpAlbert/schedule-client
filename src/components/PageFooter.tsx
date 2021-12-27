@@ -18,16 +18,10 @@ export default function PageFooter() {
 				>
 					<GithubIcon className="github-icon page-footer__icon" />
 				</Link>
-				<Link
-					className="page-footer__link"
-					href="mailto:plumpalbert@gmail.com"
-				>
+				<Link className="page-footer__link" href="mailto:plumpalbert@gmail.com">
 					<GmailIcon className="mail-icon page-footer__icon" />
 				</Link>
-				<Link
-					className="page-footer__link"
-					href="https://t.me/plump_albert"
-				>
+				<Link className="page-footer__link" href="https://t.me/plump_albert">
 					<TelegramIcon className="telegram-icon page-footer__icon" />
 				</Link>
 			</div>

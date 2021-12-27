@@ -13,9 +13,7 @@ function TypeControl({dispatch, value}: IProps<SUBJECT_TYPE>) {
 		(event: SelectChangeEvent<number>) => void
 	>(
 		({target}) => {
-			dispatch(
-				actions.updateProperty({property: "type", value: target.value})
-			);
+			dispatch(actions.updateProperty({property: "type", value: target.value}));
 		},
 		[dispatch]
 	);
@@ -44,17 +42,13 @@ function TypeControl({dispatch, value}: IProps<SUBJECT_TYPE>) {
 				renderValue={value => (
 					<p className="form__select__selected-item">
 						{GetSubjectTypeAsString(value)}
-						<span
-							className={`select__selected-item__type ${typeClass}`}
-						/>
+						<span className={`select__selected-item__type ${typeClass}`} />
 					</p>
 				)}
 			>
 				<MenuItem value={SUBJECT_TYPE.ЛЕКЦИЯ}>Лекция</MenuItem>
 				<MenuItem value={SUBJECT_TYPE.ПРАКТИКА}>Практика</MenuItem>
-				<MenuItem value={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}>
-					Лабораторная
-				</MenuItem>
+				<MenuItem value={SUBJECT_TYPE.ЛАБОРАТОРНАЯ}>Лабораторная</MenuItem>
 			</Select>
 		</FormControl>
 	);

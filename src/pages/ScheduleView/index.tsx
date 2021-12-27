@@ -22,7 +22,7 @@ const ScheduleView = () => {
 		weekdayRefs.current[currentDay - 1]?.scrollIntoView({
 			behavior: "smooth",
 			block: "center",
-			inline: "center"
+			inline: "center",
 		});
 	}, [currentDay]);
 

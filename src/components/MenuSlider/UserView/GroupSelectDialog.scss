@@ -24,10 +24,7 @@
 				&.course-toggle-button--selected {
 					border-radius: 4px 4px 0 0;
 					&.course-1 {
-						background-color: transparentize(
-							$purple,
-							$amount: 0.95
-						);
+						background-color: transparentize($purple, $amount: 0.95);
 						border-bottom-color: $purple;
 					}
 					&.course-2 {
@@ -35,10 +32,7 @@
 						border-bottom-color: $red;
 					}
 					&.course-3 {
-						background-color: transparentize(
-							$yellow,
-							$amount: 0.95
-						);
+						background-color: transparentize($yellow, $amount: 0.95);
 						border-bottom-color: $yellow;
 					}
 					&.course-4 {

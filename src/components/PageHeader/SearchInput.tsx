@@ -16,7 +16,7 @@ const SearchInput = () => {
 	const dispatch = useDispatch();
 	const {variant, value} = useSelector(state => ({
 		variant: state.application.header.searchDisplay,
-		value: state.application.header.searchValue
+		value: state.application.header.searchValue,
 	}));
 
 	//#region ACTION CREATORS

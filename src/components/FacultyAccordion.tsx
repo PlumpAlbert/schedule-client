@@ -15,10 +15,7 @@ interface IProps {
 
 const FacultyAccordion = ({title, specialties}: IProps) => {
 	const specialtyElements = useMemo(
-		() =>
-			specialties?.map(specialty => (
-				<SpecialtyAccordion {...specialty} />
-			)),
+		() => specialties?.map(specialty => <SpecialtyAccordion {...specialty} />),
 		[specialties]
 	);
 

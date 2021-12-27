@@ -28,7 +28,7 @@ function SubjectView({
 	loading = false,
 	isEditable,
 	value,
-	type = value?.type
+	type = value?.type,
 }: IProps & ILoadable) {
 	let typeClass;
 	switch (type || value?.type) {
@@ -91,18 +91,13 @@ function SubjectView({
 				<div className={`subject-view-type ${typeClass}`} />
 				<div className="subject-view-content">
 					<div className="subject-view__header">
-						<span className="subject-view-time">
-							{renderTime(value?.time)}
-						</span>
+						<span className="subject-view-time">{renderTime(value?.time)}</span>
 						<span className="subject-view-location">
-							{value && SUBJECT_TYPE[value.type]} в{" "}
-							{value?.audience}
+							{value && SUBJECT_TYPE[value.type]} в {value?.audience}
 						</span>
 					</div>
 					<span className="subject-view-title">{value?.title}</span>
-					<span className="subject-view-teacher">
-						{value?.teacher?.name}
-					</span>
+					<span className="subject-view-teacher">{value?.teacher?.name}</span>
 				</div>
 			</SwipeAction>
 		</ListItem>

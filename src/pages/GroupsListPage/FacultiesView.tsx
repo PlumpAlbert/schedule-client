@@ -20,7 +20,7 @@ const Faculty = ({title}: IFacultyProps) => {
 	);
 };
 Faculty.propTypes = {
-	title: PropTypes.string.isRequired
+	title: PropTypes.string.isRequired,
 };
 
 const FacultiesView = () => {
@@ -31,7 +31,7 @@ const FacultiesView = () => {
 	return <div className="faculties-wrapper">{facultyElements}</div>;
 };
 FacultiesView.propTypes = {
-	onFacultyClick: PropTypes.func
+	onFacultyClick: PropTypes.func,
 };
 
 export default FacultiesView;
