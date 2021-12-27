@@ -253,13 +253,13 @@ export default class ScheduleAPI {
 			const response = await fetch(`${ScheduleAPI.HOST}/group`, {
 				signal: abortController?.signal,
 				method: "POST",
-				body: JSON.stringify({faculty, specialty, course})
+				body: JSON.stringify({faculty, specialty, year: calculateYear(course)}),
 			});
 			if (response.status !== 200) {
 				return ScheduleAPI.handleError("Request error");
 			}
-			const result: IResponse = await response.json();
-			return result.error;
+			const result: IResponse<{id: number}> = await response.json();
+			return !result.error ? result.body.id : undefined;
 		} catch (err) {
 			return ScheduleAPI.handleError(err);
 		}
