@@ -23,10 +23,14 @@ export const initialState: SubjectState = {
 	teacher: {id: 0, name: ""},
 };
 
+type addAttendTimePayload =
+	| {isCreated: true; time: Omit<IAttendTime, "id">}
+	| {isCreated: false; time: IAttendTime};
+
 export const actions = {
 	updateProperty: createAction<SubjectPayload>("updateSubject"),
 	// Attend time actions
-	addAttendTime: createAction<Omit<IAttendTime, "id">>("addAttendTime"),
+	addAttendTime: createAction<addAttendTimePayload>("addAttendTime"),
 	deleteAttendTime: createAction<number>("deleteAttendTime"),
 	updateAttendTime: createAction<IAttendTimePayload>("updateAttendTime"),
 };
@@ -42,7 +46,9 @@ export const slice = createSlice({
 				(state[property] as ISubject[typeof property]) = value;
 			})
 			.addCase(actions.addAttendTime, (state, {payload}) => {
-				state.times.push({...payload, id: Date.now(), isCreated: true});
+				const {isCreated, time} = payload;
+				const id = isCreated ? Date.now() : (time as IAttendTime).id;
+				state.times.push({...time, id, isCreated});
 			})
 			.addCase(actions.deleteAttendTime, (state, {payload}) => {
 				const index = state.times.findIndex(t => t.id === payload);
