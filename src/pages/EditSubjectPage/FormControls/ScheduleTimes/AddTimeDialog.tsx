@@ -17,8 +17,8 @@ interface IProps {
 function shortWeekdayName(day: WEEKDAY) {
 	let date = new Date();
 	date.setDate(date.getDate() - (date.getDay() - day));
-	const locale = navigator.language || "ru";
-	return date.toLocaleString(locale, {weekday: "short"});
+	// const locale = navigator.language || "ru";
+	return date.toLocaleString("ru", {weekday: "short"});
 }
 
 const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
