@@ -110,3 +110,10 @@ export function renderTime(time: number = Date.now()) {
 		minute: "2-digit",
 	})}`;
 }
+
+export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
+	obj: X,
+	prop: Y
+): obj is X & Record<Y, unknown> {
+	return obj.hasOwnProperty(prop);
+}
