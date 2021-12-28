@@ -65,7 +65,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 			weekday,
 			weekType,
 		});
-	}, [onClose]);
+	}, [onClose, time, audience, weekday, weekType]);
 
 	const handleCancelClick = useCallback(() => {
 		onClose();
