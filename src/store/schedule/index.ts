@@ -11,7 +11,9 @@ type ForwardedAction = SubjectIndex & {
 };
 
 export type EditMode = "create" | "edit" | undefined;
+
 interface SchedulePageState {
+	currentGroup: number;
 	subjects: ISubject[];
 	currentDay: WEEKDAY;
 	currentWeek: WEEK_TYPE;
@@ -19,7 +21,9 @@ interface SchedulePageState {
 }
 
 const today = new Date();
+
 const initialState: SchedulePageState = {
+	currentGroup: 0,
 	editMode: undefined,
 	subjects: [],
 	currentDay: today.getDay() === 0 ? 7 : today.getDay(),
@@ -28,6 +32,7 @@ const initialState: SchedulePageState = {
 
 export const actions = {
 	// View actions
+	setCurrentGroup: createAction<number>("setCurrentGroup"),
 	setWeekday: createAction<WEEKDAY>("setWeekday"),
 	setWeekType: createAction<WEEK_TYPE>("setWeekType"),
 	toggleWeekType: createAction("toggleWeekType"),
@@ -75,6 +80,9 @@ const scheduleSlice = createSlice({
 	extraReducers: builder => {
 		builder
 			// View actions
+			.addCase(actions.setCurrentGroup, (state, {payload}) => {
+				state.currentGroup = payload;
+			})
 			.addCase(actions.setWeekday, (state, {payload}) => {
 				state.currentDay = payload;
 			})

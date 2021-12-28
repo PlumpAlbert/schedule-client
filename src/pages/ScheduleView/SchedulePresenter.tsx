@@ -30,6 +30,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const user = useSelector(selectUser);
+	const selectedGroup = useSelector(({schedule}) => schedule.currentGroup);
 
 	const subjects = useSelector<DisplaySubject[]>(({schedule}) => {
 		return schedule.subjects.reduce<DisplaySubject[]>(
@@ -45,36 +46,38 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 		);
 	});
 
-	const groupId = useMemo(() => {
+	useEffect(() => {
 		const query = new URLSearchParams(location.search);
-		const groupId = query.get("group");
-		if (groupId) return Number(groupId);
-		if (user) return user.group?.id;
+		let groupId = Number(query.get("group"));
+		if (!groupId && user) {
+			groupId = user.group?.id || NaN;
+		}
+		if (!groupId) {
+			navigate("/groups", {replace: true});
+			return;
+		}
+		dispatch(scheduleActions.setCurrentGroup(groupId));
 	}, [location.search]);
 
 	useEffect(() => {
-		if (subjects.length > 0) {
-			setLoading(false);
-			return;
-		}
 		const abortController = new AbortController();
-		try {
-			ScheduleAPI.fetchSchedule(groupId || 1, abortController).then(
-				schedule => {
-					dispatch(scheduleActions.setSchedule(schedule));
-					setLoading(false);
-				}
-			);
-		} catch (err) {
-			if (!abortController.signal.aborted) {
+		ScheduleAPI.fetchSchedule(selectedGroup, abortController)
+			.then(schedule => {
+				dispatch(scheduleActions.setSchedule(schedule));
 				setLoading(false);
-			}
-		} finally {
-			return () => {
-				abortController.abort();
-			};
-		}
-	}, [groupId]);
+			})
+			.catch(err => {
+				if (!abortController.signal.aborted) {
+					setLoading(false);
+					if (process.env.NODE_ENV === "development") {
+						console.error(err);
+					}
+				}
+			});
+		return () => {
+			abortController.abort();
+		};
+	}, [selectedGroup]);
 
 	const handleSubjectClick = useCallback<(s: DisplaySubject) => void>(
 		subject => {
