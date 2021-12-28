@@ -1,5 +1,7 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
-import {IAttendTime, ISubject, SUBJECT_TYPE} from "../../types";
+import {hasOwnProperty} from "../../Helpers";
+import {DisplaySubject} from "../../pages/ScheduleView/SubjectView";
+import {IAttendTime, ISubject, SUBJECT_TYPE, WithID} from "../../types";
 
 interface IAttendTimePayload {
 	id: number;
@@ -30,6 +32,7 @@ type addAttendTimePayload =
 	| {isCreated: false; time: IAttendTime};
 
 export const actions = {
+	update: createAction<WithID<Partial<DisplaySubject>>>("update"),
 	updateProperty: createAction<SubjectPayload>("updateSubject"),
 	// Attend time actions
 	addAttendTime: createAction<addAttendTimePayload>("addAttendTime"),
@@ -47,6 +50,24 @@ export const slice = createSlice({
 	reducers: {},
 	extraReducers: builder => {
 		builder
+			.addCase(actions.update, (state, {payload}) => {
+				const {id, ...data} = payload;
+				const time = state.times.find(t => t.id === id);
+				// Iterate over all of updated properties
+				(Object.keys(data) as Array<keyof typeof data>).forEach(key => {
+					if (typeof data[key] === "undefined") return;
+					// If state property was change - update it
+					if (hasOwnProperty(state, key)) {
+						(state[key] as any) = data[key];
+					}
+					// If attend time property was ask
+					else if (time && hasOwnProperty(time, key)) {
+						(time[key] as any) = data[key];
+					}
+				});
+				// If attend time was created by user - untag it
+				if (time?.isCreated) time.isCreated = undefined;
+			})
 			.addCase(actions.updateProperty, (state, {payload}) => {
 				const {property, value} = payload;
 				(state[property] as ISubject[typeof property]) = value;
