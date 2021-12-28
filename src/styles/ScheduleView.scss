@@ -74,7 +74,7 @@
 
 	& .schedule-view-page__fab {
 		z-index: 99;
-		position: absolute;
+		position: fixed;
 		background-color: $blue;
 		bottom: 3rem;
 		right: 1.5rem;
