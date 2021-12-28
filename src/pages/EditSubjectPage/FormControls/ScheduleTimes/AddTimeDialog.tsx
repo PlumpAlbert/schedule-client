@@ -5,9 +5,12 @@ import Button from "@mui/material/Button";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 import {IAttendTime, WEEKDAY, WEEK_TYPE} from "../../../../types";
 
 import "./AddTimeDialog.scss";
+import {renderTime} from "../../../../Helpers";
+
 interface IProps {
 	open: boolean;
 	value?: IAttendTime;
@@ -21,6 +24,16 @@ function shortWeekdayName(day: WEEKDAY) {
 	// const locale = navigator.language || "ru";
 	return date.toLocaleString("ru", {weekday: "short"});
 }
+
+const times = ["08:00", "09:40", "11:20", "13:20", "15:00", "16:40"];
+const timeOptions = times.map(time => {
+	const startTime = new Date("1970-01-01T" + time).getTime();
+	return (
+		<MenuItem key={`menu-item-${startTime}`} value={startTime}>
+			{renderTime(startTime)}
+		</MenuItem>
+	);
+});
 
 const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 	const [weekday, setWeekday] = useState<WEEKDAY>(
@@ -66,6 +79,11 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 		[setWeekday]
 	);
 
+	const handleTimeChange = useCallback(
+		({target}) => void setTime(target.value),
+		[setTime]
+	);
+
 	return (
 		<Dialog className="add-time-dialog" open={open} onClose={handleCancelClick}>
 			<DialogTitle className="add-time-dialog__title">
@@ -88,10 +106,19 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 						Время проведения
 					</label>
 					<TextField
+						select
 						className="field-input"
 						type="select"
+						variant="standard"
+						InputLabelProps={{className: "field-label"}}
+						label="Время проведения"
+						InputProps={{className: "field-input__root"}}
 						placeholder="Выберите время проведения занятия"
-					/>
+						value={time}
+						onChange={handleTimeChange}
+					>
+						{timeOptions}
+					</TextField>
 				</div>
 				<div className="add-time-dialog__field">
 					<label htmlFor="" className="field-label">
