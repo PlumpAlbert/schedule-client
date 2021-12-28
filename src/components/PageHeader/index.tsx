@@ -204,7 +204,10 @@ function PageHeader() {
 	});
 
 	return (
-		<AppBar elevation={isScrolled ? 3 : 0} className="page-header">
+		<AppBar
+			elevation={isScrolled && location.pathname !== "/schedule" ? 3 : 0}
+			className="page-header"
+		>
 			{leftSideIcon}
 			{title && <h1 className="page-header__title">{title}</h1>}
 			{rightSideIcon}
