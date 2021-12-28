@@ -72,9 +72,9 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 	}, [onClose]);
 
 	const handleWeekdayChange = useCallback(
-		(_, value) => {
-			debugger;
-			setWeekday(value);
+		(_, values) => {
+			if (values.length < 2) return;
+			setWeekday(values[1]);
 		},
 		[setWeekday]
 	);
@@ -90,26 +90,27 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 	);
 
 	return (
-		<Dialog className="add-time-dialog" open={open} onClose={handleCancelClick}>
+		<Dialog
+			className="add-time-dialog-wrapper"
+			classes={{paper: "add-time-dialog"}}
+			open={open}
+			onClose={handleCancelClick}
+		>
 			<DialogTitle className="add-time-dialog__title">
-				Добавить время проведения
+				Время проведения
 			</DialogTitle>
 			<div className="add-time-dialog__body">
 				<div className="add-time-dialog__field">
-					<label htmlFor="" className="field-label">
-						День недели
-					</label>
+					<label className="field-label">День недели</label>
 					<ToggleButtonGroup
-						className="field-input"
+						className="field-input toggle-button-group"
 						onChange={handleWeekdayChange}
+						value={[weekday]}
 					>
 						{weekdayButtons}
 					</ToggleButtonGroup>
 				</div>
 				<div className="add-time-dialog__field">
-					<label htmlFor="" className="field-label">
-						Время проведения
-					</label>
 					<TextField
 						select
 						className="field-input"
