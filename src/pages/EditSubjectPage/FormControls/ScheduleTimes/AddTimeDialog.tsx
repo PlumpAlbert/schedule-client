@@ -7,6 +7,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import TextField from "@mui/material/TextField";
 import {IAttendTime, WEEKDAY, WEEK_TYPE} from "../../../../types";
 
+import "./AddTimeDialog.scss";
 interface IProps {
 	open: boolean;
 	value?: IAttendTime;
