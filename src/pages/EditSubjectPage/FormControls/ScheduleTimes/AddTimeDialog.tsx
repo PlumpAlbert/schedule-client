@@ -33,7 +33,11 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 		let buttons = [];
 		for (let i = WEEKDAY.MONDAY; i <= WEEKDAY.SUNDAY; ++i) {
 			buttons.push(
-				<ToggleButton className="toggle-button" value={i}>
+				<ToggleButton
+					className="toggle-button"
+					classes={{selected: "toggle-button--selected"}}
+					value={i}
+				>
 					{shortWeekdayName(i)}
 				</ToggleButton>
 			);
