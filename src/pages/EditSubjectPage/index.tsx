@@ -8,12 +8,71 @@ import reducer, {
 	actions as subjectActions,
 	SubjectState,
 	initialState,
+	SubjectStateAttendTime,
 } from "../../store/schedule/subject";
 import {useSelector, useDispatch} from "../../store";
 import {actions as scheduleActions} from "../../store/schedule";
 import {WEEK_TYPE} from "../../types";
+import ScheduleAPI from "../../API";
+import {DisplaySubject} from "../ScheduleView/SubjectView";
 
 import "../../styles/EditSubjectPage.scss";
+
+function updateSubject(
+	oldSubject: SubjectState,
+	newSubject: SubjectState,
+	dispach: ReturnType<typeof useDispatch>
+) {
+	let changedProperties: Partial<DisplaySubject> = {};
+	// Look for updated property. Skip `times` for now
+	(Object.keys(newSubject) as Array<keyof typeof newSubject>).forEach(key => {
+		if (key === "times" || newSubject[key] === oldSubject[key]) return;
+		scheduleActions.updateSubject({
+			teacher: oldSubject.teacher.id,
+			type: oldSubject.type,
+			title: oldSubject.title,
+			action: subjectActions.updateProperty({
+				property: key,
+				value: newSubject[key],
+			}),
+		});
+	});
+	newSubject.times.map(newTime => {
+		const oldTime = oldSubject.times.find(({id}) => id === newTime.id);
+		if (typeof oldTime === "undefined") {
+		} else {
+			(Object.keys(newTime) as Array<keyof SubjectStateAttendTime>).forEach(
+				key => {
+					if (
+						key === "id" ||
+						key === "isCreated" ||
+						oldTime[key] === newTime[key]
+					) {
+						return;
+					}
+					(changedProperties[key] as SubjectStateAttendTime[typeof key]) =
+						newTime[key];
+				}
+			);
+			ScheduleAPI.updateSubject({id: oldTime.id, ...changedProperties}).then(
+				() => {
+					dispatch(scheduleActions.updateSubject({}));
+				}
+			);
+		}
+	});
+
+	ScheduleAPI.updateSubject({
+		id: initTime.id,
+		...changedProperties,
+	}).then(
+		success => void console.log("# Updating", changedProperties, success)
+	);
+	return subjectActions.updateAttendTime({
+		id: initTime.id,
+		...changedProperties,
+	});
+}
 
 function EditSubjectPage() {
 	const location = useLocation();
@@ -31,90 +90,88 @@ function EditSubjectPage() {
 		attendTimeId = Number(params.get("id"));
 	}
 
-	const initState = useSelector<SubjectState & {weekType: WEEK_TYPE}>(
-		({schedule}) => {
-			if (!attendTimeId) return {...initialState, weekType: WEEK_TYPE.WHITE};
-			const subject = schedule.subjects.find(s => {
-				return !!s.times.find(t => t.id === attendTimeId);
-			});
-			if (!subject) return {...initialState, weekType: WEEK_TYPE.WHITE};
-			return {
-				...subject,
-				weekType: WEEK_TYPE.WHITE,
-			};
-		}
-	);
+	const initState = useSelector<SubjectState>(({schedule}) => {
+		if (!attendTimeId) return {...initialState};
+		const subject = schedule.subjects.find(s => {
+			return !!s.times.find(t => t.id === attendTimeId);
+		});
+		if (!subject) return {...initialState};
+		return subject;
+	});
 
 	const {current: initialStateRef} = useRef(
 		initState.title ? initState : undefined
 	);
-	const [state, dispatch] = useReducer(reducer, initState);
+	const [{times, ...subjectState}, dispatch] = useReducer(reducer, initState);
 
 	useEffect(() => {
 		if (!shouldSave) return;
 		// if subject existed
 		if (initialStateRef) {
 			// update properties of attend times
-			state.times.map(time => {
+			times.map(time => {
 				// If attend time was changed
 				if (!time.isCreated) {
-					(Object.keys(time) as Array<keyof typeof time>).map(key => {
-						if (key === "id" || key === "isCreated") return;
+					const initialTime = initialStateRef.times.find(
+						({id}) => time.id === id
+					);
+					if (typeof initialTime === "undefined") {
+						throw new Error("initialTime is undefined");
+					}
+					reduxDispatch(
+						scheduleActions.updateSubject({
+							type: subjectState.type,
+							title: subjectState.title,
+							teacher: subjectState.teacher.id,
+							action: saveTime(initialTime, time),
+						})
+					);
+				}
+				// If attend time was created from scratch
+				else {
+					ScheduleAPI.createAttendTime(subjectState, time).then(id => {
+						if (!id) {
+							throw {message: "Error during creation of attend time", time};
+						}
 						reduxDispatch(
 							scheduleActions.updateSubject({
 								type: initialStateRef.type,
 								title: initialStateRef.title,
 								teacher: initialStateRef.teacher.id,
-								action: subjectActions.updateAttendTime({
-									id: time.id,
-									property: key,
-									value: time[key],
+								action: subjectActions.addAttendTime({
+									isCreated: false,
+									time: {...time, id},
 								}),
 							})
 						);
 					});
 				}
-				// If attend time was created from scratch
-				else {
+			});
+			// update properties of subject
+			(Object.keys(subjectState) as Array<keyof typeof subjectState>).forEach(
+				key => {
+					if (subjectState[key] === initialStateRef[key]) return;
 					reduxDispatch(
 						scheduleActions.updateSubject({
+							teacher: initialStateRef.teacher.id,
 							type: initialStateRef.type,
 							title: initialStateRef.title,
-							teacher: initialStateRef.teacher.id,
-							action: subjectActions.addAttendTime({
-								weekType: time.weekType,
-								weekday: time.weekday,
-								time: time.time,
-								audience: time.audience,
+							action: subjectActions.updateProperty({
+								property: key,
+								value: subjectState[key],
 							}),
 						})
 					);
 				}
-			});
-			// update properties of subject
-			(Object.keys(state) as Array<keyof SubjectState>).forEach(key => {
-				if (key === "times") return;
-				if (state[key] === initialStateRef[key]) return;
-				reduxDispatch(
-					scheduleActions.updateSubject({
-						teacher: initialStateRef.teacher.id,
-						type: initialStateRef.type,
-						title: initialStateRef.title,
-						action: subjectActions.updateProperty({
-							property: key,
-							value: state[key],
-						}),
-					})
-				);
-			});
+			);
 		}
 		// if subject was created from scratch
 		reduxDispatch(
 			scheduleActions.addSubject({
-				type: state.type,
-				teacher: state.teacher,
-				times: state.times,
-				title: state.title,
+				type: subjectState.type,
+				teacher: subjectState.teacher,
+				times: times,
+				title: subjectState.title,
 			})
 		);
 	}, [shouldSave]);
@@ -127,10 +184,10 @@ function EditSubjectPage() {
 	return (
 		<div className="page edit-subject-page">
 			<form className="edit-subject-form">
-				<TitleControl dispatch={dispatch} value={state.title} />
-				<TypeControl dispatch={dispatch} value={state.type} />
-				<TeacherControl dispatch={dispatch} value={state.teacher} />
-				<ScheduleTimes dispatch={dispatch} value={state.times} />
+				<TitleControl dispatch={dispatch} value={subjectState.title} />
+				<TypeControl dispatch={dispatch} value={subjectState.type} />
+				<TeacherControl dispatch={dispatch} value={subjectState.teacher} />
+				<ScheduleTimes dispatch={dispatch} value={times} />
 			</form>
 		</div>
 	);
