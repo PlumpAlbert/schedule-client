@@ -79,3 +79,7 @@ export enum FACULTY {
 	МИ = "МИ",
 	ФТФ = "ФТФ",
 }
+
+export type WithID<T extends any, V extends number | string = number> = T & {
+	id: V;
+};
