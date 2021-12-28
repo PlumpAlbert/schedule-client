@@ -48,7 +48,7 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 			if (editTime) {
 				(Object.keys(time) as Array<keyof typeof time>).forEach(key => {
 					dispatch(
-						actions.updateAttendTime({
+						actions.updateAttendTimeProperty({
 							id: editTime.id,
 							property: key,
 							value: time[key],

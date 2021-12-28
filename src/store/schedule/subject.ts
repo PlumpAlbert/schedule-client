@@ -34,7 +34,11 @@ export const actions = {
 	// Attend time actions
 	addAttendTime: createAction<addAttendTimePayload>("addAttendTime"),
 	deleteAttendTime: createAction<number>("deleteAttendTime"),
-	updateAttendTime: createAction<IAttendTimePayload>("updateAttendTime"),
+	updateAttendTimeProperty: createAction<IAttendTimePayload>(
+		"updateAttendTimeProperty"
+	),
+	updateAttendTime:
+		createAction<WithID<Partial<IAttendTime>>>("updateAttendTime"),
 };
 
 export const slice = createSlice({
@@ -56,10 +60,15 @@ export const slice = createSlice({
 				const index = state.times.findIndex(t => t.id === payload);
 				state.times.splice(index, 1);
 			})
-			.addCase(actions.updateAttendTime, (state, {payload}) => {
+			.addCase(actions.updateAttendTimeProperty, (state, {payload}) => {
 				const {id, property, value} = payload;
 				const index = state.times.findIndex(t => t.id === id);
 				(state.times[index][property] as IAttendTime[typeof property]) = value;
+			})
+			.addCase(actions.updateAttendTime, (state, {payload}) => {
+				const {id, ...time} = payload;
+				const index = state.times.findIndex(t => t.id === id);
+				state.times[index] = {...state.times[index], ...time};
 			});
 	},
 });
