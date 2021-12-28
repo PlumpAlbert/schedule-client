@@ -1,12 +1,15 @@
 import {calculateCourse} from "./Helpers";
+import {DisplaySubject} from "./pages/ScheduleView/SubjectView";
 import {
 	Course,
 	FACULTY,
+	IAttendTime,
 	IAuthenticated,
 	IGroup,
 	ISpecialty,
 	ISubject,
 	IUser,
+	WithID,
 } from "./types";
 
 interface IResponse<T = any> {
@@ -258,5 +261,67 @@ export default class ScheduleAPI {
 		} catch (err) {
 			return ScheduleAPI.handleError(err);
 		}
+	};
+
+	/**
+	 * Method for creating new attend time
+	 *
+	 * @async
+	 * @param subject - subject object to append time to
+	 * @param time - time to create on server
+	 * @param [controller] - controller to abort request
+	 * @returns Returns id of newly created time. Undefined on error
+	 */
+	static createAttendTime = async (
+		subject: Omit<ISubject, "times">,
+		time: Omit<IAttendTime, "id">,
+		controller?: AbortController
+	) => ScheduleAPI.createSubject({...time, ...subject}, controller);
+
+	/**
+	 * Method for creating new subjects
+	 *
+	 * @async
+	 * @param subject - subject to create
+	 * @param [controller] - controller to abort request
+	 * @returns Id of new subject object or `undefined` on error
+	 */
+	static createSubject = async (
+		subject: Omit<DisplaySubject, "id">,
+		controller?: AbortController
+	) => {
+		const response = await fetch(`${ScheduleAPI.HOST}/subject`, {
+			signal: controller?.signal,
+			method: "POST",
+			body: JSON.stringify(subject),
+		});
+		if (response.status !== 200) {
+			return ScheduleAPI.handleError(await response.json());
+		}
+		const result: IResponse<{id: number}> = await response.json();
+		return result.body.id;
+	};
+
+	/**
+	 * Method for updating subject
+	 *
+	 * @async
+	 * @param subjectProperties - object which contains properties that needs to be updated on subject
+	 * @param [controller] - controller to abort request
+	 */
+	static updateSubject = async (
+		subjectProperties: WithID<Partial<DisplaySubject>>,
+		controller?: AbortController
+	) => {
+		const response = await fetch(`${ScheduleAPI.HOST}/subject`, {
+			signal: controller?.signal,
+			method: "UPDATE",
+			body: JSON.stringify(subjectProperties),
+		});
+		if (response.status !== 200) {
+			return ScheduleAPI.handleError(await response.json());
+		}
+		const result: IResponse<{success: boolean}> = await response.json();
+		return result.body.success;
 	};
 }
