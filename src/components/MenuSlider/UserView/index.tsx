@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/NoteAdd";
 import GroupSelectDialog from "./GroupSelectDialog";
 import {IGroup, IUser, UserType} from "../../../types";
 import ScheduleAPI from "../../../API";
@@ -86,7 +87,7 @@ function UserView({user, onGroupChange}: IProps) {
 							className="menu-settings__option"
 							onClick={handleAddScheduleClick}
 						>
-							<EditIcon classes={{root: "option__icon"}} />
+							<AddIcon classes={{root: "option__icon"}} />
 							<span className="option__text">Создать новое расписание</span>
 						</p>
 						<p
