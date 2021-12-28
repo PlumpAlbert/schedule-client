@@ -12,8 +12,10 @@ type SubjectPayload = {
 	value: ISubject[keyof Omit<ISubject, "times">];
 };
 
+export type SubjectStateAttendTime = IAttendTime & {isCreated?: boolean};
+
 export type SubjectState = Omit<ISubject, "times"> & {
-	times: Array<IAttendTime & {isCreated?: boolean}>;
+	times: SubjectStateAttendTime[];
 };
 
 export const initialState: SubjectState = {
