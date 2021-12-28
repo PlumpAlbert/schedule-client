@@ -96,23 +96,27 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 		[dispatch]
 	);
 
+	const filteredSubjects = useMemo(
+		() =>
+			subjects
+				.filter(s => s.weekday === weekday && s.weekType === weekType)
+				.sort((a, b) => a.time - b.time),
+		[weekday, weekType, subjects.length]
+	);
+
 	return (
 		<List className="schedule-view-page__schedule">
 			{isLoading
 				? subjectPlaceholders
-				: subjects.map(
-						(s, i) =>
-							s.weekday === weekday &&
-							s.weekType === weekType && (
-								<SubjectView
-									key={`subject-view-${i}`}
-									onClick={handleSubjectClick}
-									onDelete={handleSubjectDelete}
-									isEditable={!!editMode}
-									value={s}
-								/>
-							)
-				  )}
+				: filteredSubjects.map((s, i) => (
+						<SubjectView
+							key={`subject-view-${i}`}
+							onClick={handleSubjectClick}
+							onDelete={handleSubjectDelete}
+							isEditable={!!editMode}
+							value={s}
+						/>
+				  ))}
 		</List>
 	);
 }
