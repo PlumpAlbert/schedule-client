@@ -79,6 +79,11 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 		[setWeekday]
 	);
 
+	const handleAudienceChange = useCallback(
+		({target}) => void setAudience(target.value),
+		[setAudience]
+	);
+
 	const handleTimeChange = useCallback(
 		({target}) => void setTime(target.value),
 		[setTime]
@@ -121,10 +126,15 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 					</TextField>
 				</div>
 				<div className="add-time-dialog__field">
-					<label htmlFor="" className="field-label">
-						Аудитория
-					</label>
-					<TextField className="field-input" placeholder="Номер аудитории" />
+					<TextField
+						className="field-input"
+						onChange={handleAudienceChange}
+						InputLabelProps={{className: "field-label"}}
+						label="Аудитория"
+						InputProps={{className: "field-input__root"}}
+						variant="standard"
+						placeholder="Номер аудитории"
+					/>
 				</div>
 			</div>
 			<div className="add-time-dialog__footer">
