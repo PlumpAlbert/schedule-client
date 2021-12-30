@@ -32,16 +32,30 @@ type addAttendTimePayload =
 	| {isCreated: false; time: IAttendTime};
 
 export const actions = {
-	update: createAction<WithID<Partial<DisplaySubject>>>("update"),
-	updateProperty: createAction<SubjectPayload>("updateSubject"),
+	update: createAction<
+		WithID<Partial<DisplaySubject>>,
+		"schedule/subject/update"
+	>("schedule/subject/update"),
+	updateProperty: createAction<
+		SubjectPayload,
+		"schedule/subject/updateSubject"
+	>("schedule/subject/updateSubject"),
 	// Attend time actions
-	addAttendTime: createAction<addAttendTimePayload>("addAttendTime"),
-	deleteAttendTime: createAction<number>("deleteAttendTime"),
-	updateAttendTimeProperty: createAction<IAttendTimePayload>(
-		"updateAttendTimeProperty"
+	addAttendTime: createAction<
+		addAttendTimePayload,
+		"schedule/subject/addAttendTime"
+	>("schedule/subject/addAttendTime"),
+	deleteAttendTime: createAction<number, "schedule/subject/deleteAttendTime">(
+		"schedule/subject/deleteAttendTime"
 	),
-	updateAttendTime:
-		createAction<WithID<Partial<IAttendTime>>>("updateAttendTime"),
+	updateAttendTimeProperty: createAction<
+		IAttendTimePayload,
+		"schedule/subject/updateAttendTimeProperty"
+	>("schedule/subject/updateAttendTimeProperty"),
+	updateAttendTime: createAction<
+		WithID<Partial<IAttendTime>>,
+		"schedule/subject/updateAttendTime"
+	>("schedule/subject/updateAttendTime"),
 };
 
 export const slice = createSlice({
