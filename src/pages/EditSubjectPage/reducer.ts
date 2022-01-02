@@ -53,7 +53,22 @@ const reducer = (
 			return {state: newState, history: newHistory};
 		}
 		case "schedule/subject/updateSubject": {
-			break;
+      let previousUpdateIndex = history.findIndex(
+        h =>
+          h.type === action.type &&
+          h.payload.property === action.payload.property
+      );
+      let newHistory = [];
+      if (previousUpdateIndex !== -1) {
+        newHistory = [
+          ...history.slice(0, previousUpdateIndex),
+          action,
+					...history.slice(previousUpdateIndex + 1),
+        ];
+      } else {
+        newHistory = [...history, action];
+      }
+      return {state: newState, history: newHistory};
 		}
 		case "schedule/subject/addAttendTime": {
 			let addAction: any = action;
