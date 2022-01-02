@@ -76,6 +76,25 @@ const reducer = (
 			return {state: newState, history: filteredHistory};
 			break;
 		}
+		case "schedule/subject/updateAttendTimeProperty": {
+			let previousUpdateIndex = history.findIndex(
+				h =>
+					h.type === action.type &&
+					h.payload.id === action.payload.id &&
+					h.payload.property === action.payload.property
+			);
+			let newHistory = [];
+			if (previousUpdateIndex !== -1) {
+				newHistory = [
+					...history.slice(0, previousUpdateIndex),
+					action,
+					...history.slice(previousUpdateIndex + 1),
+				];
+			} else {
+				newHistory = [...history, action];
+			}
+			return {state: newState, history: newHistory};
+		}
 	}
 	const historyIndex = history.findIndex(a => a.type === action.type);
 	if (historyIndex === -1) {
