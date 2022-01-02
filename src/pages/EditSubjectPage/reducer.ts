@@ -1,16 +1,22 @@
-import {AnyAction, createAction} from "@reduxjs/toolkit";
+import {PayloadAction} from "@reduxjs/toolkit";
 import subjectReducer, {
 	actions as SubjectActions,
 	SubjectState,
 	SubjectStateAttendTime,
 } from "../../store/schedule/subject";
+import {IAttendTime} from "../../types";
 
-type SubjectActionType = ReturnType<
-	typeof SubjectActions[keyof typeof SubjectActions]
->;
+type HistoryActionType =
+	| ReturnType<
+			typeof SubjectActions[keyof Omit<typeof SubjectActions, "addAttendTime">]
+	  >
+	| PayloadAction<
+			{isCreated: true; time: IAttendTime},
+			ReturnType<typeof SubjectActions.addAttendTime>["type"]
+	  >;
 
 interface IState {
-	history: Array<SubjectActionType>;
+	history: Array<HistoryActionType>;
 	state: SubjectState;
 }
 
@@ -18,33 +24,56 @@ function shallowCompare<T>(a: T, b: T) {
 	return (Object.keys(a) as Array<keyof T>).every(key => a[key] === b[key]);
 }
 
-const reducer = ({history, state}: IState, action: SubjectActionType) => {
+const reducer = (
+	{history, state}: IState,
+	action: ReturnType<typeof SubjectActions[keyof typeof SubjectActions]>
+) => {
 	const newState = subjectReducer(state, action);
 	switch (action.type) {
 		case "schedule/subject/update":
 		case "schedule/subject/updateSubject": {
 			break;
 		}
-		case "schedule/subject/deleteAttendTime": {
-			// If we delete object that was previosly created - we need to delete
-			// action with creation to prevent dummy work on server
-			const attendTime = state.times.find(({id}) => id === action.payload);
-			// If we found deleted time from old state and it was created by user
-			if (attendTime?.isCreated) {
-				// Find index in history where we inserting this attend time
-				const deleteHistoryIndex = history.findIndex(
-					({type, payload}) =>
-						type === "schedule/subject/addAttendTime" &&
-						shallowCompare(payload.time, attendTime)
-				);
-				return {
-					state: newState,
-					history: [
-						...history.slice(0, deleteHistoryIndex),
-						...history.slice(deleteHistoryIndex + 1),
-					],
-				};
+		case "schedule/subject/addAttendTime": {
+			let addAction: any = action;
+			if (action.payload.isCreated) {
+				const newAttendTime = newState.times[newState.times.length - 1];
+				addAction.payload.time.id = newAttendTime.id;
 			}
+			return {state: newState, history: [...history, addAction]};
+		}
+		case "schedule/subject/deleteAttendTime": {
+			const removedId = action.payload;
+			// If we delete object that was previously created - we need to delete
+			// action with creation to prevent dummy work on server
+			const attendTime = state.times.find(({id}) => id === removedId);
+			let filteredHistory: HistoryActionType[] = [];
+			if (attendTime?.isCreated) {
+				// Filter all actions with this time
+				filteredHistory = history.filter(a => {
+					switch (a.type) {
+						case "schedule/subject/addAttendTime": {
+							return a.payload.time.id === removedId;
+						}
+						case "schedule/subject/updateAttendTime":
+						case "schedule/subject/updateAttendTimeProperty": {
+							return a.payload.id === removedId;
+						}
+					}
+				});
+			} else {
+				// Filter all update actions with this time and append delete action
+				filteredHistory = history.filter(a => {
+					switch (a.type) {
+						case "schedule/subject/updateAttendTime":
+						case "schedule/subject/updateAttendTimeProperty": {
+							return a.payload.id === removedId;
+						}
+					}
+				});
+				filteredHistory.push(action);
+			}
+			return {state: newState, history: filteredHistory};
 			break;
 		}
 	}
