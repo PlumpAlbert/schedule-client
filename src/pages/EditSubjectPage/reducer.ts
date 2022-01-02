@@ -1,4 +1,5 @@
 import {PayloadAction} from "@reduxjs/toolkit";
+import {assert} from "console";
 import subjectReducer, {
 	actions as SubjectActions,
 	SubjectState,
@@ -6,12 +7,11 @@ import subjectReducer, {
 import {IAttendTime} from "../../types";
 
 type HistoryActionType =
-	| ReturnType<
-			typeof SubjectActions[keyof Omit<typeof SubjectActions, "addAttendTime">]
-	  >
+	| ReturnType<typeof SubjectActions["deleteAttendTime"]>
+	| ReturnType<typeof SubjectActions["update"]>
 	| PayloadAction<
 			{isCreated: true; time: IAttendTime},
-			ReturnType<typeof SubjectActions.addAttendTime>["type"]
+			ReturnType<typeof SubjectActions["addAttendTime"]>["type"]
 	  >;
 
 export interface IEditSubjectPageStore {
@@ -29,46 +29,6 @@ const reducer = (
 ): IEditSubjectPageStore => {
 	const newState = subjectReducer(state, action);
 	switch (action.type) {
-		case "schedule/subject/update": {
-			let previousUpdateIndex = history.findIndex(
-				h => h.type === action.type && h.payload.id === action.payload.id
-			);
-			let newHistory = [];
-			if (previousUpdateIndex !== -1) {
-				const previousUpdate = history[previousUpdateIndex] as ReturnType<
-					typeof SubjectActions["updateAttendTime"]
-				>;
-				newHistory = [
-					...history.slice(0, previousUpdateIndex),
-					{
-						type: action.type,
-						payload: {...previousUpdate.payload, ...action.payload},
-					},
-					...history.slice(previousUpdateIndex + 1),
-				];
-			} else {
-				newHistory = [...history, action];
-			}
-			return {state: newState, history: newHistory};
-		}
-		case "schedule/subject/updateSubject": {
-			let previousUpdateIndex = history.findIndex(
-				h =>
-					h.type === action.type &&
-					h.payload.property === action.payload.property
-			);
-			let newHistory = [];
-			if (previousUpdateIndex !== -1) {
-				newHistory = [
-					...history.slice(0, previousUpdateIndex),
-					action,
-					...history.slice(previousUpdateIndex + 1),
-				];
-			} else {
-				newHistory = [...history, action];
-			}
-			return {state: newState, history: newHistory};
-		}
 		case "schedule/subject/addAttendTime": {
 			let addAction: any = action;
 			if (action.payload.isCreated) {
@@ -79,78 +39,76 @@ const reducer = (
 		}
 		case "schedule/subject/deleteAttendTime": {
 			const removedId = action.payload;
-			// If we delete object that was previously created - we need to delete
-			// action with creation to prevent dummy work on server
+			// Filter all edits of deleted attend time
+			let newHistory: HistoryActionType[] = history.filter(a => {
+				switch (a.type) {
+					case "schedule/subject/addAttendTime": {
+						return a.payload.time.id !== removedId;
+					}
+					case "schedule/subject/update": {
+						return a.payload.id !== removedId;
+					}
+				}
+			});
 			const attendTime = state.times.find(({id}) => id === removedId);
-			let filteredHistory: HistoryActionType[] = [];
-			if (attendTime?.isCreated) {
-				// Filter all actions with this time
-				filteredHistory = history.filter(a => {
-					switch (a.type) {
-						case "schedule/subject/addAttendTime": {
-							return a.payload.time.id === removedId;
-						}
-						case "schedule/subject/updateAttendTime":
-						case "schedule/subject/updateAttendTimeProperty": {
-							return a.payload.id === removedId;
-						}
-					}
-				});
-			} else {
-				// Filter all update actions with this time and append delete action
-				filteredHistory = history.filter(a => {
-					switch (a.type) {
-						case "schedule/subject/updateAttendTime":
-						case "schedule/subject/updateAttendTimeProperty": {
-							return a.payload.id === removedId;
-						}
-					}
-				});
-				filteredHistory.push(action);
+			// If this attend time wasn't created by user - append delete action
+			if (!attendTime?.isCreated) {
+				newHistory.push(action);
 			}
-			return {state: newState, history: filteredHistory};
-			break;
+			return {state: newState, history: newHistory};
+		}
+		case "schedule/subject/updateAttendTime":
+		case "schedule/subject/update": {
+			// Replacing properties for each update action for attend time with ID
+			// equal to `action.payload.id` in `history`
+			return {
+				state: newState,
+				history: history.map<HistoryActionType>(oldAction => {
+					if (
+						oldAction.type !== "schedule/subject/update" ||
+						oldAction.payload.id !== action.payload.id
+					) {
+						return oldAction;
+					}
+					return {
+						type: oldAction.type,
+						payload: {...oldAction.payload, ...action.payload},
+					};
+				}),
+			};
+		}
+		case "schedule/subject/updateSubject": {
+			// Replacing property for each update action in `history`
+			const {property, value} = action.payload;
+			return {
+				state: newState,
+				history: history.map<HistoryActionType>(oldAction => {
+					if (oldAction.type !== "schedule/subject/update") return oldAction;
+					return {
+						type: oldAction.type,
+						payload: {...oldAction.payload, [property]: value},
+					};
+				}),
+			};
 		}
 		case "schedule/subject/updateAttendTimeProperty": {
-			let previousUpdateIndex = history.findIndex(
-				h =>
-					h.type === action.type &&
-					h.payload.id === action.payload.id &&
-					h.payload.property === action.payload.property
-			);
-			let newHistory = [];
-			if (previousUpdateIndex !== -1) {
-				newHistory = [
-					...history.slice(0, previousUpdateIndex),
-					action,
-					...history.slice(previousUpdateIndex + 1),
-				];
-			} else {
-				newHistory = [...history, action];
-			}
-			return {state: newState, history: newHistory};
-		}
-		case "schedule/subject/updateAttendTime": {
-			let previousUpdateIndex = history.findIndex(
-				h => h.type === action.type && h.payload.id === action.payload.id
-			);
-			let newHistory = [];
-			if (previousUpdateIndex !== -1) {
-				const previousUpdate = history[previousUpdateIndex] as ReturnType<
-					typeof SubjectActions["updateAttendTime"]
-				>;
-				newHistory = [
-					...history.slice(0, previousUpdateIndex),
-					{
-						type: action.type,
-						payload: {...previousUpdate.payload, ...action.payload},
-					},
-					...history.slice(previousUpdateIndex + 1),
-				];
-			} else {
-				newHistory = [...history, action];
-			}
-			return {state: newState, history: newHistory};
+			// Replacing property for each update action in `history`
+			const {id, property, value} = action.payload;
+			return {
+				state: newState,
+				history: history.map<HistoryActionType>(oldAction => {
+					if (
+						oldAction.type !== "schedule/subject/update" ||
+						oldAction.payload.id !== id
+					) {
+						return oldAction;
+					}
+					return {
+						type: oldAction.type,
+						payload: {...oldAction.payload, [property]: value},
+					};
+				}),
+			};
 		}
 	}
 };
