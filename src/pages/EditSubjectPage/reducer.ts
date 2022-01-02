@@ -2,7 +2,6 @@ import {PayloadAction} from "@reduxjs/toolkit";
 import subjectReducer, {
 	actions as SubjectActions,
 	SubjectState,
-	SubjectStateAttendTime,
 } from "../../store/schedule/subject";
 import {IAttendTime} from "../../types";
 
@@ -53,22 +52,22 @@ const reducer = (
 			return {state: newState, history: newHistory};
 		}
 		case "schedule/subject/updateSubject": {
-      let previousUpdateIndex = history.findIndex(
-        h =>
-          h.type === action.type &&
-          h.payload.property === action.payload.property
-      );
-      let newHistory = [];
-      if (previousUpdateIndex !== -1) {
-        newHistory = [
-          ...history.slice(0, previousUpdateIndex),
-          action,
+			let previousUpdateIndex = history.findIndex(
+				h =>
+					h.type === action.type &&
+					h.payload.property === action.payload.property
+			);
+			let newHistory = [];
+			if (previousUpdateIndex !== -1) {
+				newHistory = [
+					...history.slice(0, previousUpdateIndex),
+					action,
 					...history.slice(previousUpdateIndex + 1),
-        ];
-      } else {
-        newHistory = [...history, action];
-      }
-      return {state: newState, history: newHistory};
+				];
+			} else {
+				newHistory = [...history, action];
+			}
+			return {state: newState, history: newHistory};
 		}
 		case "schedule/subject/addAttendTime": {
 			let addAction: any = action;
@@ -152,6 +151,8 @@ const reducer = (
 				newHistory = [...history, action];
 			}
 			return {state: newState, history: newHistory};
-	}
+		}
 	}
 };
+
+export default reducer;
