@@ -1,19 +1,17 @@
-import React, {useEffect, useReducer, useRef} from "react";
+import {useEffect, useReducer} from "react";
 import {useLocation, useNavigate} from "react-router";
 import TitleControl from "./FormControls/TitleControl";
 import TypeControl from "./FormControls/TypeControl";
 import TeacherControl from "./FormControls/TeacherControl";
 import ScheduleTimes from "./FormControls/ScheduleTimes";
-import {
-	actions as subjectActions,
-	initialState,
-} from "../../store/schedule/subject";
 import reducer, {IEditSubjectPageStore} from "./reducer";
 import {useSelector, useDispatch} from "../../store";
-import {actions as scheduleActions} from "../../store/schedule";
-import {WEEK_TYPE} from "../../types";
+import {actions as ScheduleActions} from "../../store/schedule";
+import {
+	initialState,
+	actions as SubjectActions,
+} from "../../store/schedule/subject";
 import ScheduleAPI from "../../API";
-import {DisplaySubject} from "../ScheduleView/SubjectView";
 
 import "../../styles/EditSubjectPage.scss";
 
@@ -41,7 +39,71 @@ function EditSubjectPage() {
 		if (!subject) return {state: initialState, history: []};
 		return {history: [], state: subject};
 	});
-	const [{state}, dispatch] = useReducer(reducer, initState);
+	const [{history, state}, dispatch] = useReducer(reducer, initState);
+
+	useEffect(() => {
+		if (!shouldSave) return;
+		const {times, ...subjectState} = state;
+		let subjectsToDelete: number[] = [];
+		history.forEach(action => {
+			switch (action.type) {
+				case "schedule/subject/addAttendTime": {
+					const {id, ...time} = action.payload.time;
+					ScheduleAPI.createAttendTime(subjectState, time).then(createdID => {
+						if (!createdID) return;
+						reduxDispatch(
+							ScheduleActions.updateSubject({
+								title: initState.state.title,
+								type: initState.state.type,
+								teacher: initState.state.teacher.id,
+								action: SubjectActions.addAttendTime({
+									isCreated: false,
+									time: {
+										...time,
+										id: createdID,
+									},
+								}),
+							})
+						);
+					});
+					break;
+				}
+				case "schedule/subject/deleteAttendTime": {
+					subjectsToDelete.push(action.payload);
+					break;
+				}
+				case "schedule/subject/update": {
+					ScheduleAPI.updateSubject(action.payload).then(success => {
+						if (!success) return;
+						reduxDispatch(
+							ScheduleActions.updateSubject({
+								title: initState.state.title,
+								type: initState.state.type,
+								teacher: initState.state.teacher.id,
+								action: SubjectActions.update(action.payload),
+							})
+						);
+					});
+					break;
+				}
+			}
+		});
+		if (subjectsToDelete.length > 0) {
+			ScheduleAPI.deleteSubject(subjectsToDelete).then(success => {
+				if (!success) return;
+				subjectsToDelete.forEach(id =>
+					reduxDispatch(
+						ScheduleActions.updateSubject({
+							title: initState.state.title,
+							type: initState.state.type,
+							teacher: initState.state.teacher.id,
+							action: SubjectActions.deleteAttendTime(id),
+						})
+					)
+				);
+			});
+		}
+	}, [shouldSave]);
 
 	if (editMode !== "create" && !attendTimeId) {
 		navigate("/schedule", {replace: true});
