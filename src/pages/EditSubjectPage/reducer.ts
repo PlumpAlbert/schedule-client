@@ -30,7 +30,28 @@ const reducer = (
 ) => {
 	const newState = subjectReducer(state, action);
 	switch (action.type) {
-		case "schedule/subject/update":
+		case "schedule/subject/update": {
+			let previousUpdateIndex = history.findIndex(
+				h => h.type === action.type && h.payload.id === action.payload.id
+			);
+			let newHistory = [];
+			if (previousUpdateIndex !== -1) {
+				const previousUpdate = history[previousUpdateIndex] as ReturnType<
+					typeof SubjectActions["updateAttendTime"]
+				>;
+				newHistory = [
+					...history.slice(0, previousUpdateIndex),
+					{
+						type: action.type,
+						payload: {...previousUpdate.payload, ...action.payload},
+					},
+					...history.slice(previousUpdateIndex + 1),
+				];
+			} else {
+				newHistory = [...history, action];
+			}
+			return {state: newState, history: newHistory};
+		}
 		case "schedule/subject/updateSubject": {
 			break;
 		}
