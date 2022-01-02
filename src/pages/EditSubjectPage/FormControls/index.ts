@@ -1,6 +1,6 @@
 import React from "react";
-import {AnyAction} from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
+import {ActionType} from "../reducer";
 
 export function propTypes<T>(validator: T) {
 	return {
@@ -10,6 +10,6 @@ export function propTypes<T>(validator: T) {
 }
 
 export interface IProps<T> {
-	dispatch: React.Dispatch<AnyAction>;
+	dispatch: React.Dispatch<ActionType>;
 	value: T;
 }
