@@ -15,19 +15,19 @@ type HistoryActionType =
 			ReturnType<typeof SubjectActions.addAttendTime>["type"]
 	  >;
 
-interface IState {
+export interface IEditSubjectPageStore {
 	history: Array<HistoryActionType>;
 	state: SubjectState;
 }
 
-function shallowCompare<T>(a: T, b: T) {
-	return (Object.keys(a) as Array<keyof T>).every(key => a[key] === b[key]);
-}
+export type ActionType = ReturnType<
+	typeof SubjectActions[keyof typeof SubjectActions]
+>;
 
 const reducer = (
-	{history, state}: IState,
-	action: ReturnType<typeof SubjectActions[keyof typeof SubjectActions]>
-) => {
+	{history, state}: IEditSubjectPageStore,
+	action: ActionType
+): IEditSubjectPageStore => {
 	const newState = subjectReducer(state, action);
 	switch (action.type) {
 		case "schedule/subject/update": {
