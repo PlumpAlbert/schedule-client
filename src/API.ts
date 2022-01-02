@@ -24,7 +24,7 @@ interface ISuccessful {
 export default class ScheduleAPI {
 	private static HOST: string =
 		process.env.NODE_ENV === "development"
-			? `http://${document.location.host}/api`
+			? `http://localhost:8080/api`
 			: `${process.env.PUBLIC_URL}/api`;
 
 	private static handleError(err: any) {
