@@ -324,4 +324,24 @@ export default class ScheduleAPI {
 		const result: IResponse<{success: boolean}> = await response.json();
 		return result.body.success;
 	};
+
+	/**
+	 * Method for deleting subjects from schedule
+	 * @param subjectIds ID of subjects to delete
+	 * @param controller controller to abort fetch
+	 */
+	static deleteSubject = async (
+		subjectIds: number[],
+		controller?: AbortController
+	) => {
+		const response = await fetch(
+			`${ScheduleAPI.HOST}/subject/delete?id=${encodeURI(
+				subjectIds.toString()
+			)}`
+		);
+		if (response.status !== 200) {
+			return ScheduleAPI.handleError(await response.json());
+		}
+		return true;
+	};
 }
