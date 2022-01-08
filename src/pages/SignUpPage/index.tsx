@@ -55,19 +55,12 @@ function SignUpPage() {
 				},
 				abortController
 			)
-				.then(id => {
-					if (!id) {
+				.then(user => {
+					if (!user) {
 						setError("login");
 						return;
 					}
-					const authenticatedUser: IUser = {
-						id,
-						name: name,
-						login: login,
-						group: group,
-						type: UserType.STUDENT
-					};
-					sessionStorage.setItem("user", JSON.stringify(authenticatedUser));
+					sessionStorage.setItem("user", JSON.stringify(user));
 					navigate(`/schedule?group=${group?.id}`, {
 						replace: true
 					});

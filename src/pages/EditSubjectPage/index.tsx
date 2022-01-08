@@ -41,13 +41,12 @@ function EditSubjectPage() {
 	useEffect(() => {
 		if (!shouldSave) return;
 		const {times, ...subjectState} = state;
-		let subjectsToDelete: number[] = [];
 		history.forEach(action => {
 			switch (action.type) {
 				case "schedule/subject/addAttendTime": {
 					const {id, ...time} = action.payload.time;
-					ScheduleAPI.createAttendTime(subjectState, time).then(createdID => {
-						if (!createdID) return;
+					ScheduleAPI.createAttendTime(subjectState, time).then(createdTime => {
+						if (!createdTime) return;
 						reduxDispatch(
 							ScheduleActions.updateSubject({
 								title: initState.state.title,
@@ -55,10 +54,7 @@ function EditSubjectPage() {
 								teacher: initState.state.teacher.id,
 								action: SubjectActions.addAttendTime({
 									isCreated: false,
-									time: {
-										...time,
-										id: createdID
-									}
+									time: createdTime
 								})
 							})
 						);
@@ -66,7 +62,17 @@ function EditSubjectPage() {
 					break;
 				}
 				case "schedule/subject/deleteAttendTime": {
-					subjectsToDelete.push(action.payload);
+					ScheduleAPI.deleteSubject(action.payload).then(success => {
+						if (!success) return;
+						reduxDispatch(
+							ScheduleActions.updateSubject({
+								title: initState.state.title,
+								type: initState.state.type,
+								teacher: initState.state.teacher.id,
+								action: SubjectActions.deleteAttendTime(action.payload)
+							})
+						);
+					});
 					break;
 				}
 				case "schedule/subject/update": {
@@ -85,21 +91,6 @@ function EditSubjectPage() {
 				}
 			}
 		});
-		if (subjectsToDelete.length > 0) {
-			ScheduleAPI.deleteSubject(subjectsToDelete).then(success => {
-				if (!success) return;
-				subjectsToDelete.forEach(id =>
-					reduxDispatch(
-						ScheduleActions.updateSubject({
-							title: initState.state.title,
-							type: initState.state.type,
-							teacher: initState.state.teacher.id,
-							action: SubjectActions.deleteAttendTime(id)
-						})
-					)
-				);
-			});
-		}
 	}, [shouldSave]);
 
 	if (editMode !== "create" && !attendTimeId) {

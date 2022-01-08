@@ -46,7 +46,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 		(newGroup: IGroup | null) => {
 			if (!user || !newGroup) return;
 			user.group = newGroup;
-			ScheduleAPI.changeGroup(newGroup).then(success => {
+			ScheduleAPI.updateUser({id: user.id, group: newGroup}).then(success => {
 				setAlert({
 					show: true,
 					message: success ? "Группа успешно изменена" : "Ошибка при смене группы",

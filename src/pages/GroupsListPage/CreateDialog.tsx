@@ -99,14 +99,14 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 			specialty: fields.name
 		};
 		ScheduleAPI.createGroup(group, abortController)
-			.then(id => {
-				if (!id) {
+			.then(group => {
+				if (!group) {
 					setError("Группа уже существует");
 					setCreating(false);
 					return;
 				}
 				setCreating(false);
-				onClose({...group, id});
+				onClose(group);
 			})
 			.catch(err => {
 				if (!abortController.signal.aborted) {
