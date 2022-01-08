@@ -36,9 +36,7 @@ const timeOptions = times.map(time => {
 });
 
 const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
-	const [weekday, setWeekday] = useState<WEEKDAY>(
-		value?.weekday || WEEKDAY.MONDAY
-	);
+	const [weekday, setWeekday] = useState<WEEKDAY>(value?.weekday || WEEKDAY.MONDAY);
 	const [time, setTime] = useState<number>(value?.time || -1);
 	const [audience, setAudience] = useState<string>(value?.audience || "");
 
@@ -63,7 +61,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 			audience,
 			time,
 			weekday,
-			weekType,
+			weekType
 		});
 	}, [onClose, time, audience, weekday, weekType]);
 
@@ -84,10 +82,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 		[setAudience]
 	);
 
-	const handleTimeChange = useCallback(
-		({target}) => void setTime(target.value),
-		[setTime]
-	);
+	const handleTimeChange = useCallback(({target}) => void setTime(target.value), [setTime]);
 
 	return (
 		<Dialog
@@ -96,9 +91,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 			open={open}
 			onClose={handleCancelClick}
 		>
-			<DialogTitle className="add-time-dialog__title">
-				Время проведения
-			</DialogTitle>
+			<DialogTitle className="add-time-dialog__title">Время проведения</DialogTitle>
 			<div className="add-time-dialog__body">
 				<div className="add-time-dialog__field">
 					<label className="field-label">День недели</label>
@@ -139,16 +132,10 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 				</div>
 			</div>
 			<div className="add-time-dialog__footer">
-				<Button
-					className="add-time-dialog__btn cancel-btn"
-					onClick={handleCancelClick}
-				>
+				<Button className="add-time-dialog__btn cancel-btn" onClick={handleCancelClick}>
 					Отмена
 				</Button>
-				<Button
-					className="add-time-dialog__btn save-btn"
-					onClick={handleSaveClick}
-				>
+				<Button className="add-time-dialog__btn save-btn" onClick={handleSaveClick}>
 					Сохранить
 				</Button>
 			</div>

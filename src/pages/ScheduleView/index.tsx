@@ -22,14 +22,12 @@ const ScheduleView = () => {
 		weekdayRefs.current[currentDay - 1]?.scrollIntoView({
 			behavior: "smooth",
 			block: "center",
-			inline: "center",
+			inline: "center"
 		});
 	}, [currentDay]);
 
 	//#region CALLBACKS
-	const handleWeekdayClick = useCallback<
-		React.MouseEventHandler<HTMLParagraphElement>
-	>(
+	const handleWeekdayClick = useCallback<React.MouseEventHandler<HTMLParagraphElement>>(
 		({currentTarget}) => {
 			const {dataset} = currentTarget;
 			const newDay: WEEKDAY = Number(dataset["weekday"]);
@@ -70,30 +68,18 @@ const ScheduleView = () => {
 		return array;
 	}, [handleWeekdayClick, currentDay]);
 
-	const greenWeek = useMemo(
-		() => currentWeek === WEEK_TYPE.GREEN,
-		[currentWeek]
-	);
+	const greenWeek = useMemo(() => currentWeek === WEEK_TYPE.GREEN, [currentWeek]);
 
 	return (
 		<div className="page schedule-view-page">
 			<div className="schedule-view-page__week-type">
-				<h2 className="week-type__text">
-					{greenWeek ? "Зеленая неделя" : "Белая неделя"}
-				</h2>
-				<Button
-					classes={{root: "week-type__swap-icon"}}
-					onClick={handleSwapClick}
-				>
+				<h2 className="week-type__text">{greenWeek ? "Зеленая неделя" : "Белая неделя"}</h2>
+				<Button classes={{root: "week-type__swap-icon"}} onClick={handleSwapClick}>
 					<SwapVertIcon />
 				</Button>
 			</div>
 			<div className="schedule-view-page__days">{weekdays}</div>
-			<SchedulePresenter
-				editMode={editMode}
-				weekType={currentWeek}
-				weekday={currentDay}
-			/>
+			<SchedulePresenter editMode={editMode} weekType={currentWeek} weekday={currentDay} />
 			{editMode && (
 				<FAB
 					className="schedule-view-page__fab"

@@ -29,10 +29,7 @@ function SignUpPage() {
 			}
 			const group = groupRef.current?.getState();
 			// Check if all of the fields are set
-			if (
-				!group ||
-				!Object.keys(group).every(key => !!group[key as keyof IGroup])
-			) {
+			if (!group || !Object.keys(group).every(key => !!group[key as keyof IGroup])) {
 				setError("group");
 				return;
 			}
@@ -54,7 +51,7 @@ function SignUpPage() {
 					name,
 					login,
 					password,
-					group,
+					group
 				},
 				abortController
 			)
@@ -68,11 +65,11 @@ function SignUpPage() {
 						name: name,
 						login: login,
 						group: group,
-						type: UserType.STUDENT,
+						type: UserType.STUDENT
 					};
 					sessionStorage.setItem("user", JSON.stringify(authenticatedUser));
 					navigate(`/schedule?group=${group?.id}`, {
-						replace: true,
+						replace: true
 					});
 				})
 				.catch(err => {
@@ -85,9 +82,7 @@ function SignUpPage() {
 		[name, login, password, error, navigate]
 	);
 
-	const handleInputChange = useCallback<
-		React.ChangeEventHandler<HTMLInputElement>
-	>(
+	const handleInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
 		({target}) => {
 			const {name, value} = target;
 			let updateFunction: React.Dispatch<React.SetStateAction<string>>;
@@ -133,15 +128,15 @@ function SignUpPage() {
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password",
-						},
+							autoComplete: "new-password"
+						}
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user",
+						htmlFor: "user"
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text",
+						className: "form-control__helper-text"
 					}}
 				/>
 				<TextField
@@ -163,15 +158,15 @@ function SignUpPage() {
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password",
-						},
+							autoComplete: "new-password"
+						}
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "username",
+						htmlFor: "username"
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text",
+						className: "form-control__helper-text"
 					}}
 				/>
 				<TextField
@@ -186,22 +181,22 @@ function SignUpPage() {
 					label="Пароль:"
 					helperText={
 						<span>
-							Рекомендуем задать сложный пароль, чтобы всякие{" "}
-							<mark>керилы</mark> не смогли в будущем взломать Ваш аккаунт
+							Рекомендуем задать сложный пароль, чтобы всякие <mark>керилы</mark> не
+							смогли в будущем взломать Ваш аккаунт
 						</span>
 					}
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password",
-						},
+							autoComplete: "new-password"
+						}
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user_password",
+						htmlFor: "user_password"
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text",
+						className: "form-control__helper-text"
 					}}
 				/>
 				<GroupSelect isError={error === "group"} ref={groupRef} />

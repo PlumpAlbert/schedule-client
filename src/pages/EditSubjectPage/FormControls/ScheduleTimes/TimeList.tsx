@@ -47,12 +47,8 @@ const Time = ({className, onDelete, onClick, ...time}: ITimeProps) => {
 		>
 			<ListItem className={className} onClick={handleClick}>
 				<div className={className + "__left-content"}>
-					<span className={"left-content__weekday"}>
-						{GetWeekdayName(time.weekday)}
-					</span>
-					<span className="left-content__audience">
-						В аудитории № {time.audience}
-					</span>
+					<span className={"left-content__weekday"}>{GetWeekdayName(time.weekday)}</span>
+					<span className="left-content__audience">В аудитории № {time.audience}</span>
 				</div>
 				<div className={className + "__right-content"}>
 					<span className="right-content__time">{renderTime(time.time)}</span>

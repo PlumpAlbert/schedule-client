@@ -5,7 +5,7 @@ import {ActionType} from "../reducer";
 export function propTypes<T>(validator: T) {
 	return {
 		dispatch: PropTypes.func.isRequired,
-		value: validator,
+		value: validator
 	};
 }
 

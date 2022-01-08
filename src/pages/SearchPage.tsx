@@ -5,9 +5,7 @@ import FacultyAccordion from "../components/FacultyAccordion";
 import {FACULTY, ISpecialty} from "../types";
 
 function SearchPage() {
-	const [results, setResults] = useState<
-		Partial<Record<FACULTY, ISpecialty[]>>
-	>({});
+	const [results, setResults] = useState<Partial<Record<FACULTY, ISpecialty[]>>>({});
 	const location = useLocation();
 	const navigate = useNavigate();
 

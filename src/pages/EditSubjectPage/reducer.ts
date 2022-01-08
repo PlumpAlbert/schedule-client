@@ -2,7 +2,7 @@ import {PayloadAction} from "@reduxjs/toolkit";
 import {assert} from "console";
 import subjectReducer, {
 	actions as SubjectActions,
-	SubjectState,
+	SubjectState
 } from "../../store/schedule/subject";
 import {IAttendTime} from "../../types";
 
@@ -19,9 +19,7 @@ export interface IEditSubjectPageStore {
 	state: SubjectState;
 }
 
-export type ActionType = ReturnType<
-	typeof SubjectActions[keyof typeof SubjectActions]
->;
+export type ActionType = ReturnType<typeof SubjectActions[keyof typeof SubjectActions]>;
 
 const reducer = (
 	{history, state}: IEditSubjectPageStore,
@@ -72,9 +70,9 @@ const reducer = (
 					}
 					return {
 						type: oldAction.type,
-						payload: {...oldAction.payload, ...action.payload},
+						payload: {...oldAction.payload, ...action.payload}
 					};
-				}),
+				})
 			};
 		}
 		case "schedule/subject/updateSubject": {
@@ -86,9 +84,9 @@ const reducer = (
 					if (oldAction.type !== "schedule/subject/update") return oldAction;
 					return {
 						type: oldAction.type,
-						payload: {...oldAction.payload, [property]: value},
+						payload: {...oldAction.payload, [property]: value}
 					};
-				}),
+				})
 			};
 		}
 		case "schedule/subject/updateAttendTimeProperty": {
@@ -105,9 +103,9 @@ const reducer = (
 					}
 					return {
 						type: oldAction.type,
-						payload: {...oldAction.payload, [property]: value},
+						payload: {...oldAction.payload, [property]: value}
 					};
-				}),
+				})
 			};
 		}
 	}

@@ -9,13 +9,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import {
-	BACHELOR_MAX,
-	Course,
-	FACULTY,
-	IGroup,
-	MAGISTRACY_MAX,
-} from "../../types";
+import {BACHELOR_MAX, Course, FACULTY, IGroup, MAGISTRACY_MAX} from "../../types";
 
 import "./CreateDialog.scss";
 import ScheduleAPI from "../../API";
@@ -35,14 +29,12 @@ interface IFieldsState {
 const CreateDialog = ({faculty, open, onClose}: IProps) => {
 	const [fields, setFields] = useState<IFieldsState>({
 		name: "",
-		course: 1,
+		course: 1
 	});
 	const [isCreating, setCreating] = useState(false);
 	const [error, setError] = useState<string>();
 
-	const handleFieldChange = useCallback<
-		React.ChangeEventHandler<HTMLInputElement>
-	>(
+	const handleFieldChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
 		({target}) => {
 			const {name, value} = target;
 			setFields({...fields, [name]: value});
@@ -104,7 +96,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 		const group: Omit<IGroup, "id"> = {
 			faculty,
 			year: calculateYear(fields.course),
-			specialty: fields.name,
+			specialty: fields.name
 		};
 		ScheduleAPI.createGroup(group, abortController)
 			.then(id => {
@@ -131,7 +123,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 		<Dialog
 			className="create-specialty-dialog-wrapper"
 			classes={{
-				paper: "create-specialty-dialog",
+				paper: "create-specialty-dialog"
 			}}
 			open={open}
 			onClose={handleDialogClose}
@@ -147,9 +139,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 					{error}
 				</Alert>
 			</Snackbar>
-			<DialogTitle className="create-specialty-dialog__title">
-				Создание группы
-			</DialogTitle>
+			<DialogTitle className="create-specialty-dialog__title">Создание группы</DialogTitle>
 			<TextField
 				required
 				className="create-specialty-dialog__field"
@@ -162,10 +152,10 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				value={fields.name}
 				onChange={handleFieldChange}
 				InputLabelProps={{
-					className: "field-label",
+					className: "field-label"
 				}}
 				inputProps={{
-					className: "field-input",
+					className: "field-input"
 				}}
 			/>
 			<TextField
@@ -178,17 +168,17 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				value={fields.course}
 				onChange={handleFieldChange}
 				InputLabelProps={{
-					className: "field-label",
+					className: "field-label"
 				}}
 				InputProps={{
 					startAdornment: (
 						<InputAdornment position="start" className="field-input__adornment">
 							{fields.course > BACHELOR_MAX ? "М" : "Б"}
 						</InputAdornment>
-					),
+					)
 				}}
 				inputProps={{
-					className: "field-input",
+					className: "field-input"
 				}}
 			>
 				{courseOptions}

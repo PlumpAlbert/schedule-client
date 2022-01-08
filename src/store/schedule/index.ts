@@ -27,7 +27,7 @@ const initialState: SchedulePageState = {
 	editMode: undefined,
 	subjects: [],
 	currentDay: today.getDay() === 0 ? 7 : today.getDay(),
-	currentWeek: GetWeekType(today),
+	currentWeek: GetWeekType(today)
 };
 
 export const actions = {
@@ -43,7 +43,7 @@ export const actions = {
 	addSubject: createAction<ISubject>("addSubject"),
 	deleteSubject: createAction<SubjectIndex>("deleteSubject"),
 	// Forwarded actions
-	updateSubject: createAction<ForwardedAction>("schedule/updateSubject"),
+	updateSubject: createAction<ForwardedAction>("schedule/updateSubject")
 };
 
 /**
@@ -91,9 +91,7 @@ const scheduleSlice = createSlice({
 			})
 			.addCase(actions.toggleWeekType, state => {
 				state.currentWeek =
-					state.currentWeek === WEEK_TYPE.WHITE
-						? WEEK_TYPE.GREEN
-						: WEEK_TYPE.WHITE;
+					state.currentWeek === WEEK_TYPE.WHITE ? WEEK_TYPE.GREEN : WEEK_TYPE.WHITE;
 			})
 			// Editing actions
 			.addCase(actions.toggleEditing, (state, {payload}) => {
@@ -114,7 +112,7 @@ const scheduleSlice = createSlice({
 				subjects.splice(index, 1);
 			})
 			.addCase(actions.updateSubject, forwardSubjectAction);
-	},
+	}
 });
 
 export const selectSchedule = (state: RootState) => state.schedule;

@@ -2,14 +2,14 @@ import {
 	createAction,
 	createSlice,
 	combineReducers,
-	ActionCreatorWithoutPayload,
+	ActionCreatorWithoutPayload
 } from "@reduxjs/toolkit";
 import {RootState} from "..";
 import {IGroup, IUser} from "../../types";
 import headerReducer, {
 	initialState as headerInitState,
 	actions as headerActions,
-	SearchDisplay,
+	SearchDisplay
 } from "./header";
 
 interface ApplicationState {
@@ -22,7 +22,7 @@ interface ApplicationState {
 const initialState: ApplicationState = {
 	showMenu: false,
 	showFooter: true,
-	header: headerInitState,
+	header: headerInitState
 };
 
 export const actions = {
@@ -36,7 +36,7 @@ export const actions = {
 	// User actions
 	setUser: createAction<IUser>("setUser"),
 	setUserGroup: createAction<IGroup>("setUserGroup"),
-	signOut: createAction("signOut"),
+	signOut: createAction("signOut")
 };
 
 const store = createSlice({
@@ -90,7 +90,7 @@ const store = createSlice({
 					state.header = headerReducer(state.header, action);
 				}
 			);
-	},
+	}
 });
 
 export const selectApplication = (store: RootState) => store.application;

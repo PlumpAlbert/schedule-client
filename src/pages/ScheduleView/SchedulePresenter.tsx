@@ -21,7 +21,7 @@ const subjectPlaceholders = [
 	<SubjectView key="subject-view-1" loading type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ} />,
 	<SubjectView key="subject-view-2" loading type={SUBJECT_TYPE.ПРАКТИКА} />,
 	<SubjectView key="subject-view-3" loading type={SUBJECT_TYPE.ЛАБОРАТОРНАЯ} />,
-	<SubjectView key="subject-view-4" loading type={SUBJECT_TYPE.ЛЕКЦИЯ} />,
+	<SubjectView key="subject-view-4" loading type={SUBJECT_TYPE.ЛЕКЦИЯ} />
 ];
 
 function SchedulePresenter({editMode, weekday, weekType}: IProps) {
@@ -33,17 +33,14 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 	const selectedGroup = useSelector(({schedule}) => schedule.currentGroup);
 
 	const subjects = useSelector<DisplaySubject[]>(({schedule}) => {
-		return schedule.subjects.reduce<DisplaySubject[]>(
-			(displayList, {times, ...subject}) => {
-				return displayList.concat(
-					times.map<DisplaySubject>(time => ({
-						...time,
-						...subject,
-					}))
-				);
-			},
-			[]
-		);
+		return schedule.subjects.reduce<DisplaySubject[]>((displayList, {times, ...subject}) => {
+			return displayList.concat(
+				times.map<DisplaySubject>(time => ({
+					...time,
+					...subject
+				}))
+			);
+		}, []);
 	});
 
 	useEffect(() => {
@@ -92,7 +89,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 				scheduleActions.deleteSubject({
 					title: subject.title,
 					type: subject.type,
-					teacher: subject.teacher.id,
+					teacher: subject.teacher.id
 				})
 			);
 		},
@@ -125,7 +122,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 }
 
 SchedulePresenter.propTypes = {
-	groupId: PropTypes.number,
+	groupId: PropTypes.number
 };
 
 export default SchedulePresenter;

@@ -32,19 +32,16 @@ type addAttendTimePayload =
 	| {isCreated: false; time: IAttendTime};
 
 export const actions = {
-	update: createAction<
-		WithID<Partial<DisplaySubject>>,
+	update: createAction<WithID<Partial<DisplaySubject>>, "schedule/subject/update">(
 		"schedule/subject/update"
-	>("schedule/subject/update"),
-	updateProperty: createAction<
-		SubjectPayload,
+	),
+	updateProperty: createAction<SubjectPayload, "schedule/subject/updateSubject">(
 		"schedule/subject/updateSubject"
-	>("schedule/subject/updateSubject"),
+	),
 	// Attend time actions
-	addAttendTime: createAction<
-		addAttendTimePayload,
+	addAttendTime: createAction<addAttendTimePayload, "schedule/subject/addAttendTime">(
 		"schedule/subject/addAttendTime"
-	>("schedule/subject/addAttendTime"),
+	),
 	deleteAttendTime: createAction<number, "schedule/subject/deleteAttendTime">(
 		"schedule/subject/deleteAttendTime"
 	),
@@ -55,7 +52,7 @@ export const actions = {
 	updateAttendTime: createAction<
 		WithID<Partial<IAttendTime>>,
 		"schedule/subject/updateAttendTime"
-	>("schedule/subject/updateAttendTime"),
+	>("schedule/subject/updateAttendTime")
 };
 
 export const slice = createSlice({
@@ -105,7 +102,7 @@ export const slice = createSlice({
 				const index = state.times.findIndex(t => t.id === id);
 				state.times[index] = {...state.times[index], ...time};
 			});
-	},
+	}
 });
 
 export default slice.reducer;

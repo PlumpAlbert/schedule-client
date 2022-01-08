@@ -28,7 +28,7 @@ function SubjectView({
 	loading = false,
 	isEditable,
 	value,
-	type = value?.type,
+	type = value?.type
 }: IProps & ILoadable) {
 	let typeClass;
 	switch (type || value?.type) {
@@ -63,10 +63,7 @@ function SubjectView({
 	);
 
 	return (
-		<ListItem
-			className={`subject-view${loading ? " loading" : ""}`}
-			onClick={handleClick}
-		>
+		<ListItem className={`subject-view${loading ? " loading" : ""}`} onClick={handleClick}>
 			<SwipeAction
 				className="subject-view"
 				canSwipe={isEditable}

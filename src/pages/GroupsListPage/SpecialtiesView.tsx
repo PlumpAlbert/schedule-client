@@ -14,9 +14,7 @@ interface IProps {
 	faculty: FACULTY;
 }
 function SpecialtiesView({faculty}: IProps) {
-	const [specialties, setSpecialties, isLoading] = useSpecialties(
-		faculty as FACULTY
-	);
+	const [specialties, setSpecialties, isLoading] = useSpecialties(faculty as FACULTY);
 	const [showDialog, setShowDialog] = useState(false);
 	const [showAlert, setShowAlert] = useState(false);
 
@@ -40,13 +38,13 @@ function SpecialtiesView({faculty}: IProps) {
 				setSpecialties([
 					...specialties.slice(0, index),
 					specialty,
-					...specialties.slice(index),
+					...specialties.slice(index)
 				]);
 				setShowAlert(true);
 			} else {
 				const specialty = {
 					title: group.specialty,
-					courses: {[course]: group.id},
+					courses: {[course]: group.id}
 				};
 				setSpecialties([...specialties, specialty]);
 				setShowAlert(true);
@@ -71,11 +69,7 @@ function SpecialtiesView({faculty}: IProps) {
 					Группа успешно добавлена
 				</Alert>
 			</Snackbar>
-			<CreateDialog
-				faculty={faculty}
-				open={showDialog}
-				onClose={handleDialogClose}
-			/>
+			<CreateDialog faculty={faculty} open={showDialog} onClose={handleDialogClose} />
 			<FAB
 				className="specialties-wrapper__fab"
 				size="large"
@@ -97,7 +91,7 @@ function SpecialtiesView({faculty}: IProps) {
 }
 
 SpecialtiesView.propTypes = {
-	faculty: PropTypes.string.isRequired,
+	faculty: PropTypes.string.isRequired
 };
 
 export default SpecialtiesView;

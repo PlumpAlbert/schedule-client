@@ -83,17 +83,11 @@ function UserView({user, onGroupChange}: IProps) {
 				<h3 className="menu-settings__header">Настройки</h3>
 				{user.type === UserType.ADMIN && (
 					<>
-						<p
-							className="menu-settings__option"
-							onClick={handleAddScheduleClick}
-						>
+						<p className="menu-settings__option" onClick={handleAddScheduleClick}>
 							<AddIcon classes={{root: "option__icon"}} />
 							<span className="option__text">Создать новое расписание</span>
 						</p>
-						<p
-							className="menu-settings__option"
-							onClick={handleEditScheduleClick}
-						>
+						<p className="menu-settings__option" onClick={handleEditScheduleClick}>
 							<EditIcon classes={{root: "option__icon"}} />
 							<span className="option__text">Редактировать расписание</span>
 						</p>

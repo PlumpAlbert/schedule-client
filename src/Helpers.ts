@@ -33,9 +33,7 @@ export function GetWeekType(date?: number | Date): WEEK_TYPE {
 	if (firstWeek.getDay() !== 1) {
 		firstWeek.setDate(firstWeek.getDate() - (firstWeek.getDay() - 1));
 	}
-	let weeksPassed = Math.floor(
-		(date.getTime() - firstWeek.getTime()) / 604800000
-	);
+	let weeksPassed = Math.floor((date.getTime() - firstWeek.getTime()) / 604800000);
 	return weeksPassed % 2 ? WEEK_TYPE.GREEN : WEEK_TYPE.WHITE;
 }
 
@@ -104,10 +102,10 @@ export function renderTime(time: number = Date.now()) {
 	}
 	return `${new Date(time).toLocaleTimeString(locale, {
 		hour: "2-digit",
-		minute: "2-digit",
+		minute: "2-digit"
 	})} - ${endTime.toLocaleTimeString(locale, {
 		hour: "2-digit",
-		minute: "2-digit",
+		minute: "2-digit"
 	})}`;
 }
 

@@ -5,7 +5,7 @@ import React, {
 	useImperativeHandle,
 	useMemo,
 	useReducer,
-	useState,
+	useState
 } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -29,16 +29,13 @@ const groupReducer: React.Reducer<IState, Action> = (state, action) => {
 			return action.payload;
 		}
 		case "COMBINED": {
-			const updatedState = (action.payload as Action[]).reduce<IState>(
-				(s, a) => {
-					const newState = groupReducer(s, a);
-					return {
-						...s,
-						...newState,
-					};
-				},
-				state
-			);
+			const updatedState = (action.payload as Action[]).reduce<IState>((s, a) => {
+				const newState = groupReducer(s, a);
+				return {
+					...s,
+					...newState
+				};
+			}, state);
 			return updatedState;
 		}
 	}
@@ -54,13 +51,13 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 		id: 0,
 		faculty: "",
 		specialty: "",
-		year: 0,
+		year: 0
 	});
 	const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
 	useImperativeHandle<any, IGroupSelect>(
 		ref,
 		() => ({
-			getState: () => ({...group, faculty: group.faculty as FACULTY}),
+			getState: () => ({...group, faculty: group.faculty as FACULTY})
 		}),
 		[group]
 	);
@@ -82,26 +79,24 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 					.split(" ")
 					.reduce((s, w) => (s += w[0].toUpperCase()), "");
 				const date = new Date();
-				const newOptions = Object.keys(specialty.courses).map<JSX.Element>(
-					courseNumber => {
-						let year = date.getFullYear() - Number(courseNumber);
-						if (date.getMonth() >= 9) year += 1;
-						const item = {
-							name: `${shortName}-${year.toString().slice(-2)}`,
-							value: specialty.courses[Number(courseNumber) as Course],
-						};
-						return (
-							<MenuItem
-								key={item.name}
-								itemProp={specialty.title}
-								placeholder={year.toString()}
-								value={item.value}
-							>
-								{item.name}
-							</MenuItem>
-						);
-					}
-				);
+				const newOptions = Object.keys(specialty.courses).map<JSX.Element>(courseNumber => {
+					let year = date.getFullYear() - Number(courseNumber);
+					if (date.getMonth() >= 9) year += 1;
+					const item = {
+						name: `${shortName}-${year.toString().slice(-2)}`,
+						value: specialty.courses[Number(courseNumber) as Course]
+					};
+					return (
+						<MenuItem
+							key={item.name}
+							itemProp={specialty.title}
+							placeholder={year.toString()}
+							value={item.value}
+						>
+							{item.name}
+						</MenuItem>
+					);
+				});
 				return options.concat(newOptions);
 			}, []),
 		[specialties]
@@ -111,12 +106,10 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 		if (!group.faculty) return;
 		const abortController = new AbortController();
 		try {
-			ScheduleAPI.fetchSpecialties(group.faculty, abortController).then(
-				specialties => {
-					if (!specialties) return;
-					setSpecialties(specialties);
-				}
-			);
+			ScheduleAPI.fetchSpecialties(group.faculty, abortController).then(specialties => {
+				if (!specialties) return;
+				setSpecialties(specialties);
+			});
 		} catch (err) {
 			if (!abortController.signal.aborted) {
 				console.error(err);
@@ -128,9 +121,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 		}
 	}, [group.faculty, setSpecialties]);
 
-	const handleSelectChange = useCallback<
-		(e: SelectChangeEvent<unknown>, node: any) => void
-	>(
+	const handleSelectChange = useCallback<(e: SelectChangeEvent<unknown>, node: any) => void>(
 		({target}, node) => {
 			let action: Action = {type: "", payload: target.value};
 			switch (target.name) {
@@ -143,7 +134,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 					action.payload = [
 						{type: "SET-SPECIALTY", payload: specialty},
 						{type: "SET-ID", payload: target.value},
-						{type: "SET-YEAR", payload: year},
+						{type: "SET-YEAR", payload: year}
 					];
 					break;
 				}
@@ -169,14 +160,14 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 				SelectProps={{
 					className: "form-control__input",
 					onChange: handleSelectChange,
-					value: group.faculty,
+					value: group.faculty
 				}}
 				InputLabelProps={{
 					className: "form-control__label",
-					htmlFor: "group_faculty",
+					htmlFor: "group_faculty"
 				}}
 				FormHelperTextProps={{
-					className: "form-control__helper-text",
+					className: "form-control__helper-text"
 				}}
 			>
 				{facultyOptions}
@@ -194,14 +185,14 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 				SelectProps={{
 					className: "form-control__input",
 					onChange: handleSelectChange,
-					value: group.id !== 0 ? group.id : "",
+					value: group.id !== 0 ? group.id : ""
 				}}
 				InputLabelProps={{
 					className: "form-control__label",
-					htmlFor: "group_name",
+					htmlFor: "group_name"
 				}}
 				FormHelperTextProps={{
-					className: "form-control__helper-text",
+					className: "form-control__helper-text"
 				}}
 			>
 				{groupOptions}

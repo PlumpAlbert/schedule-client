@@ -7,10 +7,7 @@ import ScheduleTimes from "./FormControls/ScheduleTimes";
 import reducer, {IEditSubjectPageStore} from "./reducer";
 import {useSelector, useDispatch} from "../../store";
 import {actions as ScheduleActions} from "../../store/schedule";
-import {
-	initialState,
-	actions as SubjectActions,
-} from "../../store/schedule/subject";
+import {initialState, actions as SubjectActions} from "../../store/schedule/subject";
 import ScheduleAPI from "../../API";
 
 import "../../styles/EditSubjectPage.scss";
@@ -21,7 +18,7 @@ function EditSubjectPage() {
 	const {editMode, shouldSave} = useSelector(({application, schedule}) => ({
 		editMode: schedule.editMode,
 		shouldSave: application.header.save,
-		initState: schedule.subjects,
+		initState: schedule.subjects
 	}));
 	const reduxDispatch = useDispatch();
 
@@ -60,9 +57,9 @@ function EditSubjectPage() {
 									isCreated: false,
 									time: {
 										...time,
-										id: createdID,
-									},
-								}),
+										id: createdID
+									}
+								})
 							})
 						);
 					});
@@ -80,7 +77,7 @@ function EditSubjectPage() {
 								title: initState.state.title,
 								type: initState.state.type,
 								teacher: initState.state.teacher.id,
-								action: SubjectActions.update(action.payload),
+								action: SubjectActions.update(action.payload)
 							})
 						);
 					});
@@ -97,7 +94,7 @@ function EditSubjectPage() {
 							title: initState.state.title,
 							type: initState.state.type,
 							teacher: initState.state.teacher.id,
-							action: SubjectActions.deleteAttendTime(id),
+							action: SubjectActions.deleteAttendTime(id)
 						})
 					)
 				);

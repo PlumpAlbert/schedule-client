@@ -19,10 +19,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 				setTeachers(teachers);
 			})
 			.catch(err => {
-				if (
-					!abortController.signal.aborted &&
-					process.env.NODE_ENV === "development"
-				) {
+				if (!abortController.signal.aborted && process.env.NODE_ENV === "development") {
 					console.error(err);
 				}
 			});
@@ -31,9 +28,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 		};
 	}, []);
 
-	const handleTeacherChanged = useCallback<
-		(event: SelectChangeEvent<number>) => void
-	>(
+	const handleTeacherChanged = useCallback<(event: SelectChangeEvent<number>) => void>(
 		({target}) => {
 			const teacherId = target.value;
 			const teacher = teachers.find(t => t.id === teacherId);
@@ -73,7 +68,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 TeacherControl.propTypes = propTypes(
 	PropTypes.shape({
 		id: PropTypes.number.isRequired,
-		name: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired
 	})
 );
 

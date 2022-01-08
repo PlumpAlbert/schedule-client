@@ -5,20 +5,20 @@ export enum LeftIcon {
 	NONE = 0,
 	MENU,
 	BACK,
-	CANCEL,
+	CANCEL
 }
 
 export enum RightIcon {
 	NONE = 0,
 	SEARCH,
 	TODAY,
-	SAVE,
+	SAVE
 }
 
 export enum SearchDisplay {
 	NONE = 0,
 	FULL,
-	ICON,
+	ICON
 }
 
 interface ApplicationHeaderState {
@@ -36,7 +36,7 @@ export const initialState: ApplicationHeaderState = {
 	leftIcon: LeftIcon.MENU,
 	rightIcon: RightIcon.NONE,
 	title: "",
-	save: false,
+	save: false
 };
 
 export const actions = {
@@ -45,7 +45,7 @@ export const actions = {
 	setSearchDisplay: createAction<SearchDisplay>("setSearchDisplay"),
 	setRightIcon: createAction<RightIcon>("setRightIcon"),
 	setLeftIcon: createAction<LeftIcon>("setLeftIcon"),
-	saveClicked: createAction<boolean>("saveClicked"),
+	saveClicked: createAction<boolean>("saveClicked")
 };
 
 const store = createSlice({
@@ -72,7 +72,7 @@ const store = createSlice({
 			.addCase(actions.saveClicked, (state, {payload}) => {
 				state.save = payload;
 			});
-	},
+	}
 });
 
 export const selectAppHeader = (state: RootState) => state.application.header;

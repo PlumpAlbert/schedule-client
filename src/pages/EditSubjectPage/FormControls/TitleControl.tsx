@@ -6,13 +6,9 @@ import {IProps, propTypes} from ".";
 import {actions} from "../../../store/schedule/subject";
 
 function TitleControl({dispatch, value}: IProps<string>) {
-	const handleTitleChanged = useCallback<
-		React.FocusEventHandler<HTMLTextAreaElement>
-	>(
+	const handleTitleChanged = useCallback<React.FocusEventHandler<HTMLTextAreaElement>>(
 		({target}) => {
-			dispatch(
-				actions.updateProperty({property: "title", value: target.value})
-			);
+			dispatch(actions.updateProperty({property: "title", value: target.value}));
 		},
 		[dispatch]
 	);

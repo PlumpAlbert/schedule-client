@@ -16,7 +16,7 @@ const SearchInput = () => {
 	const dispatch = useDispatch();
 	const {variant, value} = useSelector(state => ({
 		variant: state.application.header.searchDisplay,
-		value: state.application.header.searchValue,
+		value: state.application.header.searchValue
 	}));
 
 	//#region ACTION CREATORS
@@ -46,9 +46,7 @@ const SearchInput = () => {
 		[value]
 	);
 
-	const handleSearchValueChanged = useCallback<
-		React.ChangeEventHandler<HTMLInputElement>
-	>(
+	const handleSearchValueChanged = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
 		({target}) => {
 			setSearchValue(target.value);
 		},
@@ -77,10 +75,7 @@ const SearchInput = () => {
 	//#endregion
 
 	return (
-		<FormControl
-			className="page-header__search-input-wrapper"
-			variant="standard"
-		>
+		<FormControl className="page-header__search-input-wrapper" variant="standard">
 			<IconWrapper className="page-header__search-input-search-wrapper">
 				<SearchIcon
 					className="page-header__search-input-search"
@@ -102,10 +97,7 @@ const SearchInput = () => {
 					onChange={handleSearchValueChanged}
 					onKeyPress={handleEnterPress}
 					endAdornment={
-						<InputAdornment
-							position="end"
-							className="page-header__search-input-enter"
-						>
+						<InputAdornment position="end" className="page-header__search-input-enter">
 							<ArrowRightIcon onClick={handleEnterPress} />
 						</InputAdornment>
 					}

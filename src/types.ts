@@ -1,6 +1,6 @@
 export enum WEEK_TYPE {
 	GREEN = 1,
-	WHITE = 0,
+	WHITE = 0
 }
 
 export enum WEEKDAY {
@@ -10,7 +10,7 @@ export enum WEEKDAY {
 	THURSDAY = 4,
 	FRIDAY = 5,
 	SATURDAY = 6,
-	SUNDAY = 7,
+	SUNDAY = 7
 }
 
 export const BACHELOR_MAX = 4;
@@ -27,7 +27,7 @@ export interface ISpecialty {
 export enum SUBJECT_TYPE {
 	ЛЕКЦИЯ = 0,
 	ПРАКТИКА = 1,
-	ЛАБОРАТОРНАЯ = 2,
+	ЛАБОРАТОРНАЯ = 2
 }
 
 export interface IAttendTime {
@@ -77,7 +77,7 @@ export enum FACULTY {
 	ИМ = "ИМ",
 	ЭФ = "ЭФ",
 	МИ = "МИ",
-	ФТФ = "ФТФ",
+	ФТФ = "ФТФ"
 }
 
 export type WithID<T extends any, V extends number | string = number> = T & {

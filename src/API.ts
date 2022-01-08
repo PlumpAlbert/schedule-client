@@ -10,13 +10,13 @@ import {
 	ISpecialty,
 	ISubject,
 	IUser,
-	WithID,
+	WithID
 } from "./types";
 
 interface IResponse<T = any> {
 	error: boolean;
 	body: T;
-	message?: string;
+	message: string;
 }
 interface ISuccessful {
 	success: boolean;
@@ -36,14 +36,10 @@ export default class ScheduleAPI {
 	 * Method for fetching group's schedule
 	 * @param groupId Group identifier
 	 */
-	static fetchSchedule = async (
-		groupId: number,
-		controller?: AbortController
-	) => {
-		const response = await fetch(
-			`${ScheduleAPI.HOST}/subject?group=${groupId}`,
-			{signal: controller?.signal}
-		);
+	static fetchSchedule = async (groupId: number, controller?: AbortController) => {
+		const response = await fetch(`${ScheduleAPI.HOST}/subject?group=${groupId}`, {
+			signal: controller?.signal
+		});
 		const result: IResponse<Array<ISubject>> = await response.json();
 		return result.body;
 	};
@@ -84,14 +80,10 @@ export default class ScheduleAPI {
 	 * Method for fetching specialties for selected `faculty`
 	 * @param faculty Faculty to use
 	 */
-	static fetchSpecialties = async (
-		faculty: string,
-		controller?: AbortController
-	) => {
-		const response = await fetch(
-			`${ScheduleAPI.HOST}/group/specialty?faculty=${faculty}`,
-			{signal: controller?.signal}
-		);
+	static fetchSpecialties = async (faculty: string, controller?: AbortController) => {
+		const response = await fetch(`${ScheduleAPI.HOST}/group/specialty?faculty=${faculty}`, {
+			signal: controller?.signal
+		});
 		const result: IResponse<{
 			[specialty: string]: {
 				[courseNumber in Course]: number;
@@ -102,7 +94,7 @@ export default class ScheduleAPI {
 		}
 		return Object.keys(result.body).map<ISpecialty>(key => ({
 			title: key,
-			courses: result.body[key],
+			courses: result.body[key]
 		}));
 	};
 
@@ -120,9 +112,9 @@ export default class ScheduleAPI {
 				name: user.name,
 				login: user.login,
 				group_id: user.group?.id,
-				password: user.password,
+				password: user.password
 			}),
-			method: "POST",
+			method: "POST"
 		});
 		const result: IResponse<{id: number}> = await response.json();
 		if (result.error) {
@@ -139,7 +131,7 @@ export default class ScheduleAPI {
 		const response = await fetch(`${ScheduleAPI.HOST}/user/group`, {
 			method: "POST",
 			body: JSON.stringify({group_id: group.id}),
-			signal: controller?.signal,
+			signal: controller?.signal
 		});
 		const result: IResponse<ISuccessful> = await response.json();
 		return result.error ? false : result.body.success;
@@ -154,7 +146,7 @@ export default class ScheduleAPI {
 	 */
 	static signOut = async (controller?: AbortController): Promise<boolean> => {
 		return fetch(`${ScheduleAPI.HOST}/signout`, {
-			signal: controller?.signal,
+			signal: controller?.signal
 		})
 			.then(() => true)
 			.catch(err => {
@@ -172,15 +164,11 @@ export default class ScheduleAPI {
 	 * @param {string} searchString - string used for search
 	 * @param {AbortController} [controller] - abort controller to cancel fetch
 	 */
-	static searchGroup = async (
-		searchString: string,
-		controller?: AbortController
-	) => {
+	static searchGroup = async (searchString: string, controller?: AbortController) => {
 		try {
-			const response = await fetch(
-				`${ScheduleAPI.HOST}/group?q=${searchString}`,
-				{signal: controller?.signal}
-			);
+			const response = await fetch(`${ScheduleAPI.HOST}/group?q=${searchString}`, {
+				signal: controller?.signal
+			});
 			const result: IResponse<IGroup[]> = await response.json();
 			if (result.error) {
 				return null;
@@ -192,13 +180,11 @@ export default class ScheduleAPI {
 					faculty = [];
 				}
 				const courseNumber = calculateCourse(group.year);
-				const specialtyIndex = faculty.findIndex(
-					s => s.title === group.specialty
-				);
+				const specialtyIndex = faculty.findIndex(s => s.title === group.specialty);
 				if (specialtyIndex === -1) {
 					faculty.push({
 						title: group.specialty,
-						courses: {[courseNumber]: group.id},
+						courses: {[courseNumber]: group.id}
 					});
 				} else {
 					faculty[specialtyIndex].courses[courseNumber] = group.id;
@@ -224,13 +210,11 @@ export default class ScheduleAPI {
 	static getTeachers = async (controller?: AbortController) => {
 		try {
 			const response = await fetch(`${ScheduleAPI.HOST}/user/teacher`, {
-				signal: controller?.signal,
+				signal: controller?.signal
 			});
 			if (response.status !== 200) return;
 			const result: IResponse<IUser[]> = await response.json();
-			return result.error
-				? ScheduleAPI.handleError(result.message)
-				: result.body;
+			return result.error ? ScheduleAPI.handleError(result.message) : result.body;
 		} catch (err) {
 			return ScheduleAPI.handleError(err);
 		}
@@ -245,15 +229,12 @@ export default class ScheduleAPI {
 	 * @param course - Group's course
 	 * @param [abortController] - Abort controller to cancel fetch
 	 */
-	static createGroup = async (
-		group: Omit<IGroup, "id">,
-		abortController?: AbortController
-	) => {
+	static createGroup = async (group: Omit<IGroup, "id">, abortController?: AbortController) => {
 		try {
 			const response = await fetch(`${ScheduleAPI.HOST}/group`, {
 				signal: abortController?.signal,
 				method: "POST",
-				body: JSON.stringify(group),
+				body: JSON.stringify(group)
 			});
 			if (response.status !== 200) {
 				return ScheduleAPI.handleError(await response.json());
@@ -295,7 +276,7 @@ export default class ScheduleAPI {
 		const response = await fetch(`${ScheduleAPI.HOST}/subject`, {
 			signal: controller?.signal,
 			method: "POST",
-			body: JSON.stringify(subject),
+			body: JSON.stringify(subject)
 		});
 		if (response.status !== 200) {
 			return ScheduleAPI.handleError(await response.json());
@@ -318,7 +299,7 @@ export default class ScheduleAPI {
 		const response = await fetch(`${ScheduleAPI.HOST}/subject`, {
 			signal: controller?.signal,
 			method: "UPDATE",
-			body: JSON.stringify(subjectProperties),
+			body: JSON.stringify(subjectProperties)
 		});
 		if (response.status !== 200) {
 			return ScheduleAPI.handleError(await response.json());
@@ -332,14 +313,10 @@ export default class ScheduleAPI {
 	 * @param subjectIds ID of subjects to delete
 	 * @param controller controller to abort fetch
 	 */
-	static deleteSubject = async (
-		subjectIds: number[],
-		controller?: AbortController
-	) => {
+	static deleteSubject = async (subjectIds: number[], controller?: AbortController) => {
 		const response = await fetch(
-			`${ScheduleAPI.HOST}/subject/delete?id=${encodeURI(
-				subjectIds.toString()
-			)}`
+			`${ScheduleAPI.HOST}/subject/delete?id=${encodeURI(subjectIds.toString())}`,
+			{signal: controller?.signal}
 		);
 		if (response.status !== 200) {
 			return ScheduleAPI.handleError(await response.json());

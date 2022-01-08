@@ -17,11 +17,7 @@ const GroupsListPage = () => {
 	}, [location.pathname]);
 	return (
 		<div className="page groups-list-page">
-			{currentFaculty ? (
-				<SpecialtiesView faculty={currentFaculty} />
-			) : (
-				<FacultiesView />
-			)}
+			{currentFaculty ? <SpecialtiesView faculty={currentFaculty} /> : <FacultiesView />}
 		</div>
 	);
 };
