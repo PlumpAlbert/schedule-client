@@ -1,5 +1,4 @@
 import axios from "axios";
-import {calculateCourse} from "./Helpers";
 import {DisplaySubject} from "./pages/ScheduleView/SubjectView";
 import {
 	Course,
@@ -10,7 +9,7 @@ import {
 	ISpecialty,
 	ISubject,
 	IUser,
-	WithID
+	WithID,
 } from "./types";
 
 interface IResponse<T = any> {
@@ -38,10 +37,17 @@ export default class ScheduleAPI {
 	 */
 	static fetchSchedule = async (groupId: number, controller?: AbortController) => {
 		const response = await fetch(`${ScheduleAPI.HOST}/subject?group=${groupId}`, {
-			signal: controller?.signal
+			signal: controller?.signal,
 		});
 		const result: IResponse<Array<ISubject>> = await response.json();
-		return result.body;
+		const midnight = new Date("2000-01-01");
+		return result.body.map(subject => ({
+			...subject,
+			times: subject.times.map(attendTime => {
+				const time = new Date("2000-01-01T" + attendTime.time);
+				return {...attendTime, time: time.getTime() - midnight.getTime()};
+			}),
+		}));
 	};
 
 	/**
@@ -59,15 +65,11 @@ export default class ScheduleAPI {
 		>({
 			url: `${ScheduleAPI.HOST}/user/login`,
 			method: "POST",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json"
-			},
 			data: {
 				login,
-				password
+				password,
 			},
-			signal: controller?.signal
+			signal: controller?.signal,
 		});
 		if (response.status !== 200) return null;
 		const {access_token, user} = response.data.body;
@@ -89,7 +91,7 @@ export default class ScheduleAPI {
 			}>
 		>({
 			url: `${ScheduleAPI.HOST}/group/specialty?faculty=${faculty}`,
-			signal: controller?.signal
+			signal: controller?.signal,
 		});
 		const {error, body} = response.data;
 		if (error) {
@@ -97,7 +99,7 @@ export default class ScheduleAPI {
 		}
 		return Object.keys(body).map<ISpecialty>(key => ({
 			title: key,
-			courses: body[key]
+			courses: body[key],
 		}));
 	};
 
@@ -117,8 +119,8 @@ export default class ScheduleAPI {
 				name: user.name,
 				login: user.login,
 				group_id: user.group?.id,
-				password: user.password
-			}
+				password: user.password,
+			},
 		});
 		const {error, body} = response.data;
 		if (error) {
@@ -142,8 +144,8 @@ export default class ScheduleAPI {
 			data,
 			signal: controller?.signal,
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem("access_token")}`
-			}
+				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+			},
 		});
 		const {error, body} = response.data;
 		return error ? null : body;
@@ -160,7 +162,10 @@ export default class ScheduleAPI {
 		return axios
 			.request<IResponse<ISuccessful>>({
 				url: `${ScheduleAPI.HOST}/user/logout`,
-				signal: controller?.signal
+				signal: controller?.signal,
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+				},
 			})
 			.then(({data}) => !data.error && data.body.success)
 			.catch(err => {
@@ -183,7 +188,7 @@ export default class ScheduleAPI {
 			const response = await axios.request<IResponse<Partial<Record<FACULTY, ISpecialty[]>>>>(
 				{
 					url: `${ScheduleAPI.HOST}/group?q=${searchString}`,
-					signal: controller?.signal
+					signal: controller?.signal,
 				}
 			);
 			const {error, body} = response.data;
@@ -210,7 +215,10 @@ export default class ScheduleAPI {
 		try {
 			const response = await axios.request<IResponse<IUser[]>>({
 				url: `${ScheduleAPI.HOST}/user?type=teacher`,
-				signal: controller?.signal
+				signal: controller?.signal,
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+				},
 			});
 			if (response.status !== 200) return;
 			const {error, message, body} = response.data;
@@ -235,7 +243,10 @@ export default class ScheduleAPI {
 				url: `${ScheduleAPI.HOST}/group`,
 				signal: abortController?.signal,
 				method: "POST",
-				data: group
+				data: group,
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+				},
 			});
 			if (response.status !== 200) {
 				return ScheduleAPI.handleError(response.data);
@@ -277,7 +288,10 @@ export default class ScheduleAPI {
 			url: `${ScheduleAPI.HOST}/subject`,
 			signal: controller?.signal,
 			method: "POST",
-			data: subject
+			data: subject,
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+			},
 		});
 		if (response.status !== 200) {
 			return ScheduleAPI.handleError(response.data);
@@ -300,7 +314,10 @@ export default class ScheduleAPI {
 			url: `${ScheduleAPI.HOST}/subject/update`,
 			signal: controller?.signal,
 			method: "POST",
-			data: subjectProperties
+			data: subjectProperties,
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+			},
 		});
 		if (response.status !== 200) {
 			return ScheduleAPI.handleError(response.data);
@@ -317,7 +334,10 @@ export default class ScheduleAPI {
 		const response = await axios.request<IResponse<ISuccessful>>({
 			url: `${ScheduleAPI.HOST}/subject/delete?id=${subjectId}`,
 			signal: controller?.signal,
-			method: "POST"
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+			},
 		});
 		return response.data.body.success;
 	};
