@@ -16,7 +16,7 @@ function SwipeAction({
 	children,
 	className = "swipe",
 	touchTimeThreshold = 150,
-	onAction
+	onAction,
 }: IProps) {
 	const [swipeX, setX] = useState(0);
 	const actionRef = useRef(null);
@@ -72,7 +72,7 @@ function SwipeAction({
 				onTouchEnd={canSwipe ? handleSwipeEnd : undefined}
 				style={{
 					transform: swipeX > 0 ? "" : `translateX(${swipeX}px)`,
-					borderRadius: swipeX > -1 ? "" : "4px"
+					borderRadius: swipeX > -1 ? "" : "4px",
 				}}
 			>
 				{children}

@@ -18,7 +18,7 @@ function EditSubjectPage() {
 	const {editMode, shouldSave} = useSelector(({application, schedule}) => ({
 		editMode: schedule.editMode,
 		shouldSave: application.header.save,
-		initState: schedule.subjects
+		initState: schedule.subjects,
 	}));
 	const reduxDispatch = useDispatch();
 
@@ -54,8 +54,8 @@ function EditSubjectPage() {
 								teacher: initState.state.teacher.id,
 								action: SubjectActions.addAttendTime({
 									isCreated: false,
-									time: createdTime
-								})
+									time: createdTime,
+								}),
 							})
 						);
 					});
@@ -69,7 +69,7 @@ function EditSubjectPage() {
 								title: initState.state.title,
 								type: initState.state.type,
 								teacher: initState.state.teacher.id,
-								action: SubjectActions.deleteAttendTime(action.payload)
+								action: SubjectActions.deleteAttendTime(action.payload),
 							})
 						);
 					});
@@ -83,7 +83,7 @@ function EditSubjectPage() {
 								title: initState.state.title,
 								type: initState.state.type,
 								teacher: initState.state.teacher.id,
-								action: SubjectActions.update(action.payload)
+								action: SubjectActions.update(action.payload),
 							})
 						);
 					});

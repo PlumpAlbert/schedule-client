@@ -25,7 +25,7 @@ function App() {
 		showMenu: state.application.showMenu,
 		showFooter: state.application.showFooter,
 		user: state.application.user,
-		weekType: state.schedule.currentWeek
+		weekType: state.schedule.currentWeek,
 	}));
 
 	useEffect(() => {

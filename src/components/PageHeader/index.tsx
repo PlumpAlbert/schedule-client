@@ -15,7 +15,7 @@ import {
 	SearchDisplay,
 	LeftIcon,
 	RightIcon,
-	actions as headerActions
+	actions as headerActions,
 } from "../../store/app/header";
 import {actions as scheduleActions} from "../../store/schedule";
 import {actions as appActions} from "../../store/app";
@@ -121,7 +121,7 @@ function PageHeader() {
 					<Icon
 						onClick={onMenuClick}
 						classes={{
-							root: "page-header__icon left-icon menu-icon"
+							root: "page-header__icon left-icon menu-icon",
 						}}
 					>
 						<MenuIcon />
@@ -133,7 +133,7 @@ function PageHeader() {
 					<Icon
 						onClick={onBackClick}
 						classes={{
-							root: "page-header__icon left-icon back-icon"
+							root: "page-header__icon left-icon back-icon",
 						}}
 					>
 						<BackIcon />
@@ -145,7 +145,7 @@ function PageHeader() {
 					<Icon
 						onClick={onBackClick}
 						classes={{
-							root: "page-header__icon left-icon menu-icon"
+							root: "page-header__icon left-icon menu-icon",
 						}}
 					>
 						<CancelIcon />
@@ -170,7 +170,7 @@ function PageHeader() {
 					<Icon onClick={onTodayClick}>
 						<CalendarTodayIcon
 							classes={{
-								root: "page-header__icon right-icon calendar-icon"
+								root: "page-header__icon right-icon calendar-icon",
 							}}
 						/>
 					</Icon>
@@ -181,7 +181,7 @@ function PageHeader() {
 					<Icon onClick={onSaveClick}>
 						<SaveIcon
 							classes={{
-								root: "page-header__icon right-icon save-icon"
+								root: "page-header__icon right-icon save-icon",
 							}}
 						/>
 					</Icon>
@@ -192,7 +192,7 @@ function PageHeader() {
 
 	const isScrolled = useScrollTrigger({
 		disableHysteresis: true,
-		threshold: 0
+		threshold: 0,
 	});
 
 	return (

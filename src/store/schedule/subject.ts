@@ -24,7 +24,7 @@ export const initialState: SubjectState = {
 	type: SUBJECT_TYPE.ЛЕКЦИЯ,
 	times: [],
 	title: "",
-	teacher: {id: 0, name: "", login: ""}
+	teacher: {id: 0, name: "", login: ""},
 };
 
 type addAttendTimePayload =
@@ -52,7 +52,7 @@ export const actions = {
 	updateAttendTime: createAction<
 		WithID<Partial<IAttendTime>>,
 		"schedule/subject/updateAttendTime"
-	>("schedule/subject/updateAttendTime")
+	>("schedule/subject/updateAttendTime"),
 };
 
 export const slice = createSlice({
@@ -102,7 +102,7 @@ export const slice = createSlice({
 				const index = state.times.findIndex(t => t.id === id);
 				state.times[index] = {...state.times[index], ...time};
 			});
-	}
+	},
 });
 
 export default slice.reducer;

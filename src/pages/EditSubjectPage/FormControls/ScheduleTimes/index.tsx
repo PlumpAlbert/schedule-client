@@ -45,7 +45,7 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 						actions.updateAttendTimeProperty({
 							id: editTime.id,
 							property: key,
-							value: time[key]
+							value: time[key],
 						})
 					);
 				});
@@ -79,7 +79,7 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 				value={weekType}
 				onChange={handleWeekTypeChange}
 				classes={{
-					indicator: "week-type-tabs__indicator " + WEEK_TYPE[weekType].toLowerCase()
+					indicator: "week-type-tabs__indicator " + WEEK_TYPE[weekType].toLowerCase(),
 				}}
 			>
 				<Tab

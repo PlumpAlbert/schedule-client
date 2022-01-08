@@ -29,7 +29,7 @@ interface IFieldsState {
 const CreateDialog = ({faculty, open, onClose}: IProps) => {
 	const [fields, setFields] = useState<IFieldsState>({
 		name: "",
-		course: 1
+		course: 1,
 	});
 	const [isCreating, setCreating] = useState(false);
 	const [error, setError] = useState<string>();
@@ -96,7 +96,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 		const group: Omit<IGroup, "id"> = {
 			faculty,
 			year: calculateYear(fields.course),
-			specialty: fields.name
+			specialty: fields.name,
 		};
 		ScheduleAPI.createGroup(group, abortController)
 			.then(group => {
@@ -123,7 +123,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 		<Dialog
 			className="create-specialty-dialog-wrapper"
 			classes={{
-				paper: "create-specialty-dialog"
+				paper: "create-specialty-dialog",
 			}}
 			open={open}
 			onClose={handleDialogClose}
@@ -152,10 +152,10 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				value={fields.name}
 				onChange={handleFieldChange}
 				InputLabelProps={{
-					className: "field-label"
+					className: "field-label",
 				}}
 				inputProps={{
-					className: "field-input"
+					className: "field-input",
 				}}
 			/>
 			<TextField
@@ -168,17 +168,17 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				value={fields.course}
 				onChange={handleFieldChange}
 				InputLabelProps={{
-					className: "field-label"
+					className: "field-label",
 				}}
 				InputProps={{
 					startAdornment: (
 						<InputAdornment position="start" className="field-input__adornment">
 							{fields.course > BACHELOR_MAX ? "М" : "Б"}
 						</InputAdornment>
-					)
+					),
 				}}
 				inputProps={{
-					className: "field-input"
+					className: "field-input",
 				}}
 			>
 				{courseOptions}

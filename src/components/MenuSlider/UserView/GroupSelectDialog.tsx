@@ -24,7 +24,7 @@ function GroupSelectDialog({
 	year: defaultYear,
 	id: defaultId,
 	open,
-	onClose
+	onClose,
 }: IProps) {
 	//#region Group state
 	const [id, setId] = useState(defaultId);
@@ -69,7 +69,7 @@ function GroupSelectDialog({
 					value={i.toString()}
 					className={`course-toggle-button course-${i}`}
 					classes={{
-						selected: "course-toggle-button--selected"
+						selected: "course-toggle-button--selected",
 					}}
 				>
 					{i}
@@ -141,7 +141,7 @@ function GroupSelectDialog({
 			onClose={handleDialogClose}
 			className="group-select-dialog-wrapper"
 			classes={{
-				paper: "group-select-dialog"
+				paper: "group-select-dialog",
 			}}
 		>
 			<DialogTitle className="group-select-dialog__title">Изменение группы</DialogTitle>
@@ -158,14 +158,14 @@ function GroupSelectDialog({
 				SelectProps={{
 					className: "field__input",
 					onChange: handleSelectChange,
-					value: faculty
+					value: faculty,
 				}}
 				InputLabelProps={{
 					className: "field__label",
-					htmlFor: "group_faculty"
+					htmlFor: "group_faculty",
 				}}
 				FormHelperTextProps={{
-					className: "field__helper-text"
+					className: "field__helper-text",
 				}}
 			>
 				{facultyOptions}
@@ -183,14 +183,14 @@ function GroupSelectDialog({
 				SelectProps={{
 					className: "field__input",
 					onChange: handleSelectChange,
-					value: specialty
+					value: specialty,
 				}}
 				InputLabelProps={{
 					className: "field__label",
-					htmlFor: "group_specialty"
+					htmlFor: "group_specialty",
 				}}
 				FormHelperTextProps={{
-					className: "field__helper-text"
+					className: "field__helper-text",
 				}}
 			>
 				{specialtyOptions}

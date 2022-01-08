@@ -28,7 +28,7 @@ function SubjectView({
 	loading = false,
 	isEditable,
 	value,
-	type = value?.type
+	type = value?.type,
 }: IProps & ILoadable) {
 	let typeClass;
 	switch (type || value?.type) {

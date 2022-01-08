@@ -36,7 +36,7 @@ function LoginPage() {
 					}
 					dispatch(appActions.setUser(user));
 					navigate(`/schedule?group=${user.group?.id}`, {
-						replace: true
+						replace: true,
 					});
 				});
 			} catch (err) {

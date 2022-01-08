@@ -68,7 +68,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 TeacherControl.propTypes = propTypes(
 	PropTypes.shape({
 		id: PropTypes.number.isRequired,
-		name: PropTypes.string.isRequired
+		name: PropTypes.string.isRequired,
 	})
 );
 

@@ -61,7 +61,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 			audience,
 			time,
 			weekday,
-			weekType
+			weekType,
 		});
 	}, [onClose, time, audience, weekday, weekType]);
 

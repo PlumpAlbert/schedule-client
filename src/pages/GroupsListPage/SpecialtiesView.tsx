@@ -38,13 +38,13 @@ function SpecialtiesView({faculty}: IProps) {
 				setSpecialties([
 					...specialties.slice(0, index),
 					specialty,
-					...specialties.slice(index)
+					...specialties.slice(index),
 				]);
 				setShowAlert(true);
 			} else {
 				const specialty = {
 					title: group.specialty,
-					courses: {[course]: group.id}
+					courses: {[course]: group.id},
 				};
 				setSpecialties([...specialties, specialty]);
 				setShowAlert(true);
@@ -91,7 +91,7 @@ function SpecialtiesView({faculty}: IProps) {
 }
 
 SpecialtiesView.propTypes = {
-	faculty: PropTypes.string.isRequired
+	faculty: PropTypes.string.isRequired,
 };
 
 export default SpecialtiesView;

@@ -31,7 +31,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 	const [alert, setAlert] = useState<IAlert>({
 		show: false,
 		message: "",
-		type: "success"
+		type: "success",
 	});
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -50,7 +50,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 				setAlert({
 					show: true,
 					message: success ? "Группа успешно изменена" : "Ошибка при смене группы",
-					type: success ? "success" : "error"
+					type: success ? "success" : "error",
 				});
 				navigate(`/schedule?group=${newGroup.id}`);
 			});
@@ -61,7 +61,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 	const handleAlertClose = useCallback(() => {
 		setAlert({
 			...alert,
-			show: false
+			show: false,
 		});
 	}, [setAlert, alert]);
 
@@ -87,7 +87,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 			disableSwipeToOpen
 			elevation={0}
 			classes={{
-				paper: "app-menu"
+				paper: "app-menu",
 			}}
 			open={showMenu}
 			anchor="left"
@@ -104,7 +104,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 					className="app-menu__alert"
 					classes={{
 						filledSuccess: "app-menu__alert--success",
-						filledError: "app-menu__alert--error"
+						filledError: "app-menu__alert--error",
 					}}
 					severity={alert.type}
 					variant="filled"
@@ -133,7 +133,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 									<InputAdornment position="end" onClick={handleKeyDown}>
 										<SearchIcon className="search-input__icon search-icon" />
 									</InputAdornment>
-								)
+								),
 							}}
 						/>
 						<Button

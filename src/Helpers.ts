@@ -102,10 +102,10 @@ export function renderTime(time: number = Date.now()) {
 	}
 	return `${new Date(time).toLocaleTimeString(locale, {
 		hour: "2-digit",
-		minute: "2-digit"
+		minute: "2-digit",
 	})} - ${endTime.toLocaleTimeString(locale, {
 		hour: "2-digit",
-		minute: "2-digit"
+		minute: "2-digit",
 	})}`;
 }
 

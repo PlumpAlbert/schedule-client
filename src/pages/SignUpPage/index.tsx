@@ -51,7 +51,7 @@ function SignUpPage() {
 					name,
 					login,
 					password,
-					group
+					group,
 				},
 				abortController
 			)
@@ -62,7 +62,7 @@ function SignUpPage() {
 					}
 					sessionStorage.setItem("user", JSON.stringify(user));
 					navigate(`/schedule?group=${group?.id}`, {
-						replace: true
+						replace: true,
 					});
 				})
 				.catch(err => {
@@ -121,15 +121,15 @@ function SignUpPage() {
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password"
-						}
+							autoComplete: "new-password",
+						},
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user"
+						htmlFor: "user",
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text"
+						className: "form-control__helper-text",
 					}}
 				/>
 				<TextField
@@ -151,15 +151,15 @@ function SignUpPage() {
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password"
-						}
+							autoComplete: "new-password",
+						},
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "username"
+						htmlFor: "username",
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text"
+						className: "form-control__helper-text",
 					}}
 				/>
 				<TextField
@@ -181,15 +181,15 @@ function SignUpPage() {
 					InputProps={{
 						className: "form-control__input",
 						inputProps: {
-							autoComplete: "new-password"
-						}
+							autoComplete: "new-password",
+						},
 					}}
 					InputLabelProps={{
 						className: "form-control__label",
-						htmlFor: "user_password"
+						htmlFor: "user_password",
 					}}
 					FormHelperTextProps={{
-						className: "form-control__helper-text"
+						className: "form-control__helper-text",
 					}}
 				/>
 				<GroupSelect isError={error === "group"} ref={groupRef} />
