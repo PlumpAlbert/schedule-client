@@ -46,9 +46,9 @@ export interface ISubject {
 }
 
 export enum UserType {
-	ADMIN = 1,
-	TEACHER = 2,
 	STUDENT = 0,
+	TEACHER = 1,
+	ADMIN = 2
 }
 
 export interface IGroup {
@@ -61,7 +61,7 @@ export interface IGroup {
 export interface IUser {
 	id: number;
 	name: string;
-	login?: string;
+	login: string;
 	type?: UserType;
 	group?: IGroup;
 }

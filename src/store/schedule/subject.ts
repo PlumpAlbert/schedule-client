@@ -24,7 +24,7 @@ export const initialState: SubjectState = {
 	type: SUBJECT_TYPE.ЛЕКЦИЯ,
 	times: [],
 	title: "",
-	teacher: {id: 0, name: ""},
+	teacher: {id: 0, name: "", login: ""}
 };
 
 type addAttendTimePayload =
