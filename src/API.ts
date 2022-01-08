@@ -1,3 +1,4 @@
+import axios from "axios";
 import {calculateCourse} from "./Helpers";
 import {DisplaySubject} from "./pages/ScheduleView/SubjectView";
 import {
@@ -22,10 +23,7 @@ interface ISuccessful {
 }
 
 export default class ScheduleAPI {
-	private static HOST: string =
-		process.env.NODE_ENV === "development"
-			? `http://localhost:8080/api`
-			: `${process.env.PUBLIC_URL}/api`;
+	private static HOST: string = `${process.env.PUBLIC_URL}/api`;
 
 	private static handleError(err: any) {
 		if (process.env.NODE_ENV === "development") {
@@ -55,27 +53,31 @@ export default class ScheduleAPI {
 	 * @param login User's login
 	 * @param password User's password
 	 */
-	static authenticate = async (
-		login: string,
-		password: string,
-		controller?: AbortController
-	) => {
-		const jsonText = await fetch(`${ScheduleAPI.HOST}/auth`, {
+	static authenticate = async (login: string, password: string, controller?: AbortController) => {
+		await axios(`${process.env.PUBLIC_URL}/sanctum/csrf-cookie`);
+		const response = await axios.request<
+			IResponse<{
+				access_token: string;
+				user: IUser;
+			}>
+		>({
+			url: `${ScheduleAPI.HOST}/user/login`,
 			method: "POST",
-			cache: "no-cache",
-			credentials: "same-origin",
 			headers: {
-				"Content-Type": "application/json",
+				Accept: "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({
+			data: {
 				login,
-				password,
-			}),
-			signal: controller?.signal,
+				password
+			},
+			signal: controller?.signal
 		});
-		const result: IResponse<{success: true; user: IUser}> =
-			await jsonText.json();
-		return result.error || !result.body.success ? null : result.body.user;
+		if (response.status !== 200) return null;
+		const {access_token, user} = response.data.body;
+		localStorage.setItem("access_token", access_token);
+		localStorage.setItem("user", JSON.stringify(user));
+		return user;
 	};
 
 	/**
