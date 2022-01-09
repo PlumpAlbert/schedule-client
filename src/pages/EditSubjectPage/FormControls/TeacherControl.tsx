@@ -35,7 +35,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 			if (!teacher) return;
 			dispatch(actions.updateProperty({property: "teacher", value: teacher}));
 		},
-		[dispatch]
+		[dispatch, teachers]
 	);
 
 	const selectItems = useMemo(
