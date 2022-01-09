@@ -286,11 +286,12 @@ export default class ScheduleAPI {
 		subject: Omit<DisplaySubject, "id">,
 		controller?: AbortController
 	) => {
+		const time = new Date(subject.time);
 		const response = await axios.request<IResponse<DisplaySubject>>({
 			url: `${ScheduleAPI.HOST}/subject`,
 			signal: controller?.signal,
 			method: "POST",
-			data: subject,
+			data: {...subject, teacher: subject.teacher.id, time: time.toLocaleTimeString("ru")},
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
 			},
@@ -316,7 +317,13 @@ export default class ScheduleAPI {
 			url: `${ScheduleAPI.HOST}/subject/update`,
 			signal: controller?.signal,
 			method: "POST",
-			data: subjectProperties,
+			data: {
+				...subjectProperties,
+				teacher: subjectProperties.teacher?.id,
+				time:
+					subjectProperties.time &&
+					new Date(subjectProperties.time).toLocaleTimeString("ru"),
+			},
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
 			},
