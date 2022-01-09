@@ -7,7 +7,7 @@ import ScheduleTimes from "./FormControls/ScheduleTimes";
 import reducer, {IEditSubjectPageStore} from "./reducer";
 import {useSelector, useDispatch} from "../../store";
 import {actions as ScheduleActions} from "../../store/schedule";
-import {initialState, actions as SubjectActions} from "../../store/schedule/subject";
+import {initialState, actions as SubjectActions, ACTION_TYPES} from "../../store/schedule/subject";
 import ScheduleAPI from "../../API";
 
 import "../../styles/EditSubjectPage.scss";
@@ -40,13 +40,16 @@ function EditSubjectPage() {
 
 	useEffect(() => {
 		if (!shouldSave) return;
-		const {times, ...subjectState} = state;
 		history.forEach(action => {
 			switch (action.type) {
-				case "schedule/subject/addAttendTime": {
-					const {time} = action.payload;
-					ScheduleAPI.createAttendTime(subjectState, time).then(createdTime => {
-						if (!createdTime) return;
+				case ACTION_TYPES.addAttendTime: {
+					const {type, teacher, title, time, weekday, weekType, audience} =
+						action.payload;
+					ScheduleAPI.createAttendTime(
+						{type, teacher, title},
+						{time, weekday, audience, weekType}
+					).then(createdSubject => {
+						if (!createdSubject) return;
 						reduxDispatch(
 							ScheduleActions.updateSubject({
 								title: initState.state.title,
@@ -54,14 +57,22 @@ function EditSubjectPage() {
 								teacher: initState.state.teacher.id,
 								action: SubjectActions.addAttendTime({
 									isCreated: false,
-									time: createdTime,
+									time: createdSubject,
 								}),
+							})
+						);
+						reduxDispatch(
+							ScheduleActions.updateSubject({
+								title: initState.state.title,
+								type: initState.state.type,
+								teacher: initState.state.teacher.id,
+								action: SubjectActions.update(createdSubject),
 							})
 						);
 					});
 					break;
 				}
-				case "schedule/subject/deleteAttendTime": {
+				case ACTION_TYPES.deleteAttendTime: {
 					ScheduleAPI.deleteSubject(action.payload).then(success => {
 						if (!success) return;
 						reduxDispatch(
@@ -75,7 +86,7 @@ function EditSubjectPage() {
 					});
 					break;
 				}
-				case "schedule/subject/update": {
+				case ACTION_TYPES.updateAttendTime: {
 					ScheduleAPI.updateSubject(action.payload).then(success => {
 						if (!success) return;
 						reduxDispatch(
@@ -87,11 +98,10 @@ function EditSubjectPage() {
 							})
 						);
 					});
-					break;
 				}
 			}
 		});
-	}, [shouldSave]);
+	}, [shouldSave, history, reduxDispatch]);
 
 	if (editMode !== "create" && !attendTimeId) {
 		navigate("/schedule", {replace: true});

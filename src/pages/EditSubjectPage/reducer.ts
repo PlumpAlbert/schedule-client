@@ -1,128 +1,136 @@
 import {PayloadAction} from "@reduxjs/toolkit";
 import subjectReducer, {
 	actions as SubjectActions,
+	ACTION_TYPES,
 	SubjectState,
 } from "../../store/schedule/subject";
-import {IAttendTime, WithID} from "../../types";
+import {IAttendTime, ISubject, WithID} from "../../types";
+import {DisplaySubject} from "../ScheduleView/SubjectView";
 
-type HistoryActionType =
+type HistoryActionType = WithID<
 	| ReturnType<typeof SubjectActions["deleteAttendTime"]>
-	| ReturnType<typeof SubjectActions["update"]>
-	| PayloadAction<
-			WithID<{isCreated: true; time: Omit<IAttendTime, "id">; id: number}>,
-			ReturnType<typeof SubjectActions["addAttendTime"]>["type"]
-	  >;
+	| PayloadAction<WithID<DisplaySubject>, ACTION_TYPES.addAttendTime>
+	| PayloadAction<WithID<Partial<DisplaySubject>>, ACTION_TYPES.updateAttendTime>
+>;
 
 export interface IEditSubjectPageStore {
-	history: Array<HistoryActionType>;
+	history: HistoryActionType[];
 	state: SubjectState;
 }
 
 export type ActionType = ReturnType<typeof SubjectActions[keyof typeof SubjectActions]>;
+
+function updateSubjectProperty(
+	newState: SubjectState,
+	oldHistory: HistoryActionType[],
+	data: Partial<Omit<ISubject, "times">>
+): HistoryActionType[] {
+	const newHistory = oldHistory.map<HistoryActionType>(oldAction => {
+		switch (oldAction.type) {
+			case ACTION_TYPES.deleteAttendTime: {
+				return oldAction;
+			}
+			case ACTION_TYPES.addAttendTime: {
+				return {...oldAction, payload: {...oldAction.payload, ...data}};
+			}
+			case ACTION_TYPES.updateAttendTime: {
+				return {...oldAction, payload: {...oldAction.payload, ...data}};
+			}
+		}
+	});
+	// Search all of the attend times that was NOT updated earlier
+	// and create actions for them
+	return newHistory.concat(
+		newState.times
+			.filter(({id}) => !newHistory.find(a => a.id === id))
+			.map<HistoryActionType>(time => ({
+				type: ACTION_TYPES.updateAttendTime,
+				id: time.id,
+				payload: {...data, id: time.id},
+			}))
+	);
+}
+
+function updateAttendProperty(
+	oldHistory: HistoryActionType[],
+	data: WithID<Partial<IAttendTime>>
+): HistoryActionType[] {
+	const updateActionIndex = oldHistory.findIndex(
+		a => a.type !== ACTION_TYPES.deleteAttendTime && a.id === data.id
+	);
+	// If there was no edits
+	if (updateActionIndex === -1) {
+		return [...oldHistory, {type: ACTION_TYPES.updateAttendTime, payload: data, id: data.id}];
+	}
+	const oldAction = oldHistory[updateActionIndex] as PayloadAction<Partial<DisplaySubject>>;
+	// If current attend time was updated previously
+	return [
+		...oldHistory.slice(0, updateActionIndex),
+		{
+			type: ACTION_TYPES.updateAttendTime,
+			payload: {...oldAction.payload, ...data},
+			id: data.id,
+		},
+		...oldHistory.slice(updateActionIndex + 1),
+	];
+}
 
 const reducer = (
 	{history, state}: IEditSubjectPageStore,
 	action: ActionType
 ): IEditSubjectPageStore => {
 	const newState = subjectReducer(state, action);
+	let newHistory: typeof history = [];
 	switch (action.type) {
-		case "schedule/subject/addAttendTime": {
-			let addAction: any = action;
-			if (action.payload.isCreated) {
-				const newAttendTime = newState.times[newState.times.length - 1];
-				addAction.payload.id = newAttendTime.id;
-			}
-			return {state: newState, history: [...history, addAction]};
-		}
-		case "schedule/subject/deleteAttendTime": {
-			const removedId = action.payload;
-			let isCreated = false;
-			// Filter all edits of deleted attend time
-			let newHistory: HistoryActionType[] = history.filter(a => {
-				if (a.type === "schedule/subject/deleteAttendTime") return true;
-				if (a.type === "schedule/subject/addAttendTime" && a.payload.id === removedId) {
-					isCreated = true;
-				}
-				return a.payload.id !== removedId;
-			});
-			// If this attend time wasn't created by user - append delete action
-			if (!isCreated) {
-				newHistory.push(action);
-			}
-			return {state: newState, history: newHistory};
-		}
-		case "schedule/subject/updateAttendTime":
-		case "schedule/subject/update": {
-			// Replacing properties for each update action for attend time with ID
-			// equal to `action.payload.id` in `history`
-			return {
-				state: newState,
-				history: history.map<HistoryActionType>(oldAction => {
-					if (
-						oldAction.type === "schedule/subject/deleteAttendTime" ||
-						oldAction.payload.id !== action.payload.id
-					) {
-						return oldAction;
-					}
-					if (oldAction.type === "schedule/subject/addAttendTime") {
-						return {
-							type: oldAction.type,
-							payload: {
-								...oldAction.payload,
-								time: {...oldAction.payload.time, ...action.payload},
-							},
-						};
-					}
-					return {
-						type: oldAction.type,
-						payload: {...oldAction.payload, ...action.payload},
-					};
-				}),
-			};
-		}
-		case "schedule/subject/updateSubject": {
-			// Replacing property for each update action in `history`
+		// Subject actions
+		case ACTION_TYPES.updateProperty: {
 			const {property, value} = action.payload;
-			return {
-				state: newState,
-				history: history.map<HistoryActionType>(oldAction => {
-					if (oldAction.type !== "schedule/subject/update") return oldAction;
-					return {
-						type: oldAction.type,
-						payload: {...oldAction.payload, [property]: value},
-					};
-				}),
-			};
+			newHistory = updateSubjectProperty(newState, history, {[property]: value});
+			break;
 		}
-		case "schedule/subject/updateAttendTimeProperty": {
-			// Replacing property for each update action in `history`
+		case ACTION_TYPES.update: {
+			const {title, teacher, type, ...attendTime} = action.payload;
+			newHistory = updateAttendProperty(
+				updateSubjectProperty(newState, history, {title, type, teacher}),
+				attendTime
+			);
+			break;
+		}
+		//
+		case ACTION_TYPES.updateAttendTime: {
+			newHistory = updateAttendProperty(history, action.payload);
+			break;
+		}
+		case ACTION_TYPES.updateAttendTimeProperty: {
 			const {id, property, value} = action.payload;
-			return {
-				state: newState,
-				history: history.map<HistoryActionType>(oldAction => {
-					if (
-						oldAction.type === "schedule/subject/deleteAttendTime" ||
-						oldAction.payload.id !== id
-					) {
-						return oldAction;
-					}
-					if (oldAction.type === "schedule/subject/addAttendTime") {
-						return {
-							type: oldAction.type,
-							payload: {
-								...oldAction.payload,
-								time: {...oldAction.payload.time, [property]: value},
-							},
-						};
-					}
-					return {
-						type: oldAction.type,
-						payload: {...oldAction.payload, [property]: value},
-					};
-				}),
-			};
+			newHistory = updateAttendProperty(history, {id, [property]: value});
+			break;
+		}
+		case ACTION_TYPES.addAttendTime: {
+			const {id} = newState.times[newState.times.length - 1];
+			newHistory = [
+				...history,
+				{
+					type: action.type,
+					payload: {
+						id,
+						teacher: newState.teacher,
+						title: newState.title,
+						type: newState.type,
+						...action.payload.time,
+					},
+					id,
+				},
+			];
+			break;
+		}
+		case ACTION_TYPES.deleteAttendTime: {
+			const id = action.payload;
+			newHistory = history.filter(a => a.id !== id);
+			break;
 		}
 	}
+	return {state: newState, history: newHistory};
 };
 
 export default reducer;
