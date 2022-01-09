@@ -44,7 +44,7 @@ function EditSubjectPage() {
 		history.forEach(action => {
 			switch (action.type) {
 				case "schedule/subject/addAttendTime": {
-					const {id, ...time} = action.payload.time;
+					const {time} = action.payload;
 					ScheduleAPI.createAttendTime(subjectState, time).then(createdTime => {
 						if (!createdTime) return;
 						reduxDispatch(
