@@ -5,6 +5,7 @@ import {
 	ActionCreatorWithoutPayload,
 } from "@reduxjs/toolkit";
 import {RootState} from "..";
+import ScheduleAPI from "../../API";
 import {IGroup, IUser} from "../../types";
 import headerReducer, {
 	initialState as headerInitState,
@@ -19,10 +20,15 @@ interface ApplicationState {
 	user?: IUser;
 }
 
+const storageUser = localStorage.getItem("user");
+if (storageUser) {
+	ScheduleAPI.CSRFCookie();
+}
 const initialState: ApplicationState = {
 	showMenu: false,
 	showFooter: true,
 	header: headerInitState,
+	user: storageUser && JSON.parse(storageUser),
 };
 
 export const actions = {

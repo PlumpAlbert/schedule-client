@@ -24,6 +24,8 @@ interface ISuccessful {
 export default class ScheduleAPI {
 	private static HOST: string = `${process.env.PUBLIC_URL}/api`;
 
+	static CSRFCookie = () => axios(`${process.env.PUBLIC_URL}/sanctum/csrf-cookie`);
+
 	private static handleError(err: any) {
 		if (process.env.NODE_ENV === "development") {
 			console.error(err);
@@ -56,7 +58,7 @@ export default class ScheduleAPI {
 	 * @param password User's password
 	 */
 	static authenticate = async (login: string, password: string, controller?: AbortController) => {
-		await axios(`${process.env.PUBLIC_URL}/sanctum/csrf-cookie`);
+		await ScheduleAPI.CSRFCookie();
 		const response = await axios.request<
 			IResponse<{
 				access_token: string;
