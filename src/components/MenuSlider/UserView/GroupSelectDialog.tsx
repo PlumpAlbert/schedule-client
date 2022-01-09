@@ -27,7 +27,6 @@ function GroupSelectDialog({
 	onClose,
 }: IProps) {
 	//#region Group state
-	const [id, setId] = useState(defaultId);
 	const [course, setCourse] = useState<Course>(calculateCourse(defaultYear));
 	const [specialty, setSpecialty] = useState(defaultSpecialty);
 	const [faculty, setFaculty] = useState<FACULTY>(defaultFaculty);
@@ -82,7 +81,6 @@ function GroupSelectDialog({
 
 	//#region CALLBACKS
 	const resetState = useCallback(() => {
-		setId(defaultId);
 		setCourse(calculateCourse(defaultYear));
 		setSpecialty(defaultSpecialty);
 		setFaculty(defaultFaculty);
@@ -111,10 +109,8 @@ function GroupSelectDialog({
 				return;
 			}
 			const newCourse = newCourses[newCourses.length - 1];
-			const id = specialties.find(s => s.title === specialty)?.courses[newCourse];
 			setCourse(newCourse);
-			if (id) setId(id);
-			else setError(true);
+			setError(true);
 		},
 		[specialties, specialty]
 	);

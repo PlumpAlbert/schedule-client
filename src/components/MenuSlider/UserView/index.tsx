@@ -13,10 +13,10 @@ import {useDispatch} from "../../../store";
 
 interface IProps {
 	user: IUser;
-	onGroupChange: (group: IGroup) => void;
+	onGroupChangeSuccess: (success: boolean) => void;
 }
 
-function UserView({user, onGroupChange}: IProps) {
+function UserView({user, onGroupChangeSuccess}: IProps) {
 	const [dialogOpened, setDialogOpened] = useState(false);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -34,11 +34,17 @@ function UserView({user, onGroupChange}: IProps) {
 
 	const handleGroupChange = useCallback(
 		group => {
-			onGroupChange(group);
-			dispatch(appActions.setUserGroup(group));
 			setDialogOpened(false);
+			if (!group) return;
+			ScheduleAPI.updateUser({id: user.id, group: group.id}).then(success => {
+				onGroupChangeSuccess(!!success);
+				if (success) {
+					dispatch(appActions.setUserGroup(group));
+					navigate(`/schedule?group=${group.id}`);
+				}
+			});
 		},
-		[onGroupChange, dispatch]
+		[onGroupChangeSuccess, dispatch]
 	);
 	const handleEditGroupClick = useCallback(() => {
 		setDialogOpened(true);

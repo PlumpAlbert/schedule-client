@@ -43,16 +43,11 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 	}, [location.pathname]);
 
 	const handleGroupChange = useCallback(
-		(newGroup: IGroup | null) => {
-			if (!user || !newGroup) return;
-			user.group = newGroup;
-			ScheduleAPI.updateUser({id: user.id, group: newGroup}).then(success => {
-				setAlert({
-					show: true,
-					message: success ? "Группа успешно изменена" : "Ошибка при смене группы",
-					type: success ? "success" : "error",
-				});
-				navigate(`/schedule?group=${newGroup.id}`);
+		success => {
+			setAlert({
+				show: true,
+				message: success ? "Группа успешно изменена" : "Ошибка при смене группы",
+				type: success ? "success" : "error",
 			});
 		},
 		[user]
@@ -115,7 +110,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 				</Alert>
 			</Snackbar>
 			{user ? (
-				<UserView user={user} onGroupChange={handleGroupChange} />
+				<UserView user={user} onGroupChangeSuccess={handleGroupChange} />
 			) : (
 				<div className="app-menu__content">
 					<div className="menu-header">
