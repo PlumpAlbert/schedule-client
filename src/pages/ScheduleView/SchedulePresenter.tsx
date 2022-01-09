@@ -85,13 +85,16 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 
 	const handleSubjectDelete = useCallback<(s: DisplaySubject) => void>(
 		subject => {
-			dispatch(
-				scheduleActions.deleteSubject({
-					title: subject.title,
-					type: subject.type,
-					teacher: subject.teacher.id,
-				})
-			);
+			ScheduleAPI.deleteSubject(subject.id).then(success => {
+				if (!success) return;
+				dispatch(
+					scheduleActions.deleteSubject({
+						title: subject.title,
+						type: subject.type,
+						teacher: subject.teacher.id,
+					})
+				);
+			});
 		},
 		[dispatch]
 	);

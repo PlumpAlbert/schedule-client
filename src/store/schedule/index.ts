@@ -108,7 +108,7 @@ const scheduleSlice = createSlice({
 				const index = subjects.findIndex(
 					findSubjectCallback(payload.teacher, payload.type, payload.title)
 				);
-				if (!index) return;
+				if (index === -1) return;
 				subjects.splice(index, 1);
 			})
 			.addCase(actions.updateSubject, forwardSubjectAction);
