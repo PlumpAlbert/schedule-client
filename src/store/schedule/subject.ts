@@ -31,28 +31,34 @@ type addAttendTimePayload =
 	| {isCreated: true; time: Omit<IAttendTime, "id">}
 	| {isCreated: false; time: IAttendTime};
 
+export enum ACTION_TYPES {
+	update = "schedule/subject/update",
+	updateProperty = "schedule/subject/updateProperty",
+	addAttendTime = "schedule/subject/addAttendTime",
+	deleteAttendTime = "schedule/subject/deleteAttendTime",
+	updateAttendTime = "schedule/subject/updateAttendTime",
+	updateAttendTimeProperty = "schedule/subject/updateAttendTimeProperty",
+}
+
 export const actions = {
-	update: createAction<WithID<Partial<DisplaySubject>>, "schedule/subject/update">(
-		"schedule/subject/update"
-	),
-	updateProperty: createAction<SubjectPayload, "schedule/subject/updateSubject">(
-		"schedule/subject/updateSubject"
+	update: createAction<WithID<Partial<DisplaySubject>>, ACTION_TYPES.update>(ACTION_TYPES.update),
+	updateProperty: createAction<SubjectPayload, ACTION_TYPES.updateProperty>(
+		ACTION_TYPES.updateProperty
 	),
 	// Attend time actions
-	addAttendTime: createAction<addAttendTimePayload, "schedule/subject/addAttendTime">(
-		"schedule/subject/addAttendTime"
+	addAttendTime: createAction<addAttendTimePayload, ACTION_TYPES.addAttendTime>(
+		ACTION_TYPES.addAttendTime
 	),
-	deleteAttendTime: createAction<number, "schedule/subject/deleteAttendTime">(
-		"schedule/subject/deleteAttendTime"
+	deleteAttendTime: createAction<number, ACTION_TYPES.deleteAttendTime>(
+		ACTION_TYPES.deleteAttendTime
 	),
 	updateAttendTimeProperty: createAction<
 		IAttendTimePayload,
-		"schedule/subject/updateAttendTimeProperty"
-	>("schedule/subject/updateAttendTimeProperty"),
-	updateAttendTime: createAction<
-		WithID<Partial<IAttendTime>>,
-		"schedule/subject/updateAttendTime"
-	>("schedule/subject/updateAttendTime"),
+		ACTION_TYPES.updateAttendTimeProperty
+	>(ACTION_TYPES.updateAttendTimeProperty),
+	updateAttendTime: createAction<WithID<Partial<IAttendTime>>, ACTION_TYPES.updateAttendTime>(
+		ACTION_TYPES.updateAttendTime
+	),
 };
 
 export const slice = createSlice({
