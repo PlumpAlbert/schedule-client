@@ -22,8 +22,10 @@ body .app-menu {
 		display: flex;
 		flex-direction: column;
 		flex: 1;
+		padding-top: 3rem;
 		.menu-header,
-		.menu-body {
+		.menu-body,
+		.menu-settings {
 			display: flex;
 			flex: 1;
 			flex-direction: column;
@@ -31,7 +33,6 @@ body .app-menu {
 		}
 
 		.menu-header {
-			margin-top: 3rem;
 			justify-content: flex-end;
 			.app-title {
 				display: inline-block;
@@ -125,9 +126,7 @@ body .app-menu {
 		}
 
 		.menu-settings {
-			display: flex;
-			flex-direction: column;
-			margin-top: 3rem;
+			margin-top: 1rem;
 			padding: 0 1rem;
 
 			&__header {
