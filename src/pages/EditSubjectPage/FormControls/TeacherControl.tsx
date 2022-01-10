@@ -35,7 +35,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 			if (!teacher) return;
 			dispatch(actions.updateProperty({property: "teacher", value: teacher}));
 		},
-		[dispatch, teachers]
+		[dispatch, teachers],
 	);
 
 	const selectItems = useMemo(
@@ -45,7 +45,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 					{name}
 				</MenuItem>
 			)),
-		[teachers.length]
+		[teachers.length],
 	);
 
 	return (
@@ -69,7 +69,7 @@ TeacherControl.propTypes = propTypes(
 	PropTypes.shape({
 		id: PropTypes.number.isRequired,
 		name: PropTypes.string.isRequired,
-	})
+	}),
 );
 
 export default TeacherControl;

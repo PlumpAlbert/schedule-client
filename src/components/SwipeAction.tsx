@@ -11,13 +11,13 @@ interface IProps {
 }
 
 function SwipeAction({
-	action,
-	canSwipe = true,
-	children,
-	className = "swipe",
-	touchTimeThreshold = 150,
-	onAction,
-}: IProps) {
+											 action,
+											 canSwipe = true,
+											 children,
+											 className = "swipe",
+											 touchTimeThreshold = 150,
+											 onAction,
+										 }: IProps) {
 	const [swipeX, setX] = useState(0);
 	const actionRef = useRef(null);
 	const touchesRef = useRef<React.Touch>();
@@ -34,7 +34,7 @@ function SwipeAction({
 			const deltaX = e.changedTouches[0].clientX - touchesRef.current.clientX;
 			setX(deltaX);
 		},
-		[setX]
+		[setX],
 	);
 
 	const handleSwipeEnd = useCallback(() => {
@@ -61,7 +61,7 @@ function SwipeAction({
 			}
 			return classes.map(c => c + suffix).join(" ");
 		},
-		[className]
+		[className],
 	);
 
 	return (

@@ -7,8 +7,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import Collapse from "@mui/material/Collapse";
-import {SearchDisplay, actions as headerActions} from "../../store/app/header";
-import {useSelector, useDispatch} from "../../store";
+import {actions as headerActions, SearchDisplay} from "../../store/app/header";
+import {useDispatch, useSelector} from "../../store";
 
 const SearchInput = () => {
 	const searchInputRef = useRef<HTMLInputElement>(null);
@@ -24,14 +24,14 @@ const SearchInput = () => {
 		(type: SearchDisplay) => {
 			dispatch(headerActions.setSearchDisplay(type));
 		},
-		[dispatch]
+		[dispatch],
 	);
 
 	const setSearchValue = useCallback(
 		(value: string) => {
 			dispatch(headerActions.setSearchValue(value));
 		},
-		[dispatch]
+		[dispatch],
 	);
 	//#endregion
 
@@ -43,14 +43,14 @@ const SearchInput = () => {
 			}
 			navigate(`/search?q=${value}`);
 		},
-		[value]
+		[value],
 	);
 
 	const handleSearchValueChanged = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
 		({target}) => {
 			setSearchValue(target.value);
 		},
-		[setSearchValue]
+		[setSearchValue],
 	);
 
 	const handleSearchIconClick = useCallback(() => {
@@ -66,7 +66,7 @@ const SearchInput = () => {
 				setSearchDisplayType(SearchDisplay.ICON);
 			}
 		},
-		[setSearchDisplayType]
+		[setSearchDisplayType],
 	);
 
 	const handleCollapseEntered = useCallback(() => {

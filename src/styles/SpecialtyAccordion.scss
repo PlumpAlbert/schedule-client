@@ -1,55 +1,62 @@
 @import "./Colors.scss";
 
 .app .page .specialty {
-	border: 1px solid transparentize($black, 0.84);
-	font-family: "Roboto", sans-serif;
-	box-shadow: none;
+  border: 1px solid transparentize($black, 0.84);
+  font-family: "Roboto", sans-serif;
+  box-shadow: none;
 
-	&:first-child {
-		border-top: none;
-	}
-	&:not(:last-child) {
-		border-bottom: none;
-	}
-	&::before {
-		display: none;
-	}
+  &:first-child {
+    border-top: none;
+  }
 
-	&-summary {
-		background-color: $white;
-		padding: 1rem 1.5rem 1rem 2rem;
-		cursor: pointer;
-		.MuiAccordionSummary-content {
-			margin: 0;
-			padding-right: 1rem;
-		}
-	}
-	&-details {
-		border-top: 1px solid transparentize($black, 0.84);
-		padding: 0;
+  &:not(:last-child) {
+    border-bottom: none;
+  }
 
-		.specialty-details {
-			&-list {
-				padding: 0;
-				color: $black;
-				.specialty-course {
-					cursor: pointer;
-					background-color: hsl(0, 0%, 95%);
-					margin: 0;
-					padding: 0.8rem 2rem;
-					border-style: solid;
-					border-color: $offWhite;
-					border-width: 0 0 1px;
-					&:last-child {
-						border-bottom: 0;
-					}
-				}
-				& .specialty-details-list__subheader {
-					line-height: 1.5;
-					background-color: transparent;
-					color: $grey;
-				}
-			}
-		}
-	}
+  &::before {
+    display: none;
+  }
+
+  &-summary {
+    background-color: $white;
+    padding: 1rem 1.5rem 1rem 2rem;
+    cursor: pointer;
+
+    .MuiAccordionSummary-content {
+      margin: 0;
+      padding-right: 1rem;
+    }
+  }
+
+  &-details {
+    border-top: 1px solid transparentize($black, 0.84);
+    padding: 0;
+
+    .specialty-details {
+      &-list {
+        padding: 0;
+        color: $black;
+
+        .specialty-course {
+          cursor: pointer;
+          background-color: hsl(0, 0%, 95%);
+          margin: 0;
+          padding: 0.8rem 2rem;
+          border-style: solid;
+          border-color: $offWhite;
+          border-width: 0 0 1px;
+
+          &:last-child {
+            border-bottom: 0;
+          }
+        }
+
+        & .specialty-details-list__subheader {
+          line-height: 1.5;
+          background-color: transparent;
+          color: $grey;
+        }
+      }
+    }
+  }
 }

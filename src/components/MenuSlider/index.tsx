@@ -9,8 +9,6 @@ import Alert, {AlertColor} from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import PageFooter from "../PageFooter";
 import UserView from "./UserView";
-import ScheduleAPI from "../../API";
-import {IGroup} from "../../types";
 import {useSelector} from "../../store";
 import {selectUser} from "../../store/app";
 
@@ -50,7 +48,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 				type: success ? "success" : "error",
 			});
 		},
-		[user]
+		[user],
 	);
 
 	const handleAlertClose = useCallback(() => {
@@ -65,7 +63,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 		e => {
 			setSearchValue(e.target.value);
 		},
-		[setSearchValue]
+		[setSearchValue],
 	);
 
 	const handleKeyDown = useCallback(
@@ -73,7 +71,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 			if ((key && key !== "Enter") || !searchValue) return;
 			navigate(`/search?q=${searchValue}`);
 		},
-		[navigate, searchValue]
+		[navigate, searchValue],
 	);
 
 	return (

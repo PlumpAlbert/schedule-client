@@ -11,11 +11,11 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import SearchInput from "./SearchInput";
 import {
-	selectAppHeader,
-	SearchDisplay,
+	actions as headerActions,
 	LeftIcon,
 	RightIcon,
-	actions as headerActions,
+	SearchDisplay,
+	selectAppHeader,
 } from "../../store/app/header";
 import {actions as scheduleActions} from "../../store/schedule";
 import {actions as appActions} from "../../store/app";
@@ -37,8 +37,8 @@ function PageHeader() {
 		if (uri.length === 1) {
 			actions.push(
 				headerActions.setSearchDisplay(
-					searchValue ? SearchDisplay.FULL : SearchDisplay.ICON
-				)
+					searchValue ? SearchDisplay.FULL : SearchDisplay.ICON,
+				),
 			);
 		} else {
 			switch (uri[1]) {
@@ -47,13 +47,13 @@ function PageHeader() {
 						actions.push(
 							headerActions.setLeftIcon(LeftIcon.BACK),
 							headerActions.setTitle(""),
-							headerActions.setRightIcon(RightIcon.NONE)
+							headerActions.setRightIcon(RightIcon.NONE),
 						);
 					} else {
 						actions.push(
 							headerActions.setLeftIcon(LeftIcon.MENU),
 							headerActions.setTitle(""),
-							headerActions.setRightIcon(RightIcon.NONE)
+							headerActions.setRightIcon(RightIcon.NONE),
 						);
 					}
 					break;
@@ -62,7 +62,7 @@ function PageHeader() {
 					actions.push(
 						headerActions.setLeftIcon(LeftIcon.MENU),
 						headerActions.setTitle(""),
-						headerActions.setRightIcon(RightIcon.TODAY)
+						headerActions.setRightIcon(RightIcon.TODAY),
 					);
 					break;
 				}
@@ -70,7 +70,7 @@ function PageHeader() {
 					actions.push(
 						headerActions.setLeftIcon(LeftIcon.CANCEL),
 						headerActions.setTitle("Редактирование"),
-						headerActions.setRightIcon(RightIcon.SAVE)
+						headerActions.setRightIcon(RightIcon.SAVE),
 					);
 					break;
 				}
@@ -78,7 +78,7 @@ function PageHeader() {
 					actions.push(
 						headerActions.setLeftIcon(LeftIcon.CANCEL),
 						headerActions.setTitle("Создание"),
-						headerActions.setRightIcon(RightIcon.SAVE)
+						headerActions.setRightIcon(RightIcon.SAVE),
 					);
 					break;
 				}
@@ -87,7 +87,7 @@ function PageHeader() {
 						headerActions.setSearchDisplay(SearchDisplay.NONE),
 						headerActions.setTitle(""),
 						headerActions.setLeftIcon(LeftIcon.MENU),
-						headerActions.setRightIcon(RightIcon.NONE)
+						headerActions.setRightIcon(RightIcon.NONE),
 					);
 					break;
 				}

@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import GroupSelect, {IGroupSelect} from "./GroupSelect";
-import {IAuthenticated, IGroup, IUser, UserType} from "../../types";
+import {IGroup} from "../../types";
 import ScheduleAPI from "../../API";
 
 import "../../styles/SignUpPage.scss";
@@ -53,7 +53,7 @@ function SignUpPage() {
 					password,
 					group,
 				},
-				abortController
+				abortController,
 			)
 				.then(user => {
 					if (!user) {
@@ -72,7 +72,7 @@ function SignUpPage() {
 					}
 				});
 		},
-		[name, login, password, error, navigate]
+		[name, login, password, error, navigate],
 	);
 
 	const handleInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
@@ -94,7 +94,7 @@ function SignUpPage() {
 			}
 			updateFunction(value);
 		},
-		[setName, setLogin, setPassword]
+		[setName, setLogin, setPassword],
 	);
 	//#endregion
 

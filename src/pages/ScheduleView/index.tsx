@@ -6,7 +6,7 @@ import Button from "@mui/material/IconButton";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import {GetWeekdayName} from "../../Helpers";
 import SchedulePresenter from "./SchedulePresenter";
-import {WEEKDAY, WEEK_TYPE} from "../../types";
+import {WEEK_TYPE, WEEKDAY} from "../../types";
 import {useDispatch, useSelector} from "../../store";
 import {actions as scheduleActions, selectSchedule} from "../../store/schedule";
 
@@ -33,7 +33,7 @@ const ScheduleView = () => {
 			const newDay: WEEKDAY = Number(dataset["weekday"]);
 			dispatch(scheduleActions.setWeekday(newDay));
 		},
-		[dispatch]
+		[dispatch],
 	);
 
 	const handleSwapClick = useCallback<React.MouseEventHandler>(() => {
@@ -62,7 +62,7 @@ const ScheduleView = () => {
 					className={`weekday${currentDay === i ? " active" : ""}`}
 				>
 					{name}
-				</p>
+				</p>,
 			);
 		}
 		return array;

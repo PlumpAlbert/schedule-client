@@ -1,46 +1,47 @@
 @import "./Colors.scss";
 
 .sign-up-page {
-	display: flex;
-	flex-direction: column;
-	padding: 3rem 2rem 0;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 2rem 0;
 
-	& &__header {
-		margin: 0;
-		text-transform: uppercase;
-		text-align: center;
-		font-family: "Montserrat", "Roboto", sans-serif;
-		font-weight: 500;
-		font-size: 2rem;
-	}
+  & &__header {
+    margin: 0;
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "Montserrat", "Roboto", sans-serif;
+    font-weight: 500;
+    font-size: 2rem;
+  }
 
-	& &__form {
-		margin: 3rem 0 6rem;
+  & &__form {
+    margin: 3rem 0 6rem;
 
-		.form-control {
-			width: 100%;
-			&:not(:last-child) {
-				margin-bottom: 1rem;
-			}
+    .form-control {
+      width: 100%;
 
-			&__helper-text {
-				transform-origin: top;
-				transform: scaleY(0);
-				height: 0;
-				transition: transform ease-out 75ms;
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+      }
 
-				&.Mui-focused {
-					height: fit-content;
-					transform: scaleY(1);
-				}
-			}
-		}
+      &__helper-text {
+        transform-origin: top;
+        transform: scaleY(0);
+        height: 0;
+        transition: transform ease-out 75ms;
 
-		.form-button {
-			width: 100%;
-			background-color: $blue;
-			color: $white;
-			margin-top: 1rem;
-		}
-	}
+        &.Mui-focused {
+          height: fit-content;
+          transform: scaleY(1);
+        }
+      }
+    }
+
+    .form-button {
+      width: 100%;
+      background-color: $blue;
+      color: $white;
+      margin-top: 1rem;
+    }
+  }
 }

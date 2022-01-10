@@ -11,9 +11,9 @@ $grey: hsl(0, 0%, 37%);
 $black: hsl(0, 0%, 10%);
 
 @mixin transition($x) {
-	transition: $x;
-	-webkit-transition: $x;
-	-moz-transition: $x;
-	-ms-transition: $x;
-	-o-transition: $x;
+  transition: $x;
+  -webkit-transition: $x;
+  -moz-transition: $x;
+  -ms-transition: $x;
+  -o-transition: $x;
 }

@@ -1,77 +1,79 @@
 @import "./Colors.scss";
 
 .groups-list-page {
-	display: flex;
-	flex-direction: row;
-	overflow-x: hidden;
-	flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
+  flex: 1;
 
-	.faculties-wrapper {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		padding: 1rem 2rem;
-		margin-right: -1rem;
-		justify-content: space-between;
-		column-count: 2;
+  .faculties-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1rem 2rem;
+    margin-right: -1rem;
+    justify-content: space-between;
+    column-count: 2;
 
-		& > .faculty {
-			margin-bottom: 1.5rem;
-		}
+    & > .faculty {
+      margin-bottom: 1.5rem;
+    }
 
-		.faculty {
-			display: flex;
-			flex-direction: column;
-			min-width: 120px;
-			min-height: 100px;
-			flex: 1;
-			max-width: 150px;
-			max-height: 100px;
-			margin-right: 1rem;
-			box-shadow: 0 2px 4px $offWhite;
-			cursor: pointer;
+    .faculty {
+      display: flex;
+      flex-direction: column;
+      min-width: 120px;
+      min-height: 100px;
+      flex: 1;
+      max-width: 150px;
+      max-height: 100px;
+      margin-right: 1rem;
+      box-shadow: 0 2px 4px $offWhite;
+      cursor: pointer;
 
-			&-background {
-				flex: 1 0;
-				border-radius: 4px 4px 0 0;
-				background-color: $grey;
-			}
-			&-title {
-				flex: 0 1 fit-content;
-				font-family: "Roboto", sans-serif;
-				font-weight: 400;
-				font-size: 1rem;
-				text-align: center;
-				margin: 0;
-				padding: 0.8rem auto;
-			}
-		}
-	}
+      &-background {
+        flex: 1 0;
+        border-radius: 4px 4px 0 0;
+        background-color: $grey;
+      }
 
-	.specialties-wrapper {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		position: relative;
-		&__no-items {
-			margin: auto 0;
-			padding: 0;
-			text-align: center;
+      &-title {
+        flex: 0 1 fit-content;
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+        font-size: 1rem;
+        text-align: center;
+        margin: 0;
+        padding: 0.8rem auto;
+      }
+    }
+  }
 
-			.no-items__header {
-				font-family: "Montserrat", "Roboto", sans-serif;
-				font-size: 1rem;
-				margin: 0;
-			}
-		}
+  .specialties-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
 
-		& .specialties-wrapper__fab {
-			position: absolute;
-			z-index: 9;
-			bottom: 3rem;
-			right: 1.5rem;
-			background-color: $blue;
-			color: $white;
-		}
-	}
+    &__no-items {
+      margin: auto 0;
+      padding: 0;
+      text-align: center;
+
+      .no-items__header {
+        font-family: "Montserrat", "Roboto", sans-serif;
+        font-size: 1rem;
+        margin: 0;
+      }
+    }
+
+    & .specialties-wrapper__fab {
+      position: absolute;
+      z-index: 9;
+      bottom: 3rem;
+      right: 1.5rem;
+      background-color: $blue;
+      color: $white;
+    }
+  }
 }

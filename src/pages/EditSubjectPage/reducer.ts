@@ -1,17 +1,15 @@
 import {PayloadAction} from "@reduxjs/toolkit";
 import subjectReducer, {
-	actions as SubjectActions,
 	ACTION_TYPES,
+	actions as SubjectActions,
 	SubjectState,
 } from "../../store/schedule/subject";
 import {IAttendTime, ISubject, WithID} from "../../types";
 import {DisplaySubject} from "../ScheduleView/SubjectView";
 
-type HistoryActionType = WithID<
-	| ReturnType<typeof SubjectActions["deleteAttendTime"]>
+type HistoryActionType = WithID<| ReturnType<typeof SubjectActions["deleteAttendTime"]>
 	| PayloadAction<WithID<DisplaySubject>, ACTION_TYPES.addAttendTime>
-	| PayloadAction<WithID<Partial<DisplaySubject>>, ACTION_TYPES.updateAttendTime>
->;
+	| PayloadAction<WithID<Partial<DisplaySubject>>, ACTION_TYPES.updateAttendTime>>;
 
 export interface IEditSubjectPageStore {
 	history: HistoryActionType[];
@@ -23,7 +21,7 @@ export type ActionType = ReturnType<typeof SubjectActions[keyof typeof SubjectAc
 function updateSubjectProperty(
 	newState: SubjectState,
 	oldHistory: HistoryActionType[],
-	data: Partial<Omit<ISubject, "times">>
+	data: Partial<Omit<ISubject, "times">>,
 ): HistoryActionType[] {
 	const newHistory = oldHistory.map<HistoryActionType>(oldAction => {
 		switch (oldAction.type) {
@@ -47,16 +45,16 @@ function updateSubjectProperty(
 				type: ACTION_TYPES.updateAttendTime,
 				id: time.id,
 				payload: {...data, id: time.id},
-			}))
+			})),
 	);
 }
 
 function updateAttendProperty(
 	oldHistory: HistoryActionType[],
-	data: WithID<Partial<IAttendTime>>
+	data: WithID<Partial<IAttendTime>>,
 ): HistoryActionType[] {
 	const updateActionIndex = oldHistory.findIndex(
-		a => a.type !== ACTION_TYPES.deleteAttendTime && a.id === data.id
+		a => a.type !== ACTION_TYPES.deleteAttendTime && a.id === data.id,
 	);
 	// If there was no edits
 	if (updateActionIndex === -1) {
@@ -77,7 +75,7 @@ function updateAttendProperty(
 
 const reducer = (
 	{history, state}: IEditSubjectPageStore,
-	action: ActionType
+	action: ActionType,
 ): IEditSubjectPageStore => {
 	const newState = subjectReducer(state, action);
 	let newHistory: typeof history = [];
@@ -92,7 +90,7 @@ const reducer = (
 			const {title, teacher, type, ...attendTime} = action.payload;
 			newHistory = updateAttendProperty(
 				updateSubjectProperty(newState, history, {title, type, teacher}),
-				attendTime
+				attendTime,
 			);
 			break;
 		}

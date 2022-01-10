@@ -1,15 +1,10 @@
-import {
-	createAction,
-	createSlice,
-	combineReducers,
-	ActionCreatorWithoutPayload,
-} from "@reduxjs/toolkit";
+import {createAction, createSlice} from "@reduxjs/toolkit";
 import {RootState} from "..";
 import ScheduleAPI from "../../API";
 import {IGroup, IUser} from "../../types";
 import headerReducer, {
-	initialState as headerInitState,
 	actions as headerActions,
+	initialState as headerInitState,
 	SearchDisplay,
 } from "./header";
 
@@ -87,14 +82,12 @@ const store = createSlice({
 			})
 			.addMatcher(
 				action => {
-					const actionNames = Object.keys(headerActions) as Array<
-						keyof typeof headerActions
-					>;
+					const actionNames = Object.keys(headerActions) as Array<keyof typeof headerActions>;
 					return actionNames.some(key => headerActions[key].match(action));
 				},
 				(state, action) => {
 					state.header = headerReducer(state.header, action);
-				}
+				},
 			);
 	},
 });

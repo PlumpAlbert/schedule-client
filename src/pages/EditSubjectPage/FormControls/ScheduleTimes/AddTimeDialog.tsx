@@ -6,7 +6,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import {IAttendTime, WEEKDAY, WEEK_TYPE} from "../../../../types";
+import {IAttendTime, WEEK_TYPE, WEEKDAY} from "../../../../types";
 
 import "./AddTimeDialog.scss";
 import {renderTime} from "../../../../Helpers";
@@ -50,7 +50,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 					value={i}
 				>
 					{shortWeekdayName(i)}
-				</ToggleButton>
+				</ToggleButton>,
 			);
 		}
 		return buttons;
@@ -74,12 +74,12 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 			if (values.length < 2) return;
 			setWeekday(values[1]);
 		},
-		[setWeekday]
+		[setWeekday],
 	);
 
 	const handleAudienceChange = useCallback(
 		({target}) => void setAudience(target.value),
-		[setAudience]
+		[setAudience],
 	);
 
 	const handleTimeChange = useCallback(({target}) => void setTime(target.value), [setTime]);

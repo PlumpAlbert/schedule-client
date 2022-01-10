@@ -13,6 +13,7 @@ import {calculateCourse} from "../../Helpers";
 interface IProps {
 	faculty: FACULTY;
 }
+
 function SpecialtiesView({faculty}: IProps) {
 	const [specialties, setSpecialties, isLoading] = useSpecialties(faculty as FACULTY);
 	const [showDialog, setShowDialog] = useState(false);
@@ -20,7 +21,7 @@ function SpecialtiesView({faculty}: IProps) {
 
 	const specialtyElements = useMemo(
 		() => specialties.map(s => <SpecialtyAccordion key={s.title} {...s} />),
-		[specialties]
+		[specialties],
 	);
 
 	const handleAddClick = useCallback(() => {
@@ -50,7 +51,7 @@ function SpecialtiesView({faculty}: IProps) {
 				setShowAlert(true);
 			}
 		},
-		[setShowAlert, setShowDialog, setSpecialties, specialties]
+		[setShowAlert, setShowDialog, setSpecialties, specialties],
 	);
 
 	return (
@@ -82,10 +83,10 @@ function SpecialtiesView({faculty}: IProps) {
 			{specialtyElements.length
 				? specialtyElements
 				: !isLoading && (
-						<div className="specialties-wrapper__no-items">
-							<h3 className="no-items__header">Упс, ничего не найдено!</h3>
-						</div>
-				  )}
+				<div className="specialties-wrapper__no-items">
+					<h3 className="no-items__header">Упс, ничего не найдено!</h3>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -20,7 +20,7 @@ const SpecialtyAccordion = ({title, courses}: ISpecialty) => {
 			const id = parseInt(elementId.split("course-")[1]);
 			navigate(`/schedule?group=${id}`);
 		},
-		[navigate]
+		[navigate],
 	);
 	//#endregion
 	//#region MEMO
@@ -38,7 +38,7 @@ const SpecialtyAccordion = ({title, courses}: ISpecialty) => {
 						className="specialty-course"
 					>
 						{courseNumber - BACHELOR_MAX} курс
-					</ListItem>
+					</ListItem>,
 				);
 			} else {
 				bachelor.push(
@@ -49,7 +49,7 @@ const SpecialtyAccordion = ({title, courses}: ISpecialty) => {
 						className="specialty-course"
 					>
 						{courseNumber} курс
-					</ListItem>
+					</ListItem>,
 				);
 			}
 			return;

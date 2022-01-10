@@ -59,7 +59,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 		() => ({
 			getState: () => ({...group, faculty: group.faculty as FACULTY}),
 		}),
-		[group]
+		[group],
 	);
 
 	const facultyOptions = useMemo(
@@ -69,7 +69,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 					{faculty}
 				</MenuItem>
 			)),
-		[]
+		[],
 	);
 
 	const groupOptions = useMemo(
@@ -99,7 +99,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 				});
 				return options.concat(newOptions);
 			}, []),
-		[specialties]
+		[specialties],
 	);
 
 	useEffect(() => {
@@ -143,7 +143,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 			}
 			dispatch(action);
 		},
-		[dispatch]
+		[dispatch],
 	);
 
 	return (

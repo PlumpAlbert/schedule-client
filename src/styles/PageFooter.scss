@@ -1,46 +1,51 @@
 @import "./Colors.scss";
 
 .page-footer {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: auto;
-	font-family: "Roboto", sans-serif;
-	font-size: 0.8rem;
-	padding: 1.5em 1.5rem 1em 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.8rem;
+  padding: 1.5em 1.5rem 1em 2rem;
 
-	&__copyright {
-		margin: 0;
-	}
+  &__copyright {
+    margin: 0;
+  }
 
-	&__links {
-		display: flex;
-		flex-direction: row;
-		max-height: fit-content;
-		margin-left: 1rem;
-		.page-footer__link {
-			width: 2rem;
-			height: 1.5rem;
-			text-align: center;
-			margin-right: 1rem;
-			&:last-child {
-				margin: 0;
-			}
-			.page-footer__icon {
-				width: 1.5rem;
-				height: 1.5rem;
+  &__links {
+    display: flex;
+    flex-direction: row;
+    max-height: fit-content;
+    margin-left: 1rem;
 
-				&.github-icon {
-					fill: #333333;
-				}
-				&.mail-icon {
-					fill: #eb5757;
-				}
-				&.telegram-icon {
-					fill: #0088cc;
-				}
-			}
-		}
-	}
+    .page-footer__link {
+      width: 2rem;
+      height: 1.5rem;
+      text-align: center;
+      margin-right: 1rem;
+
+      &:last-child {
+        margin: 0;
+      }
+
+      .page-footer__icon {
+        width: 1.5rem;
+        height: 1.5rem;
+
+        &.github-icon {
+          fill: #333333;
+        }
+
+        &.mail-icon {
+          fill: #eb5757;
+        }
+
+        &.telegram-icon {
+          fill: #0088cc;
+        }
+      }
+    }
+  }
 }

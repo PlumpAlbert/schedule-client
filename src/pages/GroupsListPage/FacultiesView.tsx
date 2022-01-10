@@ -26,7 +26,7 @@ Faculty.propTypes = {
 const FacultiesView = () => {
 	const facultyElements = useMemo(
 		() => Object.values(FACULTY).map(f => <Faculty key={f} title={f} />),
-		[]
+		[],
 	);
 	return <div className="faculties-wrapper">{facultyElements}</div>;
 };

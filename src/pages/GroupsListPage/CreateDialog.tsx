@@ -39,7 +39,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 			const {name, value} = target;
 			setFields({...fields, [name]: value});
 		},
-		[setFields, fields]
+		[setFields, fields],
 	);
 
 	const handleDialogClose = useCallback(() => {
@@ -55,7 +55,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				className="create-specialty-dialog__select-subheader"
 			>
 				Бакалавриат
-			</ListSubheader>
+			</ListSubheader>,
 		);
 		for (let i = 0; i < BACHELOR_MAX; ++i) {
 			options.push(
@@ -65,7 +65,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 					value={(i + 1).toString()}
 				>
 					{i + 1} курс
-				</MenuItem>
+				</MenuItem>,
 			);
 		}
 		options.push(
@@ -74,7 +74,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				className="create-specialty-dialog__select-subheader"
 			>
 				Магистратура
-			</ListSubheader>
+			</ListSubheader>,
 		);
 		for (let i = 0; i < MAGISTRACY_MAX; ++i) {
 			options.push(
@@ -84,7 +84,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 					value={(BACHELOR_MAX + i + 1).toString()}
 				>
 					{i + 1} курс
-				</MenuItem>
+				</MenuItem>,
 			);
 		}
 		return options;

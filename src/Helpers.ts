@@ -1,4 +1,4 @@
-import {BACHELOR_MAX, Course, SUBJECT_TYPE, WEEK_TYPE} from "./types";
+import {Course, SUBJECT_TYPE, WEEK_TYPE} from "./types";
 
 /**
  * Returns string representation of a weekday
@@ -111,7 +111,7 @@ export function renderTime(time: number = Date.now()) {
 
 export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
 	obj: X,
-	prop: Y
+	prop: Y,
 ): obj is X & Record<Y, unknown> {
 	return obj.hasOwnProperty(prop);
 }

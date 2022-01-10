@@ -43,21 +43,19 @@ export enum ACTION_TYPES {
 export const actions = {
 	update: createAction<WithID<Partial<DisplaySubject>>, ACTION_TYPES.update>(ACTION_TYPES.update),
 	updateProperty: createAction<SubjectPayload, ACTION_TYPES.updateProperty>(
-		ACTION_TYPES.updateProperty
+		ACTION_TYPES.updateProperty,
 	),
 	// Attend time actions
 	addAttendTime: createAction<addAttendTimePayload, ACTION_TYPES.addAttendTime>(
-		ACTION_TYPES.addAttendTime
+		ACTION_TYPES.addAttendTime,
 	),
 	deleteAttendTime: createAction<number, ACTION_TYPES.deleteAttendTime>(
-		ACTION_TYPES.deleteAttendTime
+		ACTION_TYPES.deleteAttendTime,
 	),
-	updateAttendTimeProperty: createAction<
-		IAttendTimePayload,
-		ACTION_TYPES.updateAttendTimeProperty
-	>(ACTION_TYPES.updateAttendTimeProperty),
+	updateAttendTimeProperty: createAction<IAttendTimePayload,
+		ACTION_TYPES.updateAttendTimeProperty>(ACTION_TYPES.updateAttendTimeProperty),
 	updateAttendTime: createAction<WithID<Partial<IAttendTime>>, ACTION_TYPES.updateAttendTime>(
-		ACTION_TYPES.updateAttendTime
+		ACTION_TYPES.updateAttendTime,
 	),
 };
 

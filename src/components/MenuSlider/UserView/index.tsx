@@ -1,11 +1,11 @@
-import React, {useMemo, useCallback, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/NoteAdd";
 import GroupSelectDialog from "./GroupSelectDialog";
-import {IGroup, IUser, UserType} from "../../../types";
+import {IUser, UserType} from "../../../types";
 import ScheduleAPI from "../../../API";
 import {actions as appActions} from "../../../store/app";
 import {actions as scheduleActions} from "../../../store/schedule";
@@ -44,7 +44,7 @@ function UserView({user, onGroupChangeSuccess}: IProps) {
 				}
 			});
 		},
-		[onGroupChangeSuccess, dispatch]
+		[onGroupChangeSuccess, dispatch],
 	);
 	const handleEditGroupClick = useCallback(() => {
 		setDialogOpened(true);

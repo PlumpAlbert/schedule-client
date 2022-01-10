@@ -2,7 +2,7 @@ import {createAction, createSlice} from "@reduxjs/toolkit";
 import {RootState} from "..";
 import {GetWeekType} from "../../Helpers";
 import subjectReducer, {actions as subjectActions} from "./subject";
-import {ISubject, SUBJECT_TYPE, WEEKDAY, WEEK_TYPE} from "../../types";
+import {ISubject, SUBJECT_TYPE, WEEK_TYPE, WEEKDAY} from "../../types";
 
 type SubjectIndex = Omit<ISubject, "times" | "teacher"> & {teacher: number};
 
@@ -65,7 +65,7 @@ const findSubjectCallback =
  */
 const forwardSubjectAction = <T extends {payload: ForwardedAction}>(
 	{subjects}: SchedulePageState,
-	{payload}: T
+	{payload}: T,
 ) => {
 	const {title, type, teacher, action} = payload;
 	let index = subjects.findIndex(findSubjectCallback(teacher, type, title));
@@ -106,7 +106,7 @@ const scheduleSlice = createSlice({
 			})
 			.addCase(actions.deleteSubject, ({subjects}, {payload}) => {
 				const index = subjects.findIndex(
-					findSubjectCallback(payload.teacher, payload.type, payload.title)
+					findSubjectCallback(payload.teacher, payload.type, payload.title),
 				);
 				if (index === -1) return;
 				subjects.splice(index, 1);

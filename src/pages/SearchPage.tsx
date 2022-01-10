@@ -35,7 +35,7 @@ function SearchPage() {
 					specialties={results[faculty as FACULTY]}
 				/>
 			)),
-		[results]
+		[results],
 	);
 
 	return <div className="page search-page">{facultyElements}</div>;

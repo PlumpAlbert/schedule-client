@@ -5,9 +5,9 @@ import TypeControl from "./FormControls/TypeControl";
 import TeacherControl from "./FormControls/TeacherControl";
 import ScheduleTimes from "./FormControls/ScheduleTimes";
 import reducer, {IEditSubjectPageStore} from "./reducer";
-import {useSelector, useDispatch} from "../../store";
+import {useDispatch, useSelector} from "../../store";
 import {actions as ScheduleActions} from "../../store/schedule";
-import {initialState, actions as SubjectActions, ACTION_TYPES} from "../../store/schedule/subject";
+import {ACTION_TYPES, actions as SubjectActions, initialState} from "../../store/schedule/subject";
 import ScheduleAPI from "../../API";
 
 import "../../styles/EditSubjectPage.scss";
@@ -43,61 +43,51 @@ function EditSubjectPage() {
 		history.forEach(action => {
 			switch (action.type) {
 				case ACTION_TYPES.addAttendTime: {
-					const {type, teacher, title, time, weekday, weekType, audience} =
-						action.payload;
+					const {type, teacher, title, time, weekday, weekType, audience} = action.payload;
 					ScheduleAPI.createAttendTime(
 						{type, teacher, title},
 						{time, weekday, audience, weekType},
 						group,
 					).then(createdSubject => {
 						if (!createdSubject) return;
-						reduxDispatch(
-							ScheduleActions.updateSubject({
-								title: initState.state.title,
-								type: initState.state.type,
-								teacher: initState.state.teacher.id,
-								action: SubjectActions.addAttendTime({
-									isCreated: false,
-									time: createdSubject,
-								}),
-							})
-						);
-						reduxDispatch(
-							ScheduleActions.updateSubject({
-								title: initState.state.title,
-								type: initState.state.type,
-								teacher: initState.state.teacher.id,
-								action: SubjectActions.update(createdSubject),
-							})
-						);
+						reduxDispatch(ScheduleActions.updateSubject({
+							title: initState.state.title,
+							type: initState.state.type,
+							teacher: initState.state.teacher.id,
+							action: SubjectActions.addAttendTime({
+								isCreated: false, time: createdSubject,
+							}),
+						}));
+						reduxDispatch(ScheduleActions.updateSubject({
+							title: initState.state.title,
+							type: initState.state.type,
+							teacher: initState.state.teacher.id,
+							action: SubjectActions.update(createdSubject),
+						}));
 					});
 					break;
 				}
 				case ACTION_TYPES.deleteAttendTime: {
 					ScheduleAPI.deleteSubject(action.payload).then(success => {
 						if (!success) return;
-						reduxDispatch(
-							ScheduleActions.updateSubject({
-								title: initState.state.title,
-								type: initState.state.type,
-								teacher: initState.state.teacher.id,
-								action: SubjectActions.deleteAttendTime(action.payload),
-							})
-						);
+						reduxDispatch(ScheduleActions.updateSubject({
+							title: initState.state.title,
+							type: initState.state.type,
+							teacher: initState.state.teacher.id,
+							action: SubjectActions.deleteAttendTime(action.payload),
+						}));
 					});
 					break;
 				}
 				case ACTION_TYPES.updateAttendTime: {
 					ScheduleAPI.updateSubject(action.payload).then(success => {
 						if (!success) return;
-						reduxDispatch(
-							ScheduleActions.updateSubject({
-								title: initState.state.title,
-								type: initState.state.type,
-								teacher: initState.state.teacher.id,
-								action: SubjectActions.update(action.payload),
-							})
-						);
+						reduxDispatch(ScheduleActions.updateSubject({
+							title: initState.state.title,
+							type: initState.state.type,
+							teacher: initState.state.teacher.id,
+							action: SubjectActions.update(action.payload),
+						}));
 					});
 				}
 			}
@@ -109,16 +99,14 @@ function EditSubjectPage() {
 		return null;
 	}
 
-	return (
-		<div className="page edit-subject-page">
-			<form className="edit-subject-form">
-				<TitleControl dispatch={dispatch} value={state.title} />
-				<TypeControl dispatch={dispatch} value={state.type} />
-				<TeacherControl dispatch={dispatch} value={state.teacher} />
-				<ScheduleTimes dispatch={dispatch} value={state.times} />
-			</form>
-		</div>
-	);
+	return (<div className="page edit-subject-page">
+		<form className="edit-subject-form">
+			<TitleControl dispatch={dispatch} value={state.title} />
+			<TypeControl dispatch={dispatch} value={state.type} />
+			<TeacherControl dispatch={dispatch} value={state.teacher} />
+			<ScheduleTimes dispatch={dispatch} value={state.times} />
+		</form>
+	</div>);
 }
 
 export default EditSubjectPage;

@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import ScheduleAPI from "../API";
 import {FACULTY, ISpecialty} from "../types";
+
 /**
  * Hook for using specialties for specified `faculty`
  * @param {FACULTY} faculty Faculty to use for fetching specialties
  */
 function useSpecialties(
-	faculty: FACULTY
+	faculty: FACULTY,
 ): [ISpecialty[], React.Dispatch<React.SetStateAction<ISpecialty[]>>, boolean] {
 	const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
 	const [isLoading, setLoading] = useState<boolean>(false);

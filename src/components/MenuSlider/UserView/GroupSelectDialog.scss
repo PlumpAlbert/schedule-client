@@ -1,52 +1,61 @@
 @import "../../../styles/Colors.scss";
 
 .group-select-dialog-wrapper {
-	.group-select-dialog {
-		margin: auto 1rem;
-		padding: 0 1rem;
-		&__title {
-			font-family: "Montserrat", "Roboto", sans-serif;
-			margin: 0 0 1rem 0;
-		}
-		&__field {
-			&:not(:last-of-type) {
-				margin-bottom: 1rem;
-			}
-		}
-		&__course-buttons {
-			.course-toggle-button {
-				flex: 1;
-				background-origin: border-box;
-				border-width: 0 0 4px 0;
-				border-color: transparent;
-				border-radius: 0;
-				padding: 0.5rem 0.5rem calc(0.5rem - 4px);
-				&.course-toggle-button--selected {
-					border-radius: 4px 4px 0 0;
-					&.course-1 {
-						background-color: transparentize($purple, $amount: 0.95);
-						border-bottom-color: $purple;
-					}
-					&.course-2 {
-						background-color: transparentize($red, $amount: 0.95);
-						border-bottom-color: $red;
-					}
-					&.course-3 {
-						background-color: transparentize($yellow, $amount: 0.95);
-						border-bottom-color: $yellow;
-					}
-					&.course-4 {
-						background-color: transparentize($green, $amount: 0.95);
-						border-bottom-color: $green;
-					}
-				}
-			}
-		}
-		&__button {
-			background-color: $blue;
-			color: $white;
-			font-family: "Roboto", sans-serif;
-			margin: 2rem 0 1rem;
-		}
-	}
+  .group-select-dialog {
+    margin: auto 1rem;
+    padding: 0 1rem;
+
+    &__title {
+      font-family: "Montserrat", "Roboto", sans-serif;
+      margin: 0 0 1rem 0;
+    }
+
+    &__field {
+      &:not(:last-of-type) {
+        margin-bottom: 1rem;
+      }
+    }
+
+    &__course-buttons {
+      .course-toggle-button {
+        flex: 1;
+        background-origin: border-box;
+        border-width: 0 0 4px 0;
+        border-color: transparent;
+        border-radius: 0;
+        padding: 0.5rem 0.5rem calc(0.5rem - 4px);
+
+        &.course-toggle-button--selected {
+          border-radius: 4px 4px 0 0;
+
+          &.course-1 {
+            background-color: transparentize($purple, $amount: 0.95);
+            border-bottom-color: $purple;
+          }
+
+          &.course-2 {
+            background-color: transparentize($red, $amount: 0.95);
+            border-bottom-color: $red;
+          }
+
+          &.course-3 {
+            background-color: transparentize($yellow, $amount: 0.95);
+            border-bottom-color: $yellow;
+          }
+
+          &.course-4 {
+            background-color: transparentize($green, $amount: 0.95);
+            border-bottom-color: $green;
+          }
+        }
+      }
+    }
+
+    &__button {
+      background-color: $blue;
+      color: $white;
+      font-family: "Roboto", sans-serif;
+      margin: 2rem 0 1rem;
+    }
+  }
 }

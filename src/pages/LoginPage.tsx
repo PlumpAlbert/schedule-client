@@ -43,7 +43,7 @@ function LoginPage() {
 				console.log(err);
 			}
 		},
-		[setError, navigate, dispatch]
+		[setError, navigate, dispatch],
 	);
 
 	const handleInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(() => {

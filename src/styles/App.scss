@@ -4,31 +4,35 @@ html,
 body,
 div#root,
 div.app {
-	height: 100%;
+  height: 100%;
 }
+
 html,
 body {
-	color: $black;
-	background-color: $white;
-	font-size: 16px;
-	font-family: "Roboto", sans-serif;
-	padding: 0;
-	margin: 0;
+  color: $black;
+  background-color: $white;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+  padding: 0;
+  margin: 0;
 }
+
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .app {
-	display: flex;
-	flex-direction: column;
-	&.white {
-		background-color: $offWhite;
-	}
-	&.green {
-		background-color: $green;
-		color: $white;
-	}
+  display: flex;
+  flex-direction: column;
+
+  &.white {
+    background-color: $offWhite;
+  }
+
+  &.green {
+    background-color: $green;
+    color: $white;
+  }
 }
 
 h1,
@@ -37,16 +41,16 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: "Montserrat", "Roboto", sans-serif;
-	font-weight: 500;
+  font-family: "Montserrat", "Roboto", sans-serif;
+  font-weight: 500;
 }
 
 @media (max-width: 380px) {
-	html,
-	body {
-		font-size: 18px;
-	}
-	.page-footer__copyright {
-		font-size: 0.8rem;
-	}
+  html,
+  body {
+    font-size: 18px;
+  }
+  .page-footer__copyright {
+    font-size: 0.8rem;
+  }
 }

@@ -13,7 +13,7 @@ function TypeControl({dispatch, value}: IProps<SUBJECT_TYPE>) {
 		({target}) => {
 			dispatch(actions.updateProperty({property: "type", value: target.value}));
 		},
-		[dispatch]
+		[dispatch],
 	);
 
 	const typeClass = useMemo(() => {

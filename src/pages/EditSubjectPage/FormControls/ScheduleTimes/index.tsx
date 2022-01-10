@@ -24,12 +24,12 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 			setEditTime(time);
 			setShowDialog(true);
 		},
-		[setEditTime, setShowDialog]
+		[setEditTime, setShowDialog],
 	);
 
 	const handleTimeDelete = useCallback(
 		(time: IAttendTime) => void dispatch(actions.deleteAttendTime(time.id)),
-		[dispatch]
+		[dispatch],
 	);
 	//#endregion
 
@@ -46,14 +46,14 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 							id: editTime.id,
 							property: key,
 							value: time[key],
-						})
+						}),
 					);
 				});
 			} else {
 				dispatch(actions.addAttendTime({time, isCreated: true}));
 			}
 		},
-		[dispatch, setShowDialog, editTime]
+		[dispatch, setShowDialog, editTime],
 	);
 	//#endregion
 

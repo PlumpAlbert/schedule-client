@@ -19,13 +19,13 @@ interface IProps extends IGroup {
 }
 
 function GroupSelectDialog({
-	faculty: defaultFaculty,
-	specialty: defaultSpecialty,
-	year: defaultYear,
-	id: defaultId,
-	open,
-	onClose,
-}: IProps) {
+														 faculty: defaultFaculty,
+														 specialty: defaultSpecialty,
+														 year: defaultYear,
+														 id: defaultId,
+														 open,
+														 onClose,
+													 }: IProps) {
 	//#region Group state
 	const [course, setCourse] = useState<Course>(calculateCourse(defaultYear));
 	const [specialty, setSpecialty] = useState(defaultSpecialty);
@@ -43,7 +43,7 @@ function GroupSelectDialog({
 					{faculty}
 				</MenuItem>
 			)),
-		[]
+		[],
 	);
 	const specialtyOptions = useMemo(
 		() =>
@@ -52,7 +52,7 @@ function GroupSelectDialog({
 					{title}
 				</MenuItem>
 			)),
-		[specialties]
+		[specialties],
 	);
 
 	const courseButtons = useMemo(() => {
@@ -72,7 +72,7 @@ function GroupSelectDialog({
 					}}
 				>
 					{i}
-				</ToggleButton>
+				</ToggleButton>,
 			);
 		}
 		return buttons;
@@ -112,7 +112,7 @@ function GroupSelectDialog({
 			setCourse(newCourse);
 			setError(true);
 		},
-		[specialties, specialty]
+		[specialties, specialty],
 	);
 
 	const handleSelectChange = useCallback<(e: SelectChangeEvent<unknown>) => void>(
@@ -127,7 +127,7 @@ function GroupSelectDialog({
 					break;
 			}
 		},
-		[setFaculty, setSpecialty]
+		[setFaculty, setSpecialty],
 	);
 	//#endregion
 

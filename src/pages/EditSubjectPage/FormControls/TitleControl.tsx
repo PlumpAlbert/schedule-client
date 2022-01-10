@@ -10,7 +10,7 @@ function TitleControl({dispatch, value}: IProps<string>) {
 		({target}) => {
 			dispatch(actions.updateProperty({property: "title", value: target.value}));
 		},
-		[dispatch]
+		[dispatch],
 	);
 	return (
 		<FormControl fullWidth className="form-group form-group-vertical">

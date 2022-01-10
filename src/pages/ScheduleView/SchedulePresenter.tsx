@@ -1,11 +1,10 @@
-import React, {useState, useEffect, useCallback, useMemo} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import ScheduleAPI from "../../API";
-import {SUBJECT_TYPE} from "../../types";
+import {SUBJECT_TYPE, WEEK_TYPE} from "../../types";
 import SubjectView, {DisplaySubject} from "./SubjectView";
-import {WEEK_TYPE} from "../../types";
 import {actions as scheduleActions, EditMode} from "../../store/schedule";
 import {useDispatch, useSelector} from "../../store";
 import {selectUser} from "../../store/app";
@@ -38,7 +37,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 				times.map<DisplaySubject>(time => ({
 					...time,
 					...subject,
-				}))
+				})),
 			);
 		}, []);
 	});
@@ -80,7 +79,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 		subject => {
 			navigate("/subject?id=" + subject.id);
 		},
-		[navigate]
+		[navigate],
 	);
 
 	const handleSubjectDelete = useCallback<(s: DisplaySubject) => void>(
@@ -92,11 +91,11 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 						title: subject.title,
 						type: subject.type,
 						teacher: subject.teacher.id,
-					})
+					}),
 				);
 			});
 		},
-		[dispatch]
+		[dispatch],
 	);
 
 	const filteredSubjects = useMemo(
@@ -104,7 +103,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 			subjects
 				.filter(s => s.weekday === weekday && s.weekType === weekType)
 				.sort((a, b) => a.time - b.time),
-		[weekday, weekType, subjects.length]
+		[weekday, weekType, subjects.length],
 	);
 
 	return (
@@ -112,14 +111,14 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 			{isLoading
 				? subjectPlaceholders
 				: filteredSubjects.map((s, i) => (
-						<SubjectView
-							key={`subject-view-${i}`}
-							onClick={handleSubjectClick}
-							onDelete={handleSubjectDelete}
-							isEditable={!!editMode}
-							value={s}
-						/>
-				  ))}
+					<SubjectView
+						key={`subject-view-${i}`}
+						onClick={handleSubjectClick}
+						onDelete={handleSubjectDelete}
+						isEditable={!!editMode}
+						value={s}
+					/>
+				))}
 		</List>
 	);
 }
