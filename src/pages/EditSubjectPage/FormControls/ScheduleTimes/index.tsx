@@ -40,20 +40,17 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 			setEditTime(undefined);
 			if (!time) return;
 			if (editTime) {
-				(Object.keys(time) as Array<keyof typeof time>).forEach(key => {
 					dispatch(
-						actions.updateAttendTimeProperty({
+					actions.updateAttendTime({
+						...time,
 							id: editTime.id,
-							property: key,
-							value: time[key],
-						}),
+					})
 					);
-				});
 			} else {
 				dispatch(actions.addAttendTime({time, isCreated: true}));
 			}
 		},
-		[dispatch, setShowDialog, editTime],
+		[dispatch, setShowDialog, editTime]
 	);
 	//#endregion
 
