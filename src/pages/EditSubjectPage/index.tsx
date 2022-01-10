@@ -1,5 +1,11 @@
-import {useEffect, useReducer} from "react";
+import {useEffect, useReducer, useState} from "react";
 import {useLocation, useNavigate} from "react-router";
+// MUI
+import Dialog from "@mui/material/Dialog";
+import CircularProgress from "@mui/material/CircularProgress";
+import Icon from "@mui/material/Icon";
+import CheckIcon from "@mui/icons-material/Check";
+
 import TitleControl from "./FormControls/TitleControl";
 import TypeControl from "./FormControls/TypeControl";
 import TeacherControl from "./FormControls/TeacherControl";
@@ -12,6 +18,7 @@ import {
 	actions as SubjectActions,
 	initialState,
 } from "../../store/schedule/subject";
+import {actions as HeaderActions} from "../../store/app/header";
 import ScheduleAPI from "../../API";
 
 import "../../styles/EditSubjectPage.scss";
@@ -19,6 +26,8 @@ import "../../styles/EditSubjectPage.scss";
 function EditSubjectPage() {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const reduxDispatch = useDispatch();
+	const [saved, setSaved] = useState(false);
 	const {editMode, shouldSave, group} = useSelector(
 		({application, schedule}) => ({
 			editMode: schedule.editMode,
@@ -26,7 +35,6 @@ function EditSubjectPage() {
 			group: schedule.currentGroup,
 		})
 	);
-	const reduxDispatch = useDispatch();
 
 	let attendTimeId: number | undefined;
 	if (location.search) {
@@ -46,12 +54,12 @@ function EditSubjectPage() {
 
 	useEffect(() => {
 		if (!shouldSave) return;
-		history.forEach(action => {
+		const promises = history.map(action => {
 			switch (action.type) {
 				case ACTION_TYPES.addAttendTime: {
 					const {type, teacher, title, time, weekday, weekType, audience} =
 						action.payload;
-					ScheduleAPI.createAttendTime(
+					return ScheduleAPI.createAttendTime(
 						{type, teacher, title},
 						{time, weekday, audience, weekType},
 						group
@@ -77,10 +85,9 @@ function EditSubjectPage() {
 							})
 						);
 					});
-					break;
 				}
 				case ACTION_TYPES.deleteAttendTime: {
-					ScheduleAPI.deleteSubject(action.payload).then(success => {
+					return ScheduleAPI.deleteSubject(action.payload).then(success => {
 						if (!success) return;
 						reduxDispatch(
 							ScheduleActions.updateSubject({
@@ -91,10 +98,9 @@ function EditSubjectPage() {
 							})
 						);
 					});
-					break;
 				}
 				case ACTION_TYPES.updateAttendTime: {
-					ScheduleAPI.updateSubject(action.payload).then(success => {
+					return ScheduleAPI.updateSubject(action.payload).then(success => {
 						if (!success) return;
 						reduxDispatch(
 							ScheduleActions.updateSubject({
@@ -108,6 +114,13 @@ function EditSubjectPage() {
 				}
 			}
 		});
+		Promise.all(promises).then(() => {
+			setSaved(true);
+			setTimeout(() => {
+				reduxDispatch(HeaderActions.setSave(false));
+				navigate(`/schedule?group=${group}`, {replace: true});
+			}, 1000);
+		});
 	}, [shouldSave, history, reduxDispatch]);
 
 	if (editMode !== "create" && !attendTimeId) {
@@ -117,6 +130,32 @@ function EditSubjectPage() {
 
 	return (
 		<div className="page edit-subject-page">
+			<Dialog
+				className="edit-subject-page__save-dialog-container"
+				classes={{
+					paper: "edit-subject-page__save-dialog",
+				}}
+				open={shouldSave}
+			>
+				<CircularProgress
+					id="save-dialog__progress"
+					className={`save-dialog__progress ${
+						saved ? "save-dialog__progress--saved" : ""
+					}`}
+					disableShrink
+					color={saved ? "success" : "primary"}
+					variant={saved ? "determinate" : "indeterminate"}
+					value={saved ? 100 : undefined}
+				/>
+				{saved && (
+					<Icon className="save-dialog__icon">
+						<CheckIcon />
+					</Icon>
+				)}
+				<label htmlFor="save-dialog__progress" className="save-dialog__label">
+					{saved ? "Сохранено" : "Сохранение"}
+				</label>
+			</Dialog>
 			<form className="edit-subject-form">
 				<TitleControl dispatch={dispatch} value={state.title} />
 				<TypeControl dispatch={dispatch} value={state.type} />
