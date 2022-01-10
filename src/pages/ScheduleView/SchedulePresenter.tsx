@@ -6,6 +6,7 @@ import ScheduleAPI from "../../API";
 import {CoreSubject, SUBJECT_TYPE, WEEK_TYPE} from "../../types";
 import SubjectView from "./SubjectView";
 import {actions as scheduleActions, EditMode} from "../../store/schedule";
+import {actions as subjectActions} from "../../store/schedule/subject";
 import {useDispatch, useSelector} from "../../store";
 import {selectUser} from "../../store/app";
 
@@ -87,13 +88,25 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 
 	const handleSubjectDelete = useCallback<(subject: CoreSubject) => void>(
 		subject => {
+			dispatch(
+				scheduleActions.updateSubject({
+					title: subject.title,
+					type: subject.type,
+					teacher: subject.teacher,
+					action: subjectActions.deleteAttendTime(subject.id),
+				})
+			);
 			ScheduleAPI.deleteSubject(subject.id).then(success => {
-				if (!success) return;
+				if (success) return;
 				dispatch(
-					scheduleActions.deleteSubject({
+					scheduleActions.updateSubject({
 						title: subject.title,
 						type: subject.type,
-						teacher: subject.teacher.id,
+						teacher: subject.teacher,
+						action: subjectActions.addAttendTime({
+							isCreated: false,
+							time: subject,
+						}),
 					})
 				);
 			});
