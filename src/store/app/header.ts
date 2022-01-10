@@ -45,7 +45,7 @@ export const actions = {
 	setSearchDisplay: createAction<SearchDisplay>("setSearchDisplay"),
 	setRightIcon: createAction<RightIcon>("setRightIcon"),
 	setLeftIcon: createAction<LeftIcon>("setLeftIcon"),
-	saveClicked: createAction<boolean>("saveClicked"),
+	setSave: createAction<boolean>("saveClicked"),
 };
 
 const store = createSlice({
@@ -69,7 +69,7 @@ const store = createSlice({
 			.addCase(actions.setRightIcon, (state, {payload}) => {
 				state.rightIcon = payload;
 			})
-			.addCase(actions.saveClicked, (state, {payload}) => {
+			.addCase(actions.setSave, (state, {payload}) => {
 				state.save = payload;
 			});
 	},

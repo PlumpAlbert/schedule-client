@@ -98,7 +98,7 @@ function PageHeader() {
 	}, [location.pathname, dispatch]); // eslint-disable-line
 
 	const onSaveClick = useCallback(() => {
-		dispatch(headerActions.saveClicked(true));
+		dispatch(headerActions.setSave(true));
 	}, [dispatch]);
 
 	const onMenuClick = useCallback(() => {
