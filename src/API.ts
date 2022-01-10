@@ -23,10 +23,13 @@ interface ISuccessful {
 }
 
 export default class ScheduleAPI {
-	private static HOST: string = `${process.env.PUBLIC_URL}/api`;
+	private static HOST: string =
+		process.env.NODE_ENV === "development"
+			? "http://192.168.0.10:8080/api"
+			: `${process.env.PUBLIC_URL}/api`;
 
 	static CSRFCookie = () =>
-		axios(`${process.env.PUBLIC_URL}/sanctum/csrf-cookie`);
+		axios(`${new URL(ScheduleAPI.HOST).origin}/sanctum/csrf-cookie`);
 
 	/**
 	 * Method for fetching group's schedule
