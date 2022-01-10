@@ -36,6 +36,7 @@
 
 			& > .form__textfield {
 				flex: 1 0;
+				overflow: hidden;
 
 				input,
 				.MuiSelect-select {
