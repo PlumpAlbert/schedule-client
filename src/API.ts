@@ -265,33 +265,42 @@ export default class ScheduleAPI {
 	 * @async
 	 * @param subject - subject object to append time to
 	 * @param time - time to create on server
+	 * @param [group] - id of the group that attends this subject
 	 * @param [controller] - controller to abort request
 	 * @returns Returns id of newly created time. Undefined on error
 	 */
 	static createAttendTime = async (
 		subject: Omit<ISubject, "times">,
 		time: Omit<IAttendTime, "id">,
-		controller?: AbortController
-	) => ScheduleAPI.createSubject({...time, ...subject}, controller);
+		group?: number,
+		controller?: AbortController,
+	) => ScheduleAPI.createSubject({...time, ...subject}, group, controller);
 
 	/**
 	 * Method for creating new subjects
 	 *
 	 * @async
 	 * @param subject - subject to create
+	 * @param [group] - id of the group that attends this subject
 	 * @param [controller] - controller to abort request
 	 * @returns Id of new subject object or `undefined` on error
 	 */
 	static createSubject = async (
 		subject: Omit<DisplaySubject, "id">,
-		controller?: AbortController
+		group?: number,
+		controller?: AbortController,
 	) => {
 		const time = new Date(subject.time);
 		const response = await axios.request<IResponse<DisplaySubject>>({
 			url: `${ScheduleAPI.HOST}/subject`,
 			signal: controller?.signal,
 			method: "POST",
-			data: {...subject, teacher: subject.teacher.id, time: time.toLocaleTimeString("ru")},
+			data: {
+				...subject,
+				teacher: subject.teacher.id,
+				time: time.toLocaleTimeString("ru"),
+				group,
+			},
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
 			},

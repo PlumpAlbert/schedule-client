@@ -15,10 +15,10 @@ import "../../styles/EditSubjectPage.scss";
 function EditSubjectPage() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const {editMode, shouldSave} = useSelector(({application, schedule}) => ({
+	const {editMode, shouldSave, group} = useSelector(({application, schedule}) => ({
 		editMode: schedule.editMode,
 		shouldSave: application.header.save,
-		initState: schedule.subjects,
+		group: schedule.currentGroup,
 	}));
 	const reduxDispatch = useDispatch();
 
@@ -47,7 +47,8 @@ function EditSubjectPage() {
 						action.payload;
 					ScheduleAPI.createAttendTime(
 						{type, teacher, title},
-						{time, weekday, audience, weekType}
+						{time, weekday, audience, weekType},
+						group,
 					).then(createdSubject => {
 						if (!createdSubject) return;
 						reduxDispatch(
