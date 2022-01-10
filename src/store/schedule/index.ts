@@ -65,7 +65,7 @@ const findSubjectCallback =
  */
 const forwardSubjectAction = <T extends {payload: ForwardedAction}>(
 	{subjects}: SchedulePageState,
-	{payload}: T,
+	{payload}: T
 ) => {
 	const {title, type, teacher, action} = payload;
 	let index = subjects.findIndex(findSubjectCallback(teacher, type, title));
@@ -91,7 +91,9 @@ const scheduleSlice = createSlice({
 			})
 			.addCase(actions.toggleWeekType, state => {
 				state.currentWeek =
-					state.currentWeek === WEEK_TYPE.WHITE ? WEEK_TYPE.GREEN : WEEK_TYPE.WHITE;
+					state.currentWeek === WEEK_TYPE.WHITE
+						? WEEK_TYPE.GREEN
+						: WEEK_TYPE.WHITE;
 			})
 			// Editing actions
 			.addCase(actions.toggleEditing, (state, {payload}) => {
@@ -106,7 +108,7 @@ const scheduleSlice = createSlice({
 			})
 			.addCase(actions.deleteSubject, ({subjects}, {payload}) => {
 				const index = subjects.findIndex(
-					findSubjectCallback(payload.teacher, payload.type, payload.title),
+					findSubjectCallback(payload.teacher, payload.type, payload.title)
 				);
 				if (index === -1) return;
 				subjects.splice(index, 1);

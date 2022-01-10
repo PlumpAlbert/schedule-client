@@ -19,7 +19,10 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 				setTeachers(teachers);
 			})
 			.catch(err => {
-				if (!abortController.signal.aborted && process.env.NODE_ENV === "development") {
+				if (
+					!abortController.signal.aborted &&
+					process.env.NODE_ENV === "development"
+				) {
 					console.error(err);
 				}
 			});
@@ -28,14 +31,16 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 		};
 	}, []);
 
-	const handleTeacherChanged = useCallback<(event: SelectChangeEvent<number>) => void>(
+	const handleTeacherChanged = useCallback<
+		(event: SelectChangeEvent<number>) => void
+	>(
 		({target}) => {
 			const teacherId = target.value;
 			const teacher = teachers.find(t => t.id === teacherId);
 			if (!teacher) return;
 			dispatch(actions.updateProperty({property: "teacher", value: teacher}));
 		},
-		[dispatch, teachers],
+		[dispatch, teachers]
 	);
 
 	const selectItems = useMemo(
@@ -45,7 +50,7 @@ function TeacherControl({dispatch, value}: IProps<IUser>) {
 					{name}
 				</MenuItem>
 			)),
-		[teachers.length],
+		[teachers.length]
 	);
 
 	return (
@@ -69,7 +74,7 @@ TeacherControl.propTypes = propTypes(
 	PropTypes.shape({
 		id: PropTypes.number.isRequired,
 		name: PropTypes.string.isRequired,
-	}),
+	})
 );
 
 export default TeacherControl;

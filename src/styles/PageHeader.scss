@@ -1,125 +1,125 @@
 @import "Colors.scss";
 
 .app {
-  .page-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 1.5rem 2rem 0.5rem;
-    align-items: center;
-    background-color: $white;
-    color: $grey;
-    position: sticky;
+	.page-header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 1.5rem 2rem 0.5rem;
+		align-items: center;
+		background-color: $white;
+		color: $grey;
+		position: sticky;
 
-    .page-header {
-      &__title {
-        font-family: "Montserrat", "Roboto", sans-serif;
-        font-size: 1.5rem;
-        font-weight: 500;
-        margin: 0 1rem;
-      }
+		.page-header {
+			&__title {
+				font-family: "Montserrat", "Roboto", sans-serif;
+				font-size: 1.5rem;
+				font-weight: 500;
+				margin: 0 1rem;
+			}
 
-      &__icon {
-        display: inline-flex;
-        width: 1.5rem;
-        height: 1.5rem;
+			&__icon {
+				display: inline-flex;
+				width: 1.5rem;
+				height: 1.5rem;
 
-        &.save-icon {
-          color: $blue;
-        }
-      }
+				&.save-icon {
+					color: $blue;
+				}
+			}
 
-      &__search-input-wrapper {
-        margin-left: 1rem;
-        height: 1.75rem;
-        flex-direction: row;
-        align-items: center;
+			&__search-input-wrapper {
+				margin-left: 1rem;
+				height: 1.75rem;
+				flex-direction: row;
+				align-items: center;
 
-        &:only-child {
-          margin-left: auto;
-        }
+				&:only-child {
+					margin-left: auto;
+				}
 
-        &:focus-within {
-          .page-header__search-input-search-wrapper::after {
-            border-bottom-color: $blue;
-            transform: scaleX(1);
-          }
-        }
+				&:focus-within {
+					.page-header__search-input-search-wrapper::after {
+						border-bottom-color: $blue;
+						transform: scaleX(1);
+					}
+				}
 
-        .page-header__search-input-search-wrapper {
-          position: relative;
-          padding-bottom: 0.25rem;
-          box-sizing: content-box;
-          color: $lightGrey;
+				.page-header__search-input-search-wrapper {
+					position: relative;
+					padding-bottom: 0.25rem;
+					box-sizing: content-box;
+					color: $lightGrey;
 
-          &::after {
-            border-bottom: 2px solid transparentize($lightGrey, 0.64);
-            left: 0;
-            bottom: 0;
-            content: "";
-            position: absolute;
-            right: 0;
-            pointer-events: none;
-            transform: scaleX(0);
-            transform-origin: right;
-            @include transition(transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms);
-          }
-        }
+					&::after {
+						border-bottom: 2px solid transparentize($lightGrey, 0.64);
+						left: 0;
+						bottom: 0;
+						content: "";
+						position: absolute;
+						right: 0;
+						pointer-events: none;
+						transform: scaleX(0);
+						transform-origin: right;
+						@include transition(transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms);
+					}
+				}
 
-        .page-header__search-input-collapse {
-          &.MuiCollapse-entered {
-            .page-header__search-input input {
-              width: 100%;
-            }
-          }
+				.page-header__search-input-collapse {
+					&.MuiCollapse-entered {
+						.page-header__search-input input {
+							width: 100%;
+						}
+					}
 
-          .page-header__search-input {
-            input {
-              width: fit-content;
-              height: auto;
-              line-height: 1.5;
-              box-sizing: border-box;
-              padding: 0 0 0.25rem 0;
-            }
+					.page-header__search-input {
+						input {
+							width: fit-content;
+							height: auto;
+							line-height: 1.5;
+							box-sizing: border-box;
+							padding: 0 0 0.25rem 0;
+						}
 
-            &::after {
-              border-color: $blue;
-            }
+						&::after {
+							border-color: $blue;
+						}
 
-            &::before {
-              border-color: transparentize($lightGrey, 0.64);
-            }
+						&::before {
+							border-color: transparentize($lightGrey, 0.64);
+						}
 
-            &-enter {
-              box-sizing: content-box;
-              padding: 0 0.5rem 0.25rem;
-            }
-          }
-        }
-      }
-    }
-  }
+						&-enter {
+							box-sizing: content-box;
+							padding: 0 0.5rem 0.25rem;
+						}
+					}
+				}
+			}
+		}
+	}
 
-  &.white {
-    .page-header {
-      background-color: $offWhite;
-    }
-  }
+	&.white {
+		.page-header {
+			background-color: $offWhite;
+		}
+	}
 
-  &.green {
-    .page-header {
-      background-color: $green;
-      color: $white;
-    }
-  }
+	&.green {
+		.page-header {
+			background-color: $green;
+			color: $white;
+		}
+	}
 }
 
 @media (max-width: 380px) {
-  .app .page-header {
-    .page-header {
-      &__title {
-        font-size: 1.2rem;
-      }
-    }
-  }
+	.app .page-header {
+		.page-header {
+			&__title {
+				font-size: 1.2rem;
+			}
+		}
+	}
 }

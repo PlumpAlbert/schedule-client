@@ -11,13 +11,13 @@ interface IProps {
 }
 
 function SwipeAction({
-											 action,
-											 canSwipe = true,
-											 children,
-											 className = "swipe",
-											 touchTimeThreshold = 150,
-											 onAction,
-										 }: IProps) {
+	action,
+	canSwipe = true,
+	children,
+	className = "swipe",
+	touchTimeThreshold = 150,
+	onAction,
+}: IProps) {
 	const [swipeX, setX] = useState(0);
 	const actionRef = useRef(null);
 	const touchesRef = useRef<React.Touch>();
@@ -34,7 +34,7 @@ function SwipeAction({
 			const deltaX = e.changedTouches[0].clientX - touchesRef.current.clientX;
 			setX(deltaX);
 		},
-		[setX],
+		[setX]
 	);
 
 	const handleSwipeEnd = useCallback(() => {
@@ -42,7 +42,9 @@ function SwipeAction({
 		touchesRef.current = undefined;
 		let actionWidth = 0;
 		if (actionRef.current) {
-			actionWidth = Number(getComputedStyle(actionRef.current).width.replace("px", ""));
+			actionWidth = Number(
+				getComputedStyle(actionRef.current).width.replace("px", "")
+			);
 		}
 		if (touchTime < touchTimeThreshold && -swipeX > actionWidth) {
 			onAction();
@@ -61,7 +63,7 @@ function SwipeAction({
 			}
 			return classes.map(c => c + suffix).join(" ");
 		},
-		[className],
+		[className]
 	);
 
 	return (
@@ -77,7 +79,11 @@ function SwipeAction({
 			>
 				{children}
 			</div>
-			<div className={createClassName("-action")} ref={actionRef} onClick={onAction}>
+			<div
+				className={createClassName("-action")}
+				ref={actionRef}
+				onClick={onAction}
+			>
 				{action}
 			</div>
 		</div>

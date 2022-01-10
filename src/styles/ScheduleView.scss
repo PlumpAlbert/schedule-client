@@ -1,92 +1,92 @@
 @import "./Colors.scss";
 
 .schedule-view-page {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  position: relative;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	position: relative;
 
-  &__week-type {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding: 0 2rem;
+	&__week-type {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		margin-top: 2rem;
+		padding: 0 2rem;
 
-    .week-type__text {
-      font-weight: 500;
-      font-family: "Montserrat", sans-serif;
-      margin: 0;
-      user-select: none;
-    }
+		.week-type__text {
+			font-weight: 500;
+			font-family: "Montserrat", sans-serif;
+			margin: 0;
+			user-select: none;
+		}
 
-    .week-type__swap-icon {
-      height: 2rem;
-      width: 2rem;
-      color: inherit;
-    }
-  }
+		.week-type__swap-icon {
+			height: 2rem;
+			width: 2rem;
+			color: inherit;
+		}
+	}
 
-  &__days {
-    display: flex;
-    margin: 1.5rem 2rem 0;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 1rem 0;
-    scrollbar-width: none;
+	&__days {
+		display: flex;
+		margin: 1.5rem 2rem 0;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		padding: 1rem 0;
+		scrollbar-width: none;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
+		&::-webkit-scrollbar {
+			display: none;
+		}
 
-    .weekday {
-      margin: 0 1rem;
-      user-select: none;
-      text-transform: lowercase;
+		.weekday {
+			margin: 0 1rem;
+			user-select: none;
+			text-transform: lowercase;
 
-      &::first-letter {
-        text-transform: uppercase;
-      }
+			&::first-letter {
+				text-transform: uppercase;
+			}
 
-      &:first-child {
-        margin-left: 0;
-      }
+			&:first-child {
+				margin-left: 0;
+			}
 
-      &:last-child {
-        margin-right: 0;
-      }
+			&:last-child {
+				margin-right: 0;
+			}
 
-      &.active {
-        text-decoration: underline;
-      }
-    }
-  }
+			&.active {
+				text-decoration: underline;
+			}
+		}
+	}
 
-  &__schedule {
-    background-color: $white;
-    border-radius: 8px 8px 0 0;
-    height: 100%;
-    color: hsl(0, 0%, 10%);
-    padding: 1.5rem 0;
+	&__schedule {
+		background-color: $white;
+		border-radius: 8px 8px 0 0;
+		height: 100%;
+		color: hsl(0, 0%, 10%);
+		padding: 1.5rem 0;
 
-    .subject-view {
-      margin: 1rem 0;
+		.subject-view {
+			margin: 1rem 0;
 
-      &:first-child {
-        margin-top: 0;
-      }
-    }
-  }
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+	}
 
-  & .schedule-view-page__fab {
-    z-index: 99;
-    position: fixed;
-    background-color: $blue;
-    bottom: 3rem;
-    right: 1.5rem;
+	& .schedule-view-page__fab {
+		z-index: 99;
+		position: fixed;
+		background-color: $blue;
+		bottom: 3rem;
+		right: 1.5rem;
 
-    .fab-icon {
-      color: $white;
-    }
-  }
+		.fab-icon {
+			color: $white;
+		}
+	}
 }

@@ -51,7 +51,8 @@ function App() {
 			}
 		});
 		return () => {
-			if (document.onkeydown) document.removeEventListener("keydown", document.onkeydown);
+			if (document.onkeydown)
+				document.removeEventListener("keydown", document.onkeydown);
 		};
 	}, []);
 
@@ -72,7 +73,10 @@ function App() {
 	return (
 		<div className={appClassName}>
 			<PageHeader />
-			<MenuSlider onClose={toggleMenuVisibility} onOpen={toggleMenuVisibility} />
+			<MenuSlider
+				onClose={toggleMenuVisibility}
+				onOpen={toggleMenuVisibility}
+			/>
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
 				<Route path="/signup" element={<SignUpPage />} />

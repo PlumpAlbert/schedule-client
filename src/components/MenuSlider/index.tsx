@@ -44,11 +44,13 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 		success => {
 			setAlert({
 				show: true,
-				message: success ? "Группа успешно изменена" : "Ошибка при смене группы",
+				message: success
+					? "Группа успешно изменена"
+					: "Ошибка при смене группы",
 				type: success ? "success" : "error",
 			});
 		},
-		[user],
+		[user]
 	);
 
 	const handleAlertClose = useCallback(() => {
@@ -63,7 +65,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 		e => {
 			setSearchValue(e.target.value);
 		},
-		[setSearchValue],
+		[setSearchValue]
 	);
 
 	const handleKeyDown = useCallback(
@@ -71,7 +73,7 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 			if ((key && key !== "Enter") || !searchValue) return;
 			navigate(`/search?q=${searchValue}`);
 		},
-		[navigate, searchValue],
+		[navigate, searchValue]
 	);
 
 	return (
@@ -142,8 +144,8 @@ const MenuSlider = ({onClose, onOpen}: IProps) => {
 						<div className="menu-body__text">
 							<h3 className="text-header">Надоело искать свою группу?</h3>
 							<span className="text-content">
-								Зарегистрируйся в приложении и смотри расписание без необходимости
-								поиска
+								Зарегистрируйся в приложении и смотри расписание без
+								необходимости поиска
 							</span>
 						</div>
 						<Button

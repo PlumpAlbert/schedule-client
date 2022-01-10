@@ -25,7 +25,8 @@ import {GetWeekType} from "../../Helpers";
 import "../../styles/PageHeader.scss";
 
 function PageHeader() {
-	const {title, leftIcon, rightIcon, searchValue, searchDisplay} = useSelector(selectAppHeader);
+	const {title, leftIcon, rightIcon, searchValue, searchDisplay} =
+		useSelector(selectAppHeader);
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -37,8 +38,8 @@ function PageHeader() {
 		if (uri.length === 1) {
 			actions.push(
 				headerActions.setSearchDisplay(
-					searchValue ? SearchDisplay.FULL : SearchDisplay.ICON,
-				),
+					searchValue ? SearchDisplay.FULL : SearchDisplay.ICON
+				)
 			);
 		} else {
 			switch (uri[1]) {
@@ -47,13 +48,13 @@ function PageHeader() {
 						actions.push(
 							headerActions.setLeftIcon(LeftIcon.BACK),
 							headerActions.setTitle(""),
-							headerActions.setRightIcon(RightIcon.NONE),
+							headerActions.setRightIcon(RightIcon.NONE)
 						);
 					} else {
 						actions.push(
 							headerActions.setLeftIcon(LeftIcon.MENU),
 							headerActions.setTitle(""),
-							headerActions.setRightIcon(RightIcon.NONE),
+							headerActions.setRightIcon(RightIcon.NONE)
 						);
 					}
 					break;
@@ -62,7 +63,7 @@ function PageHeader() {
 					actions.push(
 						headerActions.setLeftIcon(LeftIcon.MENU),
 						headerActions.setTitle(""),
-						headerActions.setRightIcon(RightIcon.TODAY),
+						headerActions.setRightIcon(RightIcon.TODAY)
 					);
 					break;
 				}
@@ -70,7 +71,7 @@ function PageHeader() {
 					actions.push(
 						headerActions.setLeftIcon(LeftIcon.CANCEL),
 						headerActions.setTitle("Редактирование"),
-						headerActions.setRightIcon(RightIcon.SAVE),
+						headerActions.setRightIcon(RightIcon.SAVE)
 					);
 					break;
 				}
@@ -78,7 +79,7 @@ function PageHeader() {
 					actions.push(
 						headerActions.setLeftIcon(LeftIcon.CANCEL),
 						headerActions.setTitle("Создание"),
-						headerActions.setRightIcon(RightIcon.SAVE),
+						headerActions.setRightIcon(RightIcon.SAVE)
 					);
 					break;
 				}
@@ -87,7 +88,7 @@ function PageHeader() {
 						headerActions.setSearchDisplay(SearchDisplay.NONE),
 						headerActions.setTitle(""),
 						headerActions.setLeftIcon(LeftIcon.MENU),
-						headerActions.setRightIcon(RightIcon.NONE),
+						headerActions.setRightIcon(RightIcon.NONE)
 					);
 					break;
 				}
@@ -188,7 +189,14 @@ function PageHeader() {
 				);
 			}
 		}
-	}, [onTodayClick, onSaveClick, dispatch, rightIcon, searchValue, searchDisplay]);
+	}, [
+		onTodayClick,
+		onSaveClick,
+		dispatch,
+		rightIcon,
+		searchValue,
+		searchDisplay,
+	]);
 
 	const isScrolled = useScrollTrigger({
 		disableHysteresis: true,

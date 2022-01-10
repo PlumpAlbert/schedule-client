@@ -82,12 +82,14 @@ const store = createSlice({
 			})
 			.addMatcher(
 				action => {
-					const actionNames = Object.keys(headerActions) as Array<keyof typeof headerActions>;
+					const actionNames = Object.keys(headerActions) as Array<
+						keyof typeof headerActions
+					>;
 					return actionNames.some(key => headerActions[key].match(action));
 				},
 				(state, action) => {
 					state.header = headerReducer(state.header, action);
-				},
+				}
 			);
 	},
 });

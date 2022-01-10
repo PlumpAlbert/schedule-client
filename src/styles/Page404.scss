@@ -1,28 +1,28 @@
 @import "./Colors.scss";
 
 .page.page-404 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: auto 2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: auto 2rem;
 
-  .header {
-    font-family: "Montserrat", "Roboto", sans-serif;
-    font-size: 2rem;
-    padding: 0;
-    margin: 0 0 2rem 0;
-    text-align: center;
-  }
+	.header {
+		font-family: "Montserrat", "Roboto", sans-serif;
+		font-size: 2rem;
+		padding: 0;
+		margin: 0 0 2rem 0;
+		text-align: center;
+	}
 
-  .text {
-    font-family: "Roboto", sans-serif;
-    font-size: 1rem;
-    margin: 0;
-    text-align: justify;
+	.text {
+		font-family: "Roboto", sans-serif;
+		font-size: 1rem;
+		margin: 0;
+		text-align: justify;
 
-    &.center {
-      margin-top: 1rem;
-      text-align: center;
-    }
-  }
+		&.center {
+			margin-top: 1rem;
+			text-align: center;
+		}
+	}
 }

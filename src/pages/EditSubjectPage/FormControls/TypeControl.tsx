@@ -9,11 +9,13 @@ import {actions} from "../../../store/schedule/subject";
 import {GetSubjectTypeAsString} from "../../../Helpers";
 
 function TypeControl({dispatch, value}: IProps<SUBJECT_TYPE>) {
-	const handleTypeChanged = useCallback<(event: SelectChangeEvent<number>) => void>(
+	const handleTypeChanged = useCallback<
+		(event: SelectChangeEvent<number>) => void
+	>(
 		({target}) => {
 			dispatch(actions.updateProperty({property: "type", value: target.value}));
 		},
-		[dispatch],
+		[dispatch]
 	);
 
 	const typeClass = useMemo(() => {

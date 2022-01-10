@@ -32,14 +32,17 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 	const selectedGroup = useSelector(({schedule}) => schedule.currentGroup);
 
 	const subjects = useSelector<DisplaySubject[]>(({schedule}) => {
-		return schedule.subjects.reduce<DisplaySubject[]>((displayList, {times, ...subject}) => {
-			return displayList.concat(
-				times.map<DisplaySubject>(time => ({
-					...time,
-					...subject,
-				})),
-			);
-		}, []);
+		return schedule.subjects.reduce<DisplaySubject[]>(
+			(displayList, {times, ...subject}) => {
+				return displayList.concat(
+					times.map<DisplaySubject>(time => ({
+						...time,
+						...subject,
+					}))
+				);
+			},
+			[]
+		);
 	});
 
 	useEffect(() => {
@@ -79,7 +82,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 		subject => {
 			navigate("/subject?id=" + subject.id);
 		},
-		[navigate],
+		[navigate]
 	);
 
 	const handleSubjectDelete = useCallback<(s: DisplaySubject) => void>(
@@ -91,11 +94,11 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 						title: subject.title,
 						type: subject.type,
 						teacher: subject.teacher.id,
-					}),
+					})
 				);
 			});
 		},
-		[dispatch],
+		[dispatch]
 	);
 
 	const filteredSubjects = useMemo(
@@ -103,7 +106,7 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 			subjects
 				.filter(s => s.weekday === weekday && s.weekType === weekType)
 				.sort((a, b) => a.time - b.time),
-		[weekday, weekType, subjects.length],
+		[weekday, weekType, subjects.length]
 	);
 
 	return (
@@ -111,14 +114,14 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 			{isLoading
 				? subjectPlaceholders
 				: filteredSubjects.map((s, i) => (
-					<SubjectView
-						key={`subject-view-${i}`}
-						onClick={handleSubjectClick}
-						onDelete={handleSubjectDelete}
-						isEditable={!!editMode}
-						value={s}
-					/>
-				))}
+						<SubjectView
+							key={`subject-view-${i}`}
+							onClick={handleSubjectClick}
+							onDelete={handleSubjectDelete}
+							isEditable={!!editMode}
+							value={s}
+						/>
+				  ))}
 		</List>
 	);
 }

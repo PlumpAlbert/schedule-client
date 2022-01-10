@@ -24,14 +24,14 @@ const SearchInput = () => {
 		(type: SearchDisplay) => {
 			dispatch(headerActions.setSearchDisplay(type));
 		},
-		[dispatch],
+		[dispatch]
 	);
 
 	const setSearchValue = useCallback(
 		(value: string) => {
 			dispatch(headerActions.setSearchValue(value));
 		},
-		[dispatch],
+		[dispatch]
 	);
 	//#endregion
 
@@ -43,14 +43,16 @@ const SearchInput = () => {
 			}
 			navigate(`/search?q=${value}`);
 		},
-		[value],
+		[value]
 	);
 
-	const handleSearchValueChanged = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+	const handleSearchValueChanged = useCallback<
+		React.ChangeEventHandler<HTMLInputElement>
+	>(
 		({target}) => {
 			setSearchValue(target.value);
 		},
-		[setSearchValue],
+		[setSearchValue]
 	);
 
 	const handleSearchIconClick = useCallback(() => {
@@ -66,7 +68,7 @@ const SearchInput = () => {
 				setSearchDisplayType(SearchDisplay.ICON);
 			}
 		},
-		[setSearchDisplayType],
+		[setSearchDisplayType]
 	);
 
 	const handleCollapseEntered = useCallback(() => {
@@ -75,7 +77,10 @@ const SearchInput = () => {
 	//#endregion
 
 	return (
-		<FormControl className="page-header__search-input-wrapper" variant="standard">
+		<FormControl
+			className="page-header__search-input-wrapper"
+			variant="standard"
+		>
 			<IconWrapper className="page-header__search-input-search-wrapper">
 				<SearchIcon
 					className="page-header__search-input-search"
@@ -97,7 +102,10 @@ const SearchInput = () => {
 					onChange={handleSearchValueChanged}
 					onKeyPress={handleEnterPress}
 					endAdornment={
-						<InputAdornment position="end" className="page-header__search-input-enter">
+						<InputAdornment
+							position="end"
+							className="page-header__search-input-enter"
+						>
 							<ArrowRightIcon onClick={handleEnterPress} />
 						</InputAdornment>
 					}

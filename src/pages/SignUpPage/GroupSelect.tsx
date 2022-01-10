@@ -29,13 +29,16 @@ const groupReducer: React.Reducer<IState, Action> = (state, action) => {
 			return action.payload;
 		}
 		case "COMBINED": {
-			const updatedState = (action.payload as Action[]).reduce<IState>((s, a) => {
-				const newState = groupReducer(s, a);
-				return {
-					...s,
-					...newState,
-				};
-			}, state);
+			const updatedState = (action.payload as Action[]).reduce<IState>(
+				(s, a) => {
+					const newState = groupReducer(s, a);
+					return {
+						...s,
+						...newState,
+					};
+				},
+				state
+			);
 			return updatedState;
 		}
 	}
@@ -59,7 +62,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 		() => ({
 			getState: () => ({...group, faculty: group.faculty as FACULTY}),
 		}),
-		[group],
+		[group]
 	);
 
 	const facultyOptions = useMemo(
@@ -69,7 +72,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 					{faculty}
 				</MenuItem>
 			)),
-		[],
+		[]
 	);
 
 	const groupOptions = useMemo(
@@ -79,37 +82,41 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 					.split(" ")
 					.reduce((s, w) => (s += w[0].toUpperCase()), "");
 				const date = new Date();
-				const newOptions = Object.keys(specialty.courses).map<JSX.Element>(courseNumber => {
-					let year = date.getFullYear() - Number(courseNumber);
-					if (date.getMonth() >= 9) year += 1;
-					const item = {
-						name: `${shortName}-${year.toString().slice(-2)}`,
-						value: specialty.courses[Number(courseNumber) as Course],
-					};
-					return (
-						<MenuItem
-							key={item.name}
-							itemProp={specialty.title}
-							placeholder={year.toString()}
-							value={item.value}
-						>
-							{item.name}
-						</MenuItem>
-					);
-				});
+				const newOptions = Object.keys(specialty.courses).map<JSX.Element>(
+					courseNumber => {
+						let year = date.getFullYear() - Number(courseNumber);
+						if (date.getMonth() >= 9) year += 1;
+						const item = {
+							name: `${shortName}-${year.toString().slice(-2)}`,
+							value: specialty.courses[Number(courseNumber) as Course],
+						};
+						return (
+							<MenuItem
+								key={item.name}
+								itemProp={specialty.title}
+								placeholder={year.toString()}
+								value={item.value}
+							>
+								{item.name}
+							</MenuItem>
+						);
+					}
+				);
 				return options.concat(newOptions);
 			}, []),
-		[specialties],
+		[specialties]
 	);
 
 	useEffect(() => {
 		if (!group.faculty) return;
 		const abortController = new AbortController();
 		try {
-			ScheduleAPI.fetchSpecialties(group.faculty, abortController).then(specialties => {
-				if (!specialties) return;
-				setSpecialties(specialties);
-			});
+			ScheduleAPI.fetchSpecialties(group.faculty, abortController).then(
+				specialties => {
+					if (!specialties) return;
+					setSpecialties(specialties);
+				}
+			);
 		} catch (err) {
 			if (!abortController.signal.aborted) {
 				console.error(err);
@@ -121,7 +128,9 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 		}
 	}, [group.faculty, setSpecialties]);
 
-	const handleSelectChange = useCallback<(e: SelectChangeEvent<unknown>, node: any) => void>(
+	const handleSelectChange = useCallback<
+		(e: SelectChangeEvent<unknown>, node: any) => void
+	>(
 		({target}, node) => {
 			let action: Action = {type: "", payload: target.value};
 			switch (target.name) {
@@ -143,7 +152,7 @@ const GroupSelect = forwardRef(({isError}: {isError: boolean}, ref) => {
 			}
 			dispatch(action);
 		},
-		[dispatch],
+		[dispatch]
 	);
 
 	return (

@@ -19,13 +19,13 @@ interface IProps extends IGroup {
 }
 
 function GroupSelectDialog({
-														 faculty: defaultFaculty,
-														 specialty: defaultSpecialty,
-														 year: defaultYear,
-														 id: defaultId,
-														 open,
-														 onClose,
-													 }: IProps) {
+	faculty: defaultFaculty,
+	specialty: defaultSpecialty,
+	year: defaultYear,
+	id: defaultId,
+	open,
+	onClose,
+}: IProps) {
 	//#region Group state
 	const [course, setCourse] = useState<Course>(calculateCourse(defaultYear));
 	const [specialty, setSpecialty] = useState(defaultSpecialty);
@@ -43,7 +43,7 @@ function GroupSelectDialog({
 					{faculty}
 				</MenuItem>
 			)),
-		[],
+		[]
 	);
 	const specialtyOptions = useMemo(
 		() =>
@@ -52,12 +52,14 @@ function GroupSelectDialog({
 					{title}
 				</MenuItem>
 			)),
-		[specialties],
+		[specialties]
 	);
 
 	const courseButtons = useMemo(() => {
 		let buttons: React.ReactNode[] = [];
-		const courses = Object.keys(specialties.find(s => s.title === specialty)?.courses || []);
+		const courses = Object.keys(
+			specialties.find(s => s.title === specialty)?.courses || []
+		);
 		for (let i = 1; i < 5; ++i) {
 			const disabled = !courses.find(c => c === i.toString());
 			buttons.push(
@@ -72,7 +74,7 @@ function GroupSelectDialog({
 					}}
 				>
 					{i}
-				</ToggleButton>,
+				</ToggleButton>
 			);
 		}
 		return buttons;
@@ -112,10 +114,12 @@ function GroupSelectDialog({
 			setCourse(newCourse);
 			setError(true);
 		},
-		[specialties, specialty],
+		[specialties, specialty]
 	);
 
-	const handleSelectChange = useCallback<(e: SelectChangeEvent<unknown>) => void>(
+	const handleSelectChange = useCallback<
+		(e: SelectChangeEvent<unknown>) => void
+	>(
 		({target}) => {
 			switch (target.name) {
 				case "group_faculty":
@@ -127,7 +131,7 @@ function GroupSelectDialog({
 					break;
 			}
 		},
-		[setFaculty, setSpecialty],
+		[setFaculty, setSpecialty]
 	);
 	//#endregion
 
@@ -140,7 +144,9 @@ function GroupSelectDialog({
 				paper: "group-select-dialog",
 			}}
 		>
-			<DialogTitle className="group-select-dialog__title">Изменение группы</DialogTitle>
+			<DialogTitle className="group-select-dialog__title">
+				Изменение группы
+			</DialogTitle>
 
 			<TextField
 				select
@@ -175,7 +181,9 @@ function GroupSelectDialog({
 				id="group_specialty"
 				name="group_specialty"
 				label="Специальность:"
-				helperText={error && !specialty ? "Укажите свою специальность" : undefined}
+				helperText={
+					error && !specialty ? "Укажите свою специальность" : undefined
+				}
 				SelectProps={{
 					className: "field__input",
 					onChange: handleSelectChange,

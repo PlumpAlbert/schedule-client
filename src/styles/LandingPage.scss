@@ -1,34 +1,34 @@
 @import "./Colors.scss";
 
 .landing-page {
-  display: flex;
-  flex-direction: column;
-  padding: 0 2rem;
-  flex: 1;
+	display: flex;
+	flex-direction: column;
+	padding: 0 2rem;
+	flex: 1;
 
-  .app-title {
-    margin: 3rem 0 0;
-    font-size: 2rem;
-    font-weight: 500;
-    font-family: "Montserrat", "Roboto", sans-serif;
-    text-transform: uppercase;
-    text-align: center;
-    align-self: center;
-  }
+	.app-title {
+		margin: 3rem 0 0;
+		font-size: 2rem;
+		font-weight: 500;
+		font-family: "Montserrat", "Roboto", sans-serif;
+		text-transform: uppercase;
+		text-align: center;
+		align-self: center;
+	}
 
-  &__text {
-    font-family: "Roboto", sans-serif;
-    margin: 1.5rem 0 0.8rem;
-    text-align: justify;
-  }
+	&__text {
+		font-family: "Roboto", sans-serif;
+		margin: 1.5rem 0 0.8rem;
+		text-align: justify;
+	}
 
-  &__btn {
-    color: $blue !important;
+	&__btn {
+		color: $blue !important;
 
-    &.signup-btn {
-      font-weight: 500 !important;
-      color: $white !important;
-      background-color: $blue !important;
-    }
-  }
+		&.signup-btn {
+			font-weight: 500 !important;
+			color: $white !important;
+			background-color: $blue !important;
+		}
+	}
 }

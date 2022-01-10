@@ -43,10 +43,12 @@ function LoginPage() {
 				console.log(err);
 			}
 		},
-		[setError, navigate, dispatch],
+		[setError, navigate, dispatch]
 	);
 
-	const handleInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(() => {
+	const handleInputChange = useCallback<
+		React.ChangeEventHandler<HTMLInputElement>
+	>(() => {
 		if (isError) setError(false);
 	}, [isError, setError]);
 	//#endregion
@@ -72,7 +74,9 @@ function LoginPage() {
 		<div className="page login-page">
 			<h1 className="login-page__title">Расписание ЛГТУ</h1>
 			<form className="login-page__form" onSubmit={handleSubmit} method="post">
-				<FormControl className={`login-page__form-control ${isError ? "error" : ""}`}>
+				<FormControl
+					className={`login-page__form-control ${isError ? "error" : ""}`}
+				>
 					<InputLabel className="form-control__label" htmlFor="user_login">
 						Логин:
 					</InputLabel>
@@ -87,7 +91,9 @@ function LoginPage() {
 						{helperText[0]}
 					</FormHelperText>
 				</FormControl>
-				<FormControl className={`login-page__form-control ${isError ? "error" : ""}`}>
+				<FormControl
+					className={`login-page__form-control ${isError ? "error" : ""}`}
+				>
 					<InputLabel className="form-control__label" htmlFor="user_password">
 						Пароль:
 					</InputLabel>

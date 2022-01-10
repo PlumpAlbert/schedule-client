@@ -7,7 +7,7 @@ import {FACULTY, ISpecialty} from "../types";
  * @param {FACULTY} faculty Faculty to use for fetching specialties
  */
 function useSpecialties(
-	faculty: FACULTY,
+	faculty: FACULTY
 ): [ISpecialty[], React.Dispatch<React.SetStateAction<ISpecialty[]>>, boolean] {
 	const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
 	const [isLoading, setLoading] = useState<boolean>(false);

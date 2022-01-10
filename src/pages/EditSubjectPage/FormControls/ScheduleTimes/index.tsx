@@ -14,9 +14,15 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 	const [showDialog, setShowDialog] = useState(false);
 	const [editTime, setEditTime] = useState<IAttendTime | undefined>();
 
-	const handleWeekTypeChange = useCallback((_, value) => void setWeekType(value), [setWeekType]);
+	const handleWeekTypeChange = useCallback(
+		(_, value) => void setWeekType(value),
+		[setWeekType]
+	);
 
-	const toggleDialog = useCallback(() => void setShowDialog(!showDialog), [showDialog]);
+	const toggleDialog = useCallback(
+		() => void setShowDialog(!showDialog),
+		[showDialog]
+	);
 
 	//#region TimeList callbacks
 	const handleTimeClick = useCallback(
@@ -24,12 +30,12 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 			setEditTime(time);
 			setShowDialog(true);
 		},
-		[setEditTime, setShowDialog],
+		[setEditTime, setShowDialog]
 	);
 
 	const handleTimeDelete = useCallback(
 		(time: IAttendTime) => void dispatch(actions.deleteAttendTime(time.id)),
-		[dispatch],
+		[dispatch]
 	);
 	//#endregion
 
@@ -40,12 +46,12 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 			setEditTime(undefined);
 			if (!time) return;
 			if (editTime) {
-					dispatch(
+				dispatch(
 					actions.updateAttendTime({
 						...time,
-							id: editTime.id,
+						id: editTime.id,
 					})
-					);
+				);
 			} else {
 				dispatch(actions.addAttendTime({time, isCreated: true}));
 			}
@@ -76,7 +82,8 @@ const ScheduleTimes = ({dispatch, value}: IProps<IAttendTime[]>) => {
 				value={weekType}
 				onChange={handleWeekTypeChange}
 				classes={{
-					indicator: "week-type-tabs__indicator " + WEEK_TYPE[weekType].toLowerCase(),
+					indicator:
+						"week-type-tabs__indicator " + WEEK_TYPE[weekType].toLowerCase(),
 				}}
 			>
 				<Tab

@@ -8,9 +8,14 @@ import "../styles/PageFooter.scss";
 export default function PageFooter() {
 	return (
 		<footer className="page-footer">
-			<p className="page-footer__copyright">© {new Date().getFullYear()} Plump Albert</p>
+			<p className="page-footer__copyright">
+				© {new Date().getFullYear()} Plump Albert
+			</p>
 			<div className="page-footer__links">
-				<Link className="page-footer__link" href="https://github.com/PlumpAlbert">
+				<Link
+					className="page-footer__link"
+					href="https://github.com/PlumpAlbert"
+				>
 					<GithubIcon className="github-icon page-footer__icon" />
 				</Link>
 				<Link className="page-footer__link" href="mailto:plumpalbert@gmail.com">

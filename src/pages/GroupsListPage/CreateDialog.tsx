@@ -9,7 +9,13 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import {BACHELOR_MAX, Course, FACULTY, IGroup, MAGISTRACY_MAX} from "../../types";
+import {
+	BACHELOR_MAX,
+	Course,
+	FACULTY,
+	IGroup,
+	MAGISTRACY_MAX,
+} from "../../types";
 
 import "./CreateDialog.scss";
 import ScheduleAPI from "../../API";
@@ -34,12 +40,14 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 	const [isCreating, setCreating] = useState(false);
 	const [error, setError] = useState<string>();
 
-	const handleFieldChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+	const handleFieldChange = useCallback<
+		React.ChangeEventHandler<HTMLInputElement>
+	>(
 		({target}) => {
 			const {name, value} = target;
 			setFields({...fields, [name]: value});
 		},
-		[setFields, fields],
+		[setFields, fields]
 	);
 
 	const handleDialogClose = useCallback(() => {
@@ -55,7 +63,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				className="create-specialty-dialog__select-subheader"
 			>
 				Бакалавриат
-			</ListSubheader>,
+			</ListSubheader>
 		);
 		for (let i = 0; i < BACHELOR_MAX; ++i) {
 			options.push(
@@ -65,7 +73,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 					value={(i + 1).toString()}
 				>
 					{i + 1} курс
-				</MenuItem>,
+				</MenuItem>
 			);
 		}
 		options.push(
@@ -74,7 +82,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 				className="create-specialty-dialog__select-subheader"
 			>
 				Магистратура
-			</ListSubheader>,
+			</ListSubheader>
 		);
 		for (let i = 0; i < MAGISTRACY_MAX; ++i) {
 			options.push(
@@ -84,7 +92,7 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 					value={(BACHELOR_MAX + i + 1).toString()}
 				>
 					{i + 1} курс
-				</MenuItem>,
+				</MenuItem>
 			);
 		}
 		return options;
@@ -139,7 +147,9 @@ const CreateDialog = ({faculty, open, onClose}: IProps) => {
 					{error}
 				</Alert>
 			</Snackbar>
-			<DialogTitle className="create-specialty-dialog__title">Создание группы</DialogTitle>
+			<DialogTitle className="create-specialty-dialog__title">
+				Создание группы
+			</DialogTitle>
 			<TextField
 				required
 				className="create-specialty-dialog__field"

@@ -23,13 +23,13 @@ interface IProps {
 }
 
 function SubjectView({
-											 onClick = undefined,
-											 onDelete = undefined,
-											 loading = false,
-											 isEditable,
-											 value,
-											 type = value?.type,
-										 }: IProps & ILoadable) {
+	onClick = undefined,
+	onDelete = undefined,
+	loading = false,
+	isEditable,
+	value,
+	type = value?.type,
+}: IProps & ILoadable) {
 	let typeClass;
 	switch (type || value?.type) {
 		case SUBJECT_TYPE.ЛЕКЦИЯ:
@@ -51,7 +51,7 @@ function SubjectView({
 				onClick(value);
 			}
 		},
-		[onClick, value],
+		[onClick, value]
 	);
 
 	const handleDeleteClick = useCallback(
@@ -59,11 +59,14 @@ function SubjectView({
 			if (e) e.stopPropagation();
 			if (onDelete && value) onDelete(value);
 		},
-		[onDelete, value],
+		[onDelete, value]
 	);
 
 	return (
-		<ListItem className={`subject-view${loading ? " loading" : ""}`} onClick={handleClick}>
+		<ListItem
+			className={`subject-view${loading ? " loading" : ""}`}
+			onClick={handleClick}
+		>
 			<SwipeAction
 				className="subject-view"
 				canSwipe={isEditable}

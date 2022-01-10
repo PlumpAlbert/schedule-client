@@ -1,175 +1,175 @@
 @import "Colors.scss";
 
 body .app-menu {
-  display: flex;
-  min-width: 85%;
-  width: min-content;
-  overflow-x: hidden;
-  flex-direction: column;
-  color: $black;
+	display: flex;
+	min-width: 85%;
+	width: min-content;
+	overflow-x: hidden;
+	flex-direction: column;
+	color: $black;
 
-  & &__alert {
-    font-family: "Roboto", sans-serif;
+	& &__alert {
+		font-family: "Roboto", sans-serif;
 
-    &--success {
-      background-color: $green;
-    }
+		&--success {
+			background-color: $green;
+		}
 
-    &--error {
-      background-color: $red;
-    }
-  }
+		&--error {
+			background-color: $red;
+		}
+	}
 
-  .app-menu__content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding-top: 3rem;
+	.app-menu__content {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		padding-top: 3rem;
 
-    .menu-header,
-    .menu-body,
-    .menu-settings {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      padding: 0 1.5rem;
-    }
+		.menu-header,
+		.menu-body,
+		.menu-settings {
+			display: flex;
+			flex: 1;
+			flex-direction: column;
+			padding: 0 1.5rem;
+		}
 
-    .menu-header {
-      justify-content: flex-end;
+		.menu-header {
+			justify-content: flex-end;
 
-      .app-title {
-        display: inline-block;
-        font-family: "Montserrat", "Roboto", sans-serif;
-        font-size: 1.5rem;
-        font-weight: 500;
-        text-align: center;
-        margin: 0;
-        text-transform: uppercase;
-      }
+			.app-title {
+				display: inline-block;
+				font-family: "Montserrat", "Roboto", sans-serif;
+				font-size: 1.5rem;
+				font-weight: 500;
+				text-align: center;
+				margin: 0;
+				text-transform: uppercase;
+			}
 
-      .search-input {
-        margin-top: 1.5rem;
-      }
+			.search-input {
+				margin-top: 1.5rem;
+			}
 
-      &__btn {
-        color: $blue;
-        background-color: $white;
-        font-family: "Roboto", "Montserrat", sans-serif;
-        padding: 0.5rem 1rem;
+			&__btn {
+				color: $blue;
+				background-color: $white;
+				font-family: "Roboto", "Montserrat", sans-serif;
+				padding: 0.5rem 1rem;
 
-        &.btn-groups {
-          margin-top: 1rem;
-        }
-      }
+				&.btn-groups {
+					margin-top: 1rem;
+				}
+			}
 
-      .user-info {
-        display: flex;
-        flex-direction: column;
-        margin-top: 2rem;
-        align-items: center;
+			.user-info {
+				display: flex;
+				flex-direction: column;
+				margin-top: 2rem;
+				align-items: center;
 
-        .user-pic {
-          width: 128px;
-        }
+				.user-pic {
+					width: 128px;
+				}
 
-        .user-name {
-          font-family: "Roboto", sans-serif;
-          font-weight: 400;
-          font-size: 1.5rem;
-          text-align: center;
-          margin: 1.5rem 0 0.8rem;
-          text-transform: capitalize;
-        }
+				.user-name {
+					font-family: "Roboto", sans-serif;
+					font-weight: 400;
+					font-size: 1.5rem;
+					text-align: center;
+					margin: 1.5rem 0 0.8rem;
+					text-transform: capitalize;
+				}
 
-        .user-group {
-          font-family: "Roboto", sans-serif;
-          font-weight: 400;
-          font-size: 1rem;
-          text-align: center;
-          text-transform: uppercase;
-          margin: 0;
-        }
-      }
-    }
+				.user-group {
+					font-family: "Roboto", sans-serif;
+					font-weight: 400;
+					font-size: 1rem;
+					text-align: center;
+					text-transform: uppercase;
+					margin: 0;
+				}
+			}
+		}
 
-    .menu-body {
-      margin: 2rem 0;
-      justify-content: center;
+		.menu-body {
+			margin: 2rem 0;
+			justify-content: center;
 
-      &__btn {
-        color: $blue;
-        background-color: $white;
-        font-family: "Roboto", "Montserrat", sans-serif;
+			&__btn {
+				color: $blue;
+				background-color: $white;
+				font-family: "Roboto", "Montserrat", sans-serif;
 
-        &.btn-sign-up {
-          background-color: $blue;
-          color: $white;
-          margin-top: 1.5rem;
-        }
+				&.btn-sign-up {
+					background-color: $blue;
+					color: $white;
+					margin-top: 1.5rem;
+				}
 
-        &.btn-sign-in {
-          margin-top: 1rem;
-        }
-      }
+				&.btn-sign-in {
+					margin-top: 1rem;
+				}
+			}
 
-      &__text {
-        .text {
-          line-height: 1.5;
+			&__text {
+				.text {
+					line-height: 1.5;
 
-          &-header {
-            font-family: "Roboto", "Montserrat", sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-            margin: 0;
-            margin-bottom: 0.5rem;
-          }
+					&-header {
+						font-family: "Roboto", "Montserrat", sans-serif;
+						font-size: 1rem;
+						font-weight: 500;
+						margin: 0;
+						margin-bottom: 0.5rem;
+					}
 
-          &-content {
-            display: inline-block;
-            font-family: "Roboto", "Montserrat", sans-serif;
-            font-size: 1rem;
-            font-weight: 400;
-            text-align: justify;
-          }
-        }
-      }
-    }
+					&-content {
+						display: inline-block;
+						font-family: "Roboto", "Montserrat", sans-serif;
+						font-size: 1rem;
+						font-weight: 400;
+						text-align: justify;
+					}
+				}
+			}
+		}
 
-    .menu-settings {
-      margin-top: 1rem;
-      padding: 0 1rem;
+		.menu-settings {
+			margin-top: 1rem;
+			padding: 0 1rem;
 
-      &__header {
-        font-family: "Roboto", sans-serif;
-        font-weight: 700;
-        font-size: 1rem;
-        margin-left: 2.5rem;
-      }
+			&__header {
+				font-family: "Roboto", sans-serif;
+				font-weight: 700;
+				font-size: 1rem;
+				margin-left: 2.5rem;
+			}
 
-      &__option {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        line-height: 1.5;
-        margin: 0;
-        padding: 0.5rem 0;
-        cursor: pointer;
+			&__option {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				line-height: 1.5;
+				margin: 0;
+				padding: 0.5rem 0;
+				cursor: pointer;
 
-        .option__icon {
-          color: $grey;
-        }
+				.option__icon {
+					color: $grey;
+				}
 
-        .option__text {
-          margin-left: 1rem;
-        }
-      }
-    }
-  }
+				.option__text {
+					margin-left: 1rem;
+				}
+			}
+		}
+	}
 
-  .page-footer {
-    margin-top: auto;
-    white-space: nowrap;
-    padding: 1rem 1.5rem;
-  }
+	.page-footer {
+		margin-top: auto;
+		white-space: nowrap;
+		padding: 1rem 1.5rem;
+	}
 }

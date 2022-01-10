@@ -25,16 +25,23 @@ interface ISuccessful {
 export default class ScheduleAPI {
 	private static HOST: string = `${process.env.PUBLIC_URL}/api`;
 
-	static CSRFCookie = () => axios(`${process.env.PUBLIC_URL}/sanctum/csrf-cookie`);
+	static CSRFCookie = () =>
+		axios(`${process.env.PUBLIC_URL}/sanctum/csrf-cookie`);
 
 	/**
 	 * Method for fetching group's schedule
 	 * @param groupId Group identifier
 	 */
-	static fetchSchedule = async (groupId: number, controller?: AbortController) => {
-		const response = await fetch(`${ScheduleAPI.HOST}/subject?group=${groupId}`, {
-			signal: controller?.signal,
-		});
+	static fetchSchedule = async (
+		groupId: number,
+		controller?: AbortController
+	) => {
+		const response = await fetch(
+			`${ScheduleAPI.HOST}/subject?group=${groupId}`,
+			{
+				signal: controller?.signal,
+			}
+		);
 		const result: IResponse<Array<ISubject>> = await response.json();
 		const midnight = new Date("2000-01-01");
 		return result.body.map(subject => ({
@@ -51,12 +58,18 @@ export default class ScheduleAPI {
 	 * @param login User's login
 	 * @param password User's password
 	 */
-	static authenticate = async (login: string, password: string, controller?: AbortController) => {
+	static authenticate = async (
+		login: string,
+		password: string,
+		controller?: AbortController
+	) => {
 		await ScheduleAPI.CSRFCookie();
-		const response = await axios.request<IResponse<{
-			access_token: string;
-			user: IUser;
-		}>>({
+		const response = await axios.request<
+			IResponse<{
+				access_token: string;
+				user: IUser;
+			}>
+		>({
 			url: `${ScheduleAPI.HOST}/user/login`,
 			method: "POST",
 			data: {
@@ -76,12 +89,17 @@ export default class ScheduleAPI {
 	 * Method for fetching specialties for selected `faculty`
 	 * @param faculty Faculty to use
 	 */
-	static fetchSpecialties = async (faculty: string, controller?: AbortController) => {
-		const response = await axios.request<IResponse<{
-			[specialty: string]: {
-				[courseNumber in Course]: number;
-			};
-		}>>({
+	static fetchSpecialties = async (
+		faculty: string,
+		controller?: AbortController
+	) => {
+		const response = await axios.request<
+			IResponse<{
+				[specialty: string]: {
+					[courseNumber in Course]: number;
+				};
+			}>
+		>({
 			url: `${ScheduleAPI.HOST}/group/specialty?faculty=${faculty}`,
 			signal: controller?.signal,
 		});
@@ -101,7 +119,7 @@ export default class ScheduleAPI {
 	 */
 	static signUp = async (
 		user: Omit<IUser, "id"> & IAuthenticated,
-		controller?: AbortController,
+		controller?: AbortController
 	) => {
 		const response = await axios.request<IResponse<IUser>>({
 			url: `${ScheduleAPI.HOST}/user`,
@@ -128,7 +146,7 @@ export default class ScheduleAPI {
 	 */
 	static updateUser = async (
 		data: WithID<Partial<IUser>>,
-		controller?: AbortController,
+		controller?: AbortController
 	): Promise<IUser | null> => {
 		const response = await axios.request<IResponse<IUser>>({
 			url: `${ScheduleAPI.HOST}/user/group`,
@@ -175,14 +193,17 @@ export default class ScheduleAPI {
 	 * @param {string} searchString - string used for search
 	 * @param {AbortController} [controller] - abort controller to cancel fetch
 	 */
-	static searchGroup = async (searchString: string, controller?: AbortController) => {
+	static searchGroup = async (
+		searchString: string,
+		controller?: AbortController
+	) => {
 		try {
-			const response = await axios.request<IResponse<Partial<Record<FACULTY, ISpecialty[]>>>>(
-				{
-					url: `${ScheduleAPI.HOST}/group?q=${searchString}`,
-					signal: controller?.signal,
-				},
-			);
+			const response = await axios.request<
+				IResponse<Partial<Record<FACULTY, ISpecialty[]>>>
+			>({
+				url: `${ScheduleAPI.HOST}/group?q=${searchString}`,
+				signal: controller?.signal,
+			});
 			const {error, body} = response.data;
 			if (error) {
 				return null;
@@ -229,7 +250,10 @@ export default class ScheduleAPI {
 	 * @param course - Group's course
 	 * @param [abortController] - Abort controller to cancel fetch
 	 */
-	static createGroup = async (group: Omit<IGroup, "id">, abortController?: AbortController) => {
+	static createGroup = async (
+		group: Omit<IGroup, "id">,
+		abortController?: AbortController
+	) => {
 		try {
 			const response = await axios.request<IResponse<IGroup>>({
 				url: `${ScheduleAPI.HOST}/group`,
@@ -263,7 +287,7 @@ export default class ScheduleAPI {
 		subject: Omit<ISubject, "times">,
 		time: Omit<IAttendTime, "id">,
 		group?: number,
-		controller?: AbortController,
+		controller?: AbortController
 	) => ScheduleAPI.createSubject({...time, ...subject}, group, controller);
 
 	/**
@@ -278,7 +302,7 @@ export default class ScheduleAPI {
 	static createSubject = async (
 		subject: Omit<DisplaySubject, "id">,
 		group?: number,
-		controller?: AbortController,
+		controller?: AbortController
 	) => {
 		const time = new Date(subject.time);
 		const response = await axios.request<IResponse<DisplaySubject>>({
@@ -310,7 +334,7 @@ export default class ScheduleAPI {
 	 */
 	static updateSubject = async (
 		subjectProperties: WithID<Partial<DisplaySubject>>,
-		controller?: AbortController,
+		controller?: AbortController
 	) => {
 		const response = await axios.request<IResponse<DisplaySubject>>({
 			url: `${ScheduleAPI.HOST}/subject/update`,
@@ -338,7 +362,10 @@ export default class ScheduleAPI {
 	 * @param subjectId ID of subject to delete
 	 * @param controller controller to abort fetch
 	 */
-	static deleteSubject = async (subjectId: number, controller?: AbortController) => {
+	static deleteSubject = async (
+		subjectId: number,
+		controller?: AbortController
+	) => {
 		const response = await axios.request<IResponse<ISuccessful>>({
 			url: `${ScheduleAPI.HOST}/subject/delete?id=${subjectId}`,
 			signal: controller?.signal,
