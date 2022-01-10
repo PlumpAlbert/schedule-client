@@ -1,10 +1,13 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
 import {RootState} from "..";
 import {GetWeekType} from "../../Helpers";
-import subjectReducer, {actions as subjectActions} from "./subject";
+import subjectReducer, {
+	actions as subjectActions,
+	ACTION_TYPES as SUBJECT_ACTION_TYPES,
+} from "./subject";
 import {ISubject, SUBJECT_TYPE, WEEK_TYPE, WEEKDAY} from "../../types";
 
-type SubjectIndex = Omit<ISubject, "times" | "teacher"> & {teacher: number};
+type SubjectIndex = Omit<ISubject, "times">;
 
 type ForwardedAction = SubjectIndex & {
 	action: ReturnType<typeof subjectActions[keyof typeof subjectActions]>;
@@ -68,8 +71,21 @@ const forwardSubjectAction = <T extends {payload: ForwardedAction}>(
 	{payload}: T
 ) => {
 	const {title, type, teacher, action} = payload;
-	let index = subjects.findIndex(findSubjectCallback(teacher, type, title));
-	if (index === -1) return;
+	let index = subjects.findIndex(findSubjectCallback(teacher.id, type, title));
+	if (index === -1) {
+		if (action.type !== SUBJECT_ACTION_TYPES.addAttendTime) return;
+		subjects.push({
+			title,
+			type,
+			teacher,
+			times: [
+				action.payload.isCreated
+					? {id: Date.now(), ...action.payload.time}
+					: action.payload.time,
+			],
+		});
+		return;
+	}
 	subjects[index] = subjectReducer(subjects[index], action);
 };
 
@@ -108,7 +124,7 @@ const scheduleSlice = createSlice({
 			})
 			.addCase(actions.deleteSubject, ({subjects}, {payload}) => {
 				const index = subjects.findIndex(
-					findSubjectCallback(payload.teacher, payload.type, payload.title)
+					findSubjectCallback(payload.teacher.id, payload.type, payload.title)
 				);
 				if (index === -1) return;
 				subjects.splice(index, 1);

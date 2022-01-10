@@ -69,7 +69,7 @@ function EditSubjectPage() {
 							ScheduleActions.updateSubject({
 								title: initState.state.title,
 								type: initState.state.type,
-								teacher: initState.state.teacher.id,
+								teacher: initState.state.teacher,
 								action: SubjectActions.addAttendTime({
 									isCreated: false,
 									time: createdSubject,
@@ -80,7 +80,7 @@ function EditSubjectPage() {
 							ScheduleActions.updateSubject({
 								title: initState.state.title,
 								type: initState.state.type,
-								teacher: initState.state.teacher.id,
+								teacher: initState.state.teacher,
 								action: SubjectActions.update(createdSubject),
 							})
 						);
@@ -93,7 +93,7 @@ function EditSubjectPage() {
 							ScheduleActions.updateSubject({
 								title: initState.state.title,
 								type: initState.state.type,
-								teacher: initState.state.teacher.id,
+								teacher: initState.state.teacher,
 								action: SubjectActions.deleteAttendTime(action.payload),
 							})
 						);
@@ -106,7 +106,7 @@ function EditSubjectPage() {
 							ScheduleActions.updateSubject({
 								title: initState.state.title,
 								type: initState.state.type,
-								teacher: initState.state.teacher.id,
+								teacher: initState.state.teacher,
 								action: SubjectActions.update(action.payload),
 							})
 						);
