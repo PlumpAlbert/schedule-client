@@ -3,8 +3,8 @@ import {useLocation, useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import ScheduleAPI from "../../API";
-import {SUBJECT_TYPE, WEEK_TYPE} from "../../types";
-import SubjectView, {DisplaySubject} from "./SubjectView";
+import {CoreSubject, SUBJECT_TYPE, WEEK_TYPE} from "../../types";
+import SubjectView from "./SubjectView";
 import {actions as scheduleActions, EditMode} from "../../store/schedule";
 import {useDispatch, useSelector} from "../../store";
 import {selectUser} from "../../store/app";
@@ -31,11 +31,11 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 	const user = useSelector(selectUser);
 	const selectedGroup = useSelector(({schedule}) => schedule.currentGroup);
 
-	const subjects = useSelector<DisplaySubject[]>(({schedule}) => {
-		return schedule.subjects.reduce<DisplaySubject[]>(
+	const subjects = useSelector<CoreSubject[]>(({schedule}) => {
+		return schedule.subjects.reduce<CoreSubject[]>(
 			(displayList, {times, ...subject}) => {
 				return displayList.concat(
-					times.map<DisplaySubject>(time => ({
+					times.map<CoreSubject>(time => ({
 						...time,
 						...subject,
 					}))
@@ -78,14 +78,14 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 		};
 	}, [selectedGroup]);
 
-	const handleSubjectClick = useCallback<(s: DisplaySubject) => void>(
+	const handleSubjectClick = useCallback<(s: CoreSubject) => void>(
 		subject => {
 			navigate("/subject?id=" + subject.id);
 		},
 		[navigate]
 	);
 
-	const handleSubjectDelete = useCallback<(s: DisplaySubject) => void>(
+	const handleSubjectDelete = useCallback<(subject: CoreSubject) => void>(
 		subject => {
 			ScheduleAPI.deleteSubject(subject.id).then(success => {
 				if (!success) return;

@@ -5,15 +5,12 @@ import subjectReducer, {
 	SubjectState,
 } from "../../store/schedule/subject";
 import {IAttendTime, ISubject, WithID} from "../../types";
-import {DisplaySubject} from "../ScheduleView/SubjectView";
+import {CoreSubject} from "../../types";
 
 type HistoryActionType = WithID<
 	| ReturnType<typeof SubjectActions["deleteAttendTime"]>
-	| PayloadAction<WithID<DisplaySubject>, ACTION_TYPES.addAttendTime>
-	| PayloadAction<
-			WithID<Partial<DisplaySubject>>,
-			ACTION_TYPES.updateAttendTime
-	  >
+	| PayloadAction<WithID<CoreSubject>, ACTION_TYPES.addAttendTime>
+	| PayloadAction<WithID<Partial<CoreSubject>>, ACTION_TYPES.updateAttendTime>
 >;
 
 export interface IEditSubjectPageStore {
@@ -71,7 +68,7 @@ function updateAttendProperty(
 		];
 	}
 	const oldAction = oldHistory[updateActionIndex] as PayloadAction<
-		Partial<DisplaySubject>
+		Partial<CoreSubject>
 	>;
 	// If current attend time was updated previously
 	return [

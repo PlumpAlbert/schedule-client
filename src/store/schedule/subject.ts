@@ -1,7 +1,12 @@
 import {createAction, createSlice} from "@reduxjs/toolkit";
 import {hasOwnProperty} from "../../Helpers";
-import {DisplaySubject} from "../../pages/ScheduleView/SubjectView";
-import {IAttendTime, ISubject, SUBJECT_TYPE, WithID} from "../../types";
+import {
+	CoreSubject,
+	IAttendTime,
+	ISubject,
+	SUBJECT_TYPE,
+	WithID,
+} from "../../types";
 
 interface IAttendTimePayload {
 	id: number;
@@ -41,7 +46,7 @@ export enum ACTION_TYPES {
 }
 
 export const actions = {
-	update: createAction<WithID<Partial<DisplaySubject>>, ACTION_TYPES.update>(
+	update: createAction<WithID<Partial<CoreSubject>>, ACTION_TYPES.update>(
 		ACTION_TYPES.update
 	),
 	updateProperty: createAction<SubjectPayload, ACTION_TYPES.updateProperty>(

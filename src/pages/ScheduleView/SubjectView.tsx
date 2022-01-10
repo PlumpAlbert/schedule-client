@@ -2,7 +2,7 @@ import React, {useCallback} from "react";
 import ListItem from "@mui/material/ListItem";
 import Icon from "@mui/material/Icon";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {IAttendTime, ISubject, SUBJECT_TYPE} from "../../types";
+import {CoreSubject, SUBJECT_TYPE} from "../../types";
 
 import "./SubjectView.scss";
 import {renderTime} from "../../Helpers";
@@ -12,14 +12,12 @@ interface ILoadable {
 	loading?: boolean;
 }
 
-export type DisplaySubject = Omit<ISubject, "times"> & IAttendTime;
-
 interface IProps {
 	isEditable?: boolean;
 	type?: SUBJECT_TYPE;
-	value?: DisplaySubject;
-	onClick?: (s: DisplaySubject) => void;
-	onDelete?: (s: DisplaySubject) => void;
+	value?: CoreSubject;
+	onClick?: (s: CoreSubject) => void;
+	onDelete?: (s: CoreSubject) => void;
 }
 
 function SubjectView({

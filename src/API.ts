@@ -1,5 +1,5 @@
 import axios from "axios";
-import {DisplaySubject} from "./pages/ScheduleView/SubjectView";
+import {CoreSubject} from "./types";
 import {
 	Course,
 	FACULTY,
@@ -303,12 +303,12 @@ export default class ScheduleAPI {
 	 * @returns Id of new subject object or `undefined` on error
 	 */
 	static createSubject = async (
-		subject: Omit<DisplaySubject, "id">,
+		subject: Omit<CoreSubject, "id">,
 		group?: number,
 		controller?: AbortController
 	) => {
 		const time = new Date(subject.time);
-		const response = await axios.request<IResponse<DisplaySubject>>({
+		const response = await axios.request<IResponse<CoreSubject>>({
 			url: `${ScheduleAPI.HOST}/subject`,
 			signal: controller?.signal,
 			method: "POST",
@@ -336,10 +336,10 @@ export default class ScheduleAPI {
 	 * @param [controller] - controller to abort request
 	 */
 	static updateSubject = async (
-		subjectProperties: WithID<Partial<DisplaySubject>>,
+		subjectProperties: WithID<Partial<CoreSubject>>,
 		controller?: AbortController
 	) => {
-		const response = await axios.request<IResponse<DisplaySubject>>({
+		const response = await axios.request<IResponse<CoreSubject>>({
 			url: `${ScheduleAPI.HOST}/subject/update`,
 			signal: controller?.signal,
 			method: "POST",

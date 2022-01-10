@@ -45,6 +45,8 @@ export interface ISubject {
 	times: IAttendTime[];
 }
 
+export type CoreSubject = Omit<ISubject, "times"> & IAttendTime;
+
 export enum UserType {
 	STUDENT = 0,
 	TEACHER = 1,
