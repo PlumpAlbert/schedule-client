@@ -36,10 +36,15 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 		return schedule.subjects.reduce<CoreSubject[]>(
 			(displayList, {times, ...subject}) => {
 				return displayList.concat(
-					times.map<CoreSubject>(time => ({
-						...time,
-						...subject,
-					}))
+					times
+						.filter(
+							time => time.weekday === weekday && time.weekType === weekType
+						)
+						.map<CoreSubject>(time => ({
+							...time,
+							...subject,
+						}))
+						.sort((a, b) => a.time - b.time)
 				);
 			},
 			[]
@@ -114,19 +119,11 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 		[dispatch]
 	);
 
-	const filteredSubjects = useMemo(
-		() =>
-			subjects
-				.filter(s => s.weekday === weekday && s.weekType === weekType)
-				.sort((a, b) => a.time - b.time),
-		[weekday, weekType, subjects.length]
-	);
-
 	return (
 		<List className="schedule-view-page__schedule">
 			{isLoading
 				? subjectPlaceholders
-				: filteredSubjects.map((s, i) => (
+				: subjects.map((s, i) => (
 						<SubjectView
 							key={`subject-view-${i}`}
 							onClick={handleSubjectClick}
