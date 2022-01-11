@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
@@ -41,6 +41,12 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 	);
 	const [time, setTime] = useState<number>(value?.time || -1);
 	const [audience, setAudience] = useState<string>(value?.audience || "");
+
+	useEffect(() => {
+		if (value?.weekday) setWeekday(value.weekday);
+		if (value?.time) setTime(value.time);
+		if (value?.audience) setAudience(value.audience);
+	}, [value]);
 
 	const weekdayButtons = useMemo(() => {
 		let buttons = [];
