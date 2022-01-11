@@ -20,7 +20,7 @@ const TimeList = ({currentWeek, times, onDelete, onClick}: ITimeListProps) => {
 						<>
 							<TimeItem
 								{...t}
-								key={`time-list-item-${i}`}
+								key={`time-list-item-${t.id}`}
 								className="time-item"
 								onDelete={onDelete}
 								onClick={onClick}
