@@ -141,6 +141,7 @@ const AddTimeDialog = ({open, value, weekType, onClose}: IProps) => {
 						InputProps={{className: "field-input__root"}}
 						variant="standard"
 						placeholder="Номер аудитории"
+						value={audience}
 					/>
 				</div>
 			</div>
