@@ -15,15 +15,14 @@ interface ITimeProps extends IAttendTime {
 const TimeItem = ({className, onDelete, onClick, ...time}: ITimeProps) => {
 	const handleDelete = useCallback(() => {
 		onDelete(time);
-	}, [onDelete]);
+	}, [onDelete, time]);
 
 	const handleClick = useCallback(() => {
 		onClick(time);
-	}, [onClick]);
+	}, [onClick, time]);
 
 	return (
 		<SwipeAction
-			key={time.id}
 			className={className + "-swipe"}
 			onAction={handleDelete}
 			action={
