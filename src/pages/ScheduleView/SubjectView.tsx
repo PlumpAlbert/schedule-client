@@ -49,7 +49,7 @@ function SubjectView({
 				onClick(value);
 			}
 		},
-		[onClick, value]
+		[onClick, value, isEditable]
 	);
 
 	const handleDeleteClick = useCallback(
