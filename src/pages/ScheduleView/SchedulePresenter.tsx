@@ -33,8 +33,8 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 	const selectedGroup = useSelector(({schedule}) => schedule.currentGroup);
 
 	const subjects = useSelector<CoreSubject[]>(({schedule}) => {
-		return schedule.subjects.reduce<CoreSubject[]>(
-			(displayList, {times, ...subject}) => {
+		return schedule.subjects
+			.reduce<CoreSubject[]>((displayList, {times, ...subject}) => {
 				return displayList.concat(
 					times
 						.filter(
@@ -44,11 +44,9 @@ function SchedulePresenter({editMode, weekday, weekType}: IProps) {
 							...time,
 							...subject,
 						}))
-						.sort((a, b) => a.time - b.time)
 				);
-			},
-			[]
-		);
+			}, [])
+			.sort((a, b) => a.time - b.time);
 	});
 
 	useEffect(() => {
