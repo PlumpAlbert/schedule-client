@@ -25,7 +25,11 @@ const TimeList = ({currentWeek, times, onDelete, onClick}: ITimeListProps) => {
 								onDelete={onDelete}
 								onClick={onClick}
 							/>
-							<Divider className="time-item-divider" variant="middle" />
+							<Divider
+								key={`time-list-item-divider-${i}`}
+								className="time-item-divider"
+								variant="middle"
+							/>
 						</>
 					)
 			),
