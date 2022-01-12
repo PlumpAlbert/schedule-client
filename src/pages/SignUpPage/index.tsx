@@ -29,10 +29,7 @@ function SignUpPage() {
 			}
 			const group = groupRef.current?.getState();
 			// Check if all of the fields are set
-			if (
-				!group ||
-				!Object.keys(group).every(key => !!group[key as keyof IGroup])
-			) {
+			if (!group || !Object.keys(group).every(key => !!group[key as keyof IGroup])) {
 				setError("group");
 				return;
 			}
@@ -63,7 +60,6 @@ function SignUpPage() {
 						setError("login");
 						return;
 					}
-					sessionStorage.setItem("user", JSON.stringify(user));
 					navigate(`/schedule?group=${group?.id}`, {
 						replace: true,
 					});
@@ -78,9 +74,7 @@ function SignUpPage() {
 		[name, login, password, error, navigate]
 	);
 
-	const handleInputChange = useCallback<
-		React.ChangeEventHandler<HTMLInputElement>
-	>(
+	const handleInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
 		({target}) => {
 			const {name, value} = target;
 			let updateFunction: React.Dispatch<React.SetStateAction<string>>;
@@ -179,8 +173,8 @@ function SignUpPage() {
 					label="Пароль:"
 					helperText={
 						<span>
-							Рекомендуем задать сложный пароль, чтобы всякие{" "}
-							<mark>керилы</mark> не смогли в будущем взломать Ваш аккаунт
+							Рекомендуем задать сложный пароль, чтобы всякие <mark>керилы</mark> не
+							смогли в будущем взломать Ваш аккаунт
 						</span>
 					}
 					InputProps={{

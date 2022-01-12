@@ -12,18 +12,25 @@ interface ApplicationState {
 	showMenu: boolean;
 	showFooter: boolean;
 	header: ReturnType<typeof headerReducer>;
-	user?: IUser;
+	user: IUser | null;
 }
 
-const storageUser = localStorage.getItem("user");
+const storageUser: {expires: number; user: IUser} | null = JSON.parse(
+	localStorage.getItem("user") || "null"
+);
 if (storageUser) {
-	ScheduleAPI.CSRFCookie();
+	if (storageUser.expires < Date.now()) {
+		localStorage.removeItem("user");
+		localStorage.removeItem("access_token");
+	} else {
+		ScheduleAPI.CSRFCookie();
+	}
 }
 const initialState: ApplicationState = {
 	showMenu: false,
 	showFooter: true,
 	header: headerInitState,
-	user: storageUser && JSON.parse(storageUser),
+	user: storageUser && storageUser.user,
 };
 
 export const actions = {
@@ -78,7 +85,7 @@ const store = createSlice({
 				}
 			})
 			.addCase(actions.signOut, state => {
-				state.user = undefined;
+				state.user = null;
 			})
 			.addMatcher(
 				action => {

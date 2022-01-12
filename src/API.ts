@@ -28,23 +28,24 @@ export default class ScheduleAPI {
 			? "http://192.168.0.10:8080/api"
 			: `${process.env.PUBLIC_URL}/api`;
 
-	static CSRFCookie = () =>
-		axios(`${new URL(ScheduleAPI.HOST).origin}/sanctum/csrf-cookie`);
+	static CSRFCookie = () => axios(`${new URL(ScheduleAPI.HOST).origin}/sanctum/csrf-cookie`);
+
+	private static getAuthorizationHeader = () => {
+		const json = localStorage.getItem("access_token");
+		if (!json) throw {message: "Not authenticated", error: true};
+		const {expires, access_token} = JSON.parse(json);
+		if (expires < Date.now()) throw {message: "Not authenticated", error: true};
+		return `Bearer ${access_token}`;
+	};
 
 	/**
 	 * Method for fetching group's schedule
 	 * @param groupId Group identifier
 	 */
-	static fetchSchedule = async (
-		groupId: number,
-		controller?: AbortController
-	) => {
-		const response = await fetch(
-			`${ScheduleAPI.HOST}/subject?group=${groupId}`,
-			{
-				signal: controller?.signal,
-			}
-		);
+	static fetchSchedule = async (groupId: number, controller?: AbortController) => {
+		const response = await fetch(`${ScheduleAPI.HOST}/subject?group=${groupId}`, {
+			signal: controller?.signal,
+		});
 		const result: IResponse<Array<ISubject>> = await response.json();
 		const midnight = new Date("2000-01-01");
 		return result.body.map(subject => ({
@@ -61,11 +62,7 @@ export default class ScheduleAPI {
 	 * @param login User's login
 	 * @param password User's password
 	 */
-	static authenticate = async (
-		login: string,
-		password: string,
-		controller?: AbortController
-	) => {
+	static authenticate = async (login: string, password: string, controller?: AbortController) => {
 		await ScheduleAPI.CSRFCookie();
 		const response = await axios.request<
 			IResponse<{
@@ -83,8 +80,21 @@ export default class ScheduleAPI {
 		});
 		if (response.status !== 200) return null;
 		const {access_token, user} = response.data.body;
-		localStorage.setItem("access_token", access_token);
-		localStorage.setItem("user", JSON.stringify(user));
+		const now = new Date();
+		localStorage.setItem(
+			"access_token",
+			JSON.stringify({
+				expires: now.setDate(now.getDate() + 1),
+				access_token,
+			})
+		);
+		localStorage.setItem(
+			"user",
+			JSON.stringify({
+				expires: now.setDate(now.getDate() + 1),
+				user,
+			})
+		);
 		return user;
 	};
 
@@ -92,10 +102,7 @@ export default class ScheduleAPI {
 	 * Method for fetching specialties for selected `faculty`
 	 * @param faculty Faculty to use
 	 */
-	static fetchSpecialties = async (
-		faculty: string,
-		controller?: AbortController
-	) => {
+	static fetchSpecialties = async (faculty: string, controller?: AbortController) => {
 		const response = await axios.request<
 			IResponse<{
 				[specialty: string]: {
@@ -124,7 +131,7 @@ export default class ScheduleAPI {
 		user: Omit<IUser, "id"> & IAuthenticated,
 		controller?: AbortController
 	) => {
-		const response = await axios.request<IResponse<IUser>>({
+		const response = await axios.request<IResponse<{user: IUser; access_token: string}>>({
 			url: `${ScheduleAPI.HOST}/user`,
 			signal: controller?.signal,
 			method: "POST",
@@ -139,7 +146,22 @@ export default class ScheduleAPI {
 		if (error) {
 			return;
 		}
-		return body;
+		const now = new Date();
+		localStorage.setItem(
+			"access_token",
+			JSON.stringify({
+				expires: now.setDate(now.getDate() + 1),
+				access_token: body.access_token,
+			})
+		);
+		localStorage.setItem(
+			"user",
+			JSON.stringify({
+				expires: now.setDate(now.getDate() + 1),
+				user: body.user,
+			})
+		);
+		return body.user;
 	};
 
 	/**
@@ -157,7 +179,7 @@ export default class ScheduleAPI {
 			data,
 			signal: controller?.signal,
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+				Authorization: ScheduleAPI.getAuthorizationHeader(),
 			},
 		});
 		const {error, body} = response.data;
@@ -177,7 +199,7 @@ export default class ScheduleAPI {
 				url: `${ScheduleAPI.HOST}/user/logout`,
 				signal: controller?.signal,
 				headers: {
-					Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+					Authorization: ScheduleAPI.getAuthorizationHeader(),
 				},
 			})
 			.then(({data}) => !data.error && data.body.success)
@@ -196,17 +218,14 @@ export default class ScheduleAPI {
 	 * @param {string} searchString - string used for search
 	 * @param {AbortController} [controller] - abort controller to cancel fetch
 	 */
-	static searchGroup = async (
-		searchString: string,
-		controller?: AbortController
-	) => {
+	static searchGroup = async (searchString: string, controller?: AbortController) => {
 		try {
-			const response = await axios.request<
-				IResponse<Partial<Record<FACULTY, ISpecialty[]>>>
-			>({
-				url: `${ScheduleAPI.HOST}/group?q=${searchString}`,
-				signal: controller?.signal,
-			});
+			const response = await axios.request<IResponse<Partial<Record<FACULTY, ISpecialty[]>>>>(
+				{
+					url: `${ScheduleAPI.HOST}/group?q=${searchString}`,
+					signal: controller?.signal,
+				}
+			);
 			const {error, body} = response.data;
 			if (error) {
 				return null;
@@ -233,7 +252,7 @@ export default class ScheduleAPI {
 				url: `${ScheduleAPI.HOST}/user?type=teacher`,
 				signal: controller?.signal,
 				headers: {
-					Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+					Authorization: ScheduleAPI.getAuthorizationHeader(),
 				},
 			});
 			if (response.status !== 200) return;
@@ -253,10 +272,7 @@ export default class ScheduleAPI {
 	 * @param course - Group's course
 	 * @param [abortController] - Abort controller to cancel fetch
 	 */
-	static createGroup = async (
-		group: Omit<IGroup, "id">,
-		abortController?: AbortController
-	) => {
+	static createGroup = async (group: Omit<IGroup, "id">, abortController?: AbortController) => {
 		try {
 			const response = await axios.request<IResponse<IGroup>>({
 				url: `${ScheduleAPI.HOST}/group`,
@@ -264,7 +280,7 @@ export default class ScheduleAPI {
 				method: "POST",
 				data: group,
 				headers: {
-					Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+					Authorization: ScheduleAPI.getAuthorizationHeader(),
 				},
 			});
 			if (response.status !== 200) {
@@ -319,7 +335,7 @@ export default class ScheduleAPI {
 				group,
 			},
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+				Authorization: ScheduleAPI.getAuthorizationHeader(),
 			},
 		});
 		if (response.status !== 200) {
@@ -351,7 +367,7 @@ export default class ScheduleAPI {
 					new Date(subjectProperties.time).toLocaleTimeString("ru"),
 			},
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+				Authorization: ScheduleAPI.getAuthorizationHeader(),
 			},
 		});
 		if (response.status !== 200) {
@@ -365,16 +381,13 @@ export default class ScheduleAPI {
 	 * @param subjectId ID of subject to delete
 	 * @param controller controller to abort fetch
 	 */
-	static deleteSubject = async (
-		subjectId: number,
-		controller?: AbortController
-	) => {
+	static deleteSubject = async (subjectId: number, controller?: AbortController) => {
 		const response = await axios.request<IResponse<ISuccessful>>({
 			url: `${ScheduleAPI.HOST}/subject/delete?id=${subjectId}`,
 			signal: controller?.signal,
 			method: "POST",
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+				Authorization: ScheduleAPI.getAuthorizationHeader(),
 			},
 		});
 		return response.data.body.success;
