@@ -25,7 +25,7 @@ function shortWeekdayName(day: WEEKDAY) {
 	return date.toLocaleString("ru", {weekday: "short"});
 }
 
-const times = ["08:00", "09:40", "11:20", "13:20", "15:00", "16:40"];
+const times = ["08:00", "09:40", "11:20", "13:20", "15:00", "16:40", "18:35"];
 const timeOptions = times.map(time => {
 	const startTime = new Date("1970-01-01T" + time).getTime();
 	return (
